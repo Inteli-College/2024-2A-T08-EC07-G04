@@ -41,7 +41,8 @@ const config = {
       ({
         docs: {
           sidebarPath: './sidebars.js',
-          routeBasePath: '/docs', // Altere para uma rota diferente, como '/docs'
+          routeBasePath: '/docs', // Configura a documentação para a rota /docs
+          editUrl: 'https://github.com/Inteli-College/2024-2A-T08-EC07-G04/edit/main/website/',
         },
         theme: {
           customCss: './src/css/custom.css',
@@ -64,10 +65,10 @@ const config = {
         items: [
           {
             type: 'docSidebar',
-            sidebarId: 'tutorialSidebar',
+            sidebarId: 'tutorialSidebar', // Certifique-se de que o sidebarId corresponde ao definido em sidebars.js
             position: 'left',
             label: 'Docs',
-            to: '/docs', // Certifique-se de que este caminho corresponda ao novo routeBasePath
+            to: '/docs/intro', // Link correto para a página de introdução
           },
           {
             href: 'https://github.com/Inteli-College/2024-2A-T08-EC07-G04',
@@ -84,7 +85,7 @@ const config = {
             items: [
               {
                 label: 'Tutorial',
-                to: '/docs', // Direciona para a nova rota base da documentação
+                to: '/docs/intro', // Link correto para a página de introdução
               },
             ],
           },
