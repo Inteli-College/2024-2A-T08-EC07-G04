@@ -89,15 +89,6 @@ const config = {
               },
             ],
           },
-          {
-            title: 'More',
-            items: [
-              {
-                label: 'GitHub',
-                href: 'https://github.com/Inteli-College/2024-2A-T08-EC07-G04',
-              },
-            ],
-          },
         ],
         copyright: `Copyright © ${new Date().getFullYear()} Projeto módulo 07 engenharia da computação.`,
       },
