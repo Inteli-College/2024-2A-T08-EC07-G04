@@ -46,17 +46,17 @@ const config: Config = {
     // Replace with your project's social card
     // image: 'img/docusaurus-social-card.jpg',
     navbar: {
-      title: 'IT-CROSS',
+      title: 'Fillmore',
       logo: {
-        alt: 'IT-CROSS Logo',
-        src: 'img/logo.svg',
+        alt: 'Docusaurus',
+        src: 'img/docusaurus.png',
       },
       items: [],
     },
     footer: {
       style: 'dark',
       links: [],
-      copyright: `Copyright © ${new Date().getFullYear()} IT-CROSS. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Fillmore. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,
