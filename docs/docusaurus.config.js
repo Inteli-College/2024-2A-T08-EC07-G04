@@ -13,7 +13,7 @@ const config = {
   favicon: 'img/logo.png',
 
   // Set the production url of your site here
-  url: 'https://inteli-college.github.io/',
+  url: 'https://your-docusaurus-site.example.com',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/2024-2A-T08-EC07-G04/',
@@ -41,9 +41,7 @@ const config = {
       ({
         docs: {
           sidebarPath: './sidebars.js',
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          routeBasePath: '/'
+          routeBasePath: '/docs', // Altere para uma rota diferente, como '/docs'
         },
         theme: {
           customCss: './src/css/custom.css',
@@ -69,6 +67,7 @@ const config = {
             sidebarId: 'tutorialSidebar',
             position: 'left',
             label: 'Docs',
+            to: '/docs', // Certifique-se de que este caminho corresponda ao novo routeBasePath
           },
           {
             href: 'https://github.com/Inteli-College/2024-2A-T08-EC07-G04',
@@ -85,7 +84,16 @@ const config = {
             items: [
               {
                 label: 'Tutorial',
-                to: '/',
+                to: '/docs', // Direciona para a nova rota base da documentação
+              },
+            ],
+          },
+          {
+            title: 'More',
+            items: [
+              {
+                label: 'GitHub',
+                href: 'https://github.com/Inteli-College/2024-2A-T08-EC07-G04',
               },
             ],
           },
