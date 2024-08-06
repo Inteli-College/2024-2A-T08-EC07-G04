@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - main
+      - initdocs
 
 jobs:
   test-build:
