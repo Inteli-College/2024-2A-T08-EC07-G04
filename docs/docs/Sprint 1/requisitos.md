@@ -1,17 +1,18 @@
 # Requisitos de Viabilidade Técnica
 
 ## Objetivo da Proposta Geral do Sistema
-O projeto, realizado em parceria com a Volkswagen, tem como objetivo desenvolver um modelo preditivo e uma plataforma para a visualização dos resultados. O modelo será treinado com os dados fornecidos pela empresa, incluindo resultados de testes, descrições de falhas e status das predições. Dessa forma, o modelo será capaz de prever possíveis falhas no veículo, permitindo a eliminação da etapa de rodagem, o que contribuirá para a redução de custos e benefícios ambientais.
+O projeto, realizado em parceria com a Volkswagen, visa desenvolver um modelo preditivo e uma plataforma web para a visualização dos resultados. O modelo será treinado utilizando os dados fornecidos pela empresa, como resultados de testes, descrições de falhas e status de predições. A partir desses dados, o modelo terá a capacidade de prever possíveis falhas nos veículos, permitindo a potencial eliminação da etapa de rodagem, o que resultará em significativa redução de custos e benefícios ambientais.
 
-A plataforma web que implementará o modelo deverá contar com um campo para inserção de novos dados, uma interface para exibição imediata dos resultados das predições e uma tela para visualizar os dados coletados por meio de dashboards.
+A plataforma web que implementará o modelo incluirá funcionalidades para a inserção de novos dados, exibição imediata dos resultados das predições e uma interface para visualização dos dados coletados por meio de dashboards interativos.
 ## Descrição objetiva dos elementos gerais que vão compor a solução inicial proposta (diagrama de blocos)
-Em relação aos componentes do sistema podemos destacar os dados de entrada, modelo preditivo e plataforma web. Por meio de uma descrição mais detalhada a respeito de cada elemento.
+Em relação aos componentes do sistema podemos destacar os dados de entrada, modelo preditivo e plataforma web. Por meio de uma descrição mais detalhada a respeito de cada elemento.<br/>
+- **Dados de entrada**: É o conjunto de dados fornecidos pela empresa, incluindo resultados de testes, descrições de falhas e status das predições dos veículos. Os arquivos em questão estão maioria no formato Excel Spreadsheet(xlsx), e alguns em Comma-Separated Values(csv). Esses dados irão servir como base para o treinamento e funcionamento do modelo preditivo, pois alimentam o modelo com informações necessárias para identificar padrões e prever falhas. As tecnologias utilizadas para o desenvolvimento desse elemento serão para<br/>
+- **Modelo Preditivo**: É o Algoritmo de machine learning treinado com os dados de entrada para prever possíveis falhas nos veículos e classificá-los de acordo com essas previsões. O modelo será capaz de processar os dados inseridos e gerar predições sobre a condição dos veículos. Ele é o ponto central da solução para a identificação de falhas e a orientação das inspeções.<br/>
+- **Plataforma Web**: É a interface onde os usuários podem inserir novos dados de veículos para serem analisados pelo modelo preditivo. Essa plataforma terá, a principio, três telas principais, são elas: tela de inserção de dados, tela de exibição de resultados em tempo real e tela de dashboards interativos.<br/>
+    - **Tela de Inserção de Dados**: Interface onde os usuários podem inserir novos dados de veículos para serem analisados pelo modelo preditivo.
+    - **Tela Exibição dos Resultados em Tempo Real**: Interface que apresenta instantaneamente os resultados das predições realizadas pelo modelo, incluindo a classificação do veículo e as possíveis falhas.
+    - **Tela de Dashboards Interativos**: Interface dedicada à visualização dos dados e métricas relacionadas ao desempenho do modelo, permitindo análises detalhadas e acompanhamento contínuo das predições e dos veículos analisados.
 
-Nos dados de entrada, tem-se o arquivo "Predict.csv", o qual irá conter os dados de treinamento com colunas como FALHAS_ROD (classe e status) e outros parâmetros relevantes para o modelo.
-
-No modelo preditivo, tem-se o algoritmo de treinamento, o qual utilizará técnicas de machine learning para aprender a partir dos dados e prever possíveis falhas, além disso um modelo treinado, em que a saída é um modelo preditivo que pode avaliar as condições do veículo e identificar falhas potenciais.
-
-Na plataforma web, 
 
 
 
