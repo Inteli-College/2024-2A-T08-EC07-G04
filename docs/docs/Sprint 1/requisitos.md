@@ -1,4 +1,59 @@
 # Requisitos de Viabilidade Técnica
+## Requisitos Funcionais
+### Classificação Preditiva:
+- O sistema deve classificar os veículos em diferentes classes de inspeção com base em um modelo preditivo.
+- O sistema deve calcular a probabilidade de ocorrência de falhas e indicar o tipo de inspeção necessário para cada veículo.
+### Interface de Usuário:
+- Deve haver uma interface visual que permita ao inspetor visualizar os resultados do modelo preditivo e saber qual tipo de inspeção deve realizar.
+- A interface deve ser amigável e acessível para o analista de sistemas da fábrica.
+### Treinamento e Calibração do Modelo:
+- O sistema deve receber os novos dados de produção em tempo real e usá-los no treinamento do modelo.
+- Deve ser possível realizar o treinamento do modelo de forma contínua para manter ou melhorar a taxa de acerto.
+### Taxa de Acerto:
+- O modelo deve ter uma alta taxa de acerto, com um objetivo de assertividade acima de 95%.
+### Entrada de Dados:
+- O sistema deve receber dados da tabela Predict.csv, onde a coluna FALHAS_ROD serve como saída esperada para o modelo. Os dados cobrem o período de janeiro a abril de 2024.
+### Visualização e Relatórios:
+- O sistema deve gerar relatórios que respondam às perguntas relacionadas à probabilidade de falhas e ao tipo de inspeção a ser realizada.
+- Deve haver a capacidade de visualizar a classe predita e a probabilidade associada diretamente na interface.
+### Execução Local e em Cloud:
+- O sistema deve ser entregue funcionando em ambiente local, com instruções claras para a sua execução em ambiente de nuvem.
+- A demonstração do sistema em nuvem será feita utilizando contas acadêmicas.
+### Limitações e Restrições:
+- O sistema não deve incluir um processo longo de limpeza e adequação de dados.
+- Não se espera que o sistema trabalhe com cenários de big data.
+- O modelo não será disponibilizado em outro ambiente fora o Google Colab.
+
+## Requisitos Não Funcionais
+### Desempenho:
+- O sistema deve ser capaz de processar os dados e classificar os veículos em tempo hábil, garantindo que os resultados sejam disponibilizados para o inspetor sem atrasos significativos.
+- A resposta do modelo preditivo deve ser gerada em um tempo inferior a 5 segundos para garantir a fluidez do processo de inspeção.
+### Escalabilidade:
+- O sistema deve ser escalável o suficiente para lidar com um aumento no volume de dados, mesmo que não esteja previsto o uso de big data. Isso inclui a capacidade de processar dados adicionais provenientes de novas produções mensais sem degradação no desempenho.
+### Usabilidade:
+- A interface do sistema deve ser intuitiva e fácil de usar para os inspetores, com uma curva de aprendizado mínima.
+- O layout da interface deve ser claro, com instruções e resultados apresentados de forma simples e acessível para os usuários não técnicos.
+### Confiabilidade:
+- O sistema deve garantir uma alta disponibilidade, com um tempo de inatividade mínimo durante a operação.
+- Deve haver mecanismos para garantir a integridade dos dados durante o processo de entrada, processamento e saída.
+### Manutenibilidade:
+- O sistema deve ser fácil de manter e atualizar, especialmente em relação à recalibração e retraining do modelo preditivo com novos dados.
+- O código deve ser documentado de forma clara, permitindo que futuros desenvolvedores possam entender e modificar o sistema sem dificuldades.
+### Segurança:
+- O sistema deve garantir a segurança dos dados, especialmente considerando que a base de dados completa é restrita. Isso inclui mecanismos para proteger os dados contra acessos não autorizados.
+- Deve haver controle de acesso adequado para diferentes usuários, garantindo que apenas pessoal autorizado possa acessar certas funcionalidades e dados.
+### Portabilidade:
+- O sistema deve ser desenvolvido de maneira a ser facilmente transportado entre diferentes ambientes, como local e nuvem, sem necessidade de grandes modificações.
+- O uso de tecnologias compatíveis com múltiplas plataformas (como Python ou JavaScript) deve garantir a facilidade de implantação em diferentes ambientes.
+### Compatibilidade:
+- O sistema deve ser compatível com as tecnologias existentes na fábrica da Volkswagen, especialmente em termos de integração com outros sistemas de TI utilizados na linha de produção e inspeção.
+- Deve ser possível integrar a solução com os sistemas de ERP ou outras bases de dados corporativas, se necessário.
+### Eficiência Energética:
+- O sistema deve ser otimizado para utilizar recursos computacionais de forma eficiente, minimizando o consumo de energia e outros recursos durante o processamento dos dados.
+### Conformidade:
+- O sistema deve estar em conformidade com as regulamentações e políticas de segurança de dados da Volkswagen do Brasil, bem como com qualquer norma de qualidade aplicável ao processo de inspeção de veículos.
+
+
 
 ## Objetivo da Proposta Geral do Sistema
 O projeto, realizado em parceria com a Volkswagen, visa desenvolver um modelo preditivo e uma plataforma web para a visualização dos resultados. O modelo será treinado utilizando os dados fornecidos pela empresa, como resultados de testes, descrições de falhas e status de predições. A partir desses dados, o modelo terá a capacidade de prever possíveis falhas nos veículos, permitindo a potencial eliminação da etapa de rodagem, o que resultará em significativa redução de custos e benefícios ambientais.
