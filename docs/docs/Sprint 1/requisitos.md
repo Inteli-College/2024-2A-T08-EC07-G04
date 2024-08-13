@@ -3,6 +3,8 @@ Aqui está a tabela com três colunas, conforme solicitado:
 
 ### Requisitos Funcionais
 
+Os requisitos funcionais descrevem as funcionalidades essenciais que o sistema deve oferecer para atender às necessidades específicas do usuário e do negócio. Nesta seção, são detalhadas as capacidades que o sistema deve possuir, como a classificação preditiva de veículos, a interface de usuário, o treinamento contínuo do modelo, entre outras. Esses requisitos são fundamentais para garantir que o sistema desempenhe suas funções conforme esperado, proporcionando um ambiente eficiente e eficaz para a realização das inspeções de veículos.
+
 | **Requisito** | **Nome** | **Descrição** |
 |:---:|:---:|:---|
 | **RF01** | Classificação Preditiva | - Classificar veículos em diferentes classes de inspeção com base em um modelo preditivo.<br />- Calcular a probabilidade de ocorrência de falhas e indicar o tipo de inspeção necessário para cada veículo. |
@@ -15,6 +17,8 @@ Aqui está a tabela com três colunas, conforme solicitado:
 | **RF08** | Limitações e Restrições | - Não incluir um processo longo de limpeza e adequação de dados.<br />- Não trabalhar com cenários de big data.<br />- Modelo não será disponibilizado fora do Google Colab. |
 
 ### Requisitos Não Funcionais
+
+Os requisitos não funcionais definem as características de qualidade e as restrições que o sistema deve cumprir, além das funcionalidades básicas. Nesta seção, são abordados aspectos como desempenho, escalabilidade, usabilidade, confiabilidade, segurança, entre outros. Esses requisitos são essenciais para garantir que o sistema não apenas funcione corretamente, mas também atenda a padrões elevados de eficiência, segurança e facilidade de uso, assegurando uma experiência positiva para os usuários finais e a sustentabilidade da solução a longo prazo.
 
 | **Requisito** | **Nome** | **Descrição** |
 |:---:|:---:|:---|
