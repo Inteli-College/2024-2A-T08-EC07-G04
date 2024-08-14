@@ -2,9 +2,9 @@ import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 const config: Config = {
-  title: 'IT-CROSS',
+  title: 'Fillmore',
   tagline: 'Dinosaurs are cool',
-  favicon: 'img/IT-CROSS.png',
+  favicon: 'img/logo_fillmore.png',
   // Set the production url of your site here
   url: 'https://inteli-college.github.io/',
   // Set the /<baseUrl>/ pathname under which your site is served
@@ -49,7 +49,7 @@ const config: Config = {
       title: 'Fillmore',
       logo: {
         alt: 'Docusaurus',
-        src: 'img/docusaurus.png',
+        src: 'img/logo_fillmore.png',
       },
       items: [],
     },
