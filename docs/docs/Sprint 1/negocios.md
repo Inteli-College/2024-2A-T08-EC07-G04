@@ -1,6 +1,5 @@
 ---
 title: Entendimento do Negócio
-sidebar_position: 1
 slug: /entendimento_do_negocio
 ---
 

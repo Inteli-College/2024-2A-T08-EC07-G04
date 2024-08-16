@@ -1,7 +1,7 @@
 ---
 title: Análise dos dados
 sidebar_position: 3
-slug: /
+slug: /analise_dados
 ---
 
 ### **Análise dos Dados e Criação de Features**

@@ -1,11 +1,10 @@
 ---
 title: Economia Circular e Mapeamento do Ciclo de Produção e Consumo
-sidebar_position: 1
 slug: /economia_circular
 ---
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
-# Artefato - Economia Circular e Mapeamento do Ciclo de Produção e Consumo
+# Economia Circular e Mapeamento do Ciclo de Produção e Consumo
 ## Introdução:
 &emsp;&emsp;Esta documentação explora a aplicação da economia circular no ciclo de produção e consumo de veículos, detalhando o uso de matérias-primas como aço e plástico, os processos de estampagem e montagem, e os impactos sociais e ambientais envolvidos. Com foco na maximização da reutilização de recursos e na minimização de desperdícios, a análise abrange desde a origem dos materiais até o reprocessamento de resíduos, promovendo práticas mais sustentáveis na fabricação automotiva.
 ## 1.0 Levantamento de Matérias-Primas, Recursos, Processos e Impactos

@@ -1,7 +1,7 @@
 ---
 title: Metodologia
 sidebar_position: 1
-slug: /
+slug: /metodologia
 ---
 
 
