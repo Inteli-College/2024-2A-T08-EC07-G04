@@ -1,3 +1,9 @@
+---
+title: Entendimento do Negócio
+sidebar_position: 1
+slug: /entendimento_do_negocio
+---
+
 # Apresentação dos Documentos de Análise de Negócios do Projeto
 
 ## 1. Introdução ao Business Model Canvas
@@ -54,7 +60,7 @@ Para o projeto de manutenção preditiva da Volkswagen, a Matriz de Risco foi ut
 
 ### Introdução:
 &emsp;&emsp;Nessa seção, abordaremos a análise financeira da prova de conceito e da implementação do projeto final, observando todos os custos a serem considerados, desde o desenvolvimento até a manutenção do servidor em nuvem.  
-&emsp;&emsp;O projeto visa desenvolver um modelo preditivo capaz de identificar possíveis falhas no processo de montagem de carros nas fábricas da Volkswagen, evitando que esses carros sejam enviados para as concessionárias com defeito de fabricação.
+&emsp;&emsp;O projeto visa desenvolver um modelo preditivo capaz de identificar possíveis falhas no processo de montagem de carros nas fábricas da Volkswagen, assim reduzindo o número de "drive tests" realizados pela equipe da Volkswagen, gerando uma economia de tempo e de recursos.
 
 ### Proof of Concept (PoC)
 &emsp;&emsp;A PoC, do inglês "Proof of Concept" (prova de conceito), é o experimento realizado previamente ao projeto final, com a finalidade de provar sua viabilidade. Pensando nisso, fizemos a análise financeira da implementação dessa prova de conceito, levando em conta os custos de hardware, que dizem respeito aos computadores utilizados no desenvolvimento, a mão de obra e o custo de manutenção em nuvem. Segue abaixo uma tabela com a análise completa:
