@@ -1,3 +1,5 @@
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
 # Artefato - Economia Circular e Mapeamento do Ciclo de Produção e Consumo
 ## 1.0 Levantamento de Matérias-Primas, Recursos, Processos e Impactos
 ### **Matérias-Primas e Recursos Utilizados**
@@ -23,3 +25,6 @@
 ### **Impactos Sociais:**
 - **Empregos na Cadeia de Produção:** A atividade produtiva na empresa gera uma quantidade significativa de empregos, tanto na produção direta (estampagem e montagem) quanto na cadeia de fornecedores de matérias-primas.
 - **Condições de Trabalho:** O trabalho nas usinas de aço e na linha de montagem deve seguir normas de segurança e condições de trabalho justas, o que é um ponto relevante no contexto de ESG (Environmental, Social, and Governance).
+
+## 2.0 Infográfico Interativo
+<iframe src={useBaseUrl('/Economia-Circular.pdf')} width="100%" height="600px"></iframe>
