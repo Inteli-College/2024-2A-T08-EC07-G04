@@ -1,7 +1,7 @@
 ---
 title: Modelo inicial
 sidebar_position: 4
-slug: /
+slug: /modelo
 ---
 
 

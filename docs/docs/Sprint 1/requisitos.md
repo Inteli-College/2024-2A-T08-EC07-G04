@@ -1,3 +1,7 @@
+---
+title: Requisitos de Viabilidade Técnica
+slug: /requisitos.md
+---
 # Requisitos de Viabilidade Técnica
 
 ## Objetivo da Proposta Geral do Sistema
