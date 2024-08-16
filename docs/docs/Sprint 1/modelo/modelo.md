@@ -11,10 +11,6 @@ slug: /
 
 O primeiro modelo implementado foi o **Random Forest**,  uma técnica de aprendizado supervisionado que combina múltiplas árvores de decisão para melhorar a capacidade preditiva e reduzir o risco de overfitting. 
 
-:::danger
-O **Random Forest** foi inicialmente implementado à pedido do parceiro, que solicitou um modelo de classificação 
-:::
-
 Neste projeto, o modelo foi treinado utilizando as features selecionadas durante a fase de preparação dos dados. O treinamento incluiu features como `TOTAL OK`, `TOTAL NOK`, `RESULTADO`, além das novas features relacionadas ao status dos componentes (por exemplo, `ID1 S OK`, `ID2 S OK`, etc.). A escolha dessas features visou maximizar a informação relevante disponível para o modelo.
 
 Após o treinamento, o desempenho do Random Forest foi avaliado utilizando uma matriz de confusão. Os resultados mostraram que o modelo se saiu bem em classificar corretamente o componente **ID1**, com alta precisão. No entanto, o modelo apresentou dificuldades significativas em distinguir entre as classes **ID2** e **Nenhuma**, o que resultou em uma confusão considerável entre essas categorias. Esse problema é indicativo de que as classes compartilham características semelhantes ou que os dados disponíveis não capturam bem as diferenças entre elas.
@@ -45,10 +41,6 @@ Após o treinamento, o KNN foi avaliado utilizando uma matriz de confusão. Os r
 
 Este comportamento pode ser atribuído à natureza do algoritmo KNN, que tende a ser mais sensível a sobreposições entre classes, especialmente quando a métrica de distância usada para definir a proximidade entre os pontos não consegue capturar bem as nuances dos dados. Além disso, o KNN pode ser particularmente afetado por ruídos e outliers no dataset, o que pode ter contribuído para a alta taxa de erro observada.
 
-:::danger
-O **KNN** e outros modelos não supervisionados não serão aplicados no projeto por conta do escopo, este modelo primário foi apenas uma análise em outra perspectiva
-:::
-
 ---
 Figura 3: Métricas do modelo KNN
 ![knn metricas](../../../static/img/knn_metricas.png)
@@ -62,6 +54,10 @@ Figura 4: Matriz de confusão do modelo KNN
 Autor: criação própria (2024)
 
 ---
+
+:::danger
+Modelos de classificação foram inicialmente implementado à pedido do parceiro, que solicitou que fosse um modelo supervisionado de classificação
+:::
 
 #### **Avaliação e Comparação dos Modelos:**
 
