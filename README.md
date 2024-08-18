@@ -12,6 +12,16 @@
 
 Para acessar a documentação do projeto, basta clicar [aqui].
 
+## Documentação
+
+  A documentação pode ser encontrada no botao abaixo:
+
+  [![Button Click]][Link]
+
+  [Button Click]: https://img.shields.io/badge/Documentação-37a779?style=for-the-badge
+  [Link]: https://inteli-college.github.io/2024-2A-T08-EC07-G04/
+
+
 ## :student: Integrantes:
 
 - <a href="https://www.linkedin.com/in/gustavo-gouveia-583185271//">Gustavo Gouveia</a>
