@@ -1,9 +1,43 @@
-from fastapi import FastAPI, UploadFile
+from fastapi import FastAPI, UploadFile, Depends
 import pandas as pd
 import torch
 import torch.nn as nn
+from sqlalchemy import create_engine, Column, Integer, String , Float
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, Session
+
+DATABASE_URL = "someone_place_this"
+
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
+
+# Define a SQLAlchemy model to save the data
+class Prediction(Base):
+
+    # Please change all of this with the actual structure of the database
+    __tablename__ = "predictions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    feature1 = Column(String)
+    feature2 = Column(Float)
+    feature3 = Column(Float)
+    # Add all your features here...
+    prediction_result = Column(Float)
+
+# Create the table in the database
+Base.metadata.create_all(bind=engine)
+
 
 app = FastAPI()
+
+# Dependency to get the DB session
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 class MyModel(nn.Module):
     def __init__(self):
@@ -50,16 +84,23 @@ async def root():
 
 #-Caso não divida em 2 modelos
 @app.post("/predict")
-async def predict(file: UploadFile):
-# Step 1: Read the CSV file
+async def predict(file: UploadFile, db: Session = Depends(get_db)):
     df = pd.read_csv(file.file)
-    #df.drop[‘nome da coluna’]
-# Step 2: Pass the DataFrame to your AI model
     result = call_ai(df)
 
-# Step 3: Process the AI result and return a response
-    return {"prediction": result}
+    # Save the data and prediction to the database
+    for _, row in df.iterrows():
+        db_entry = Prediction(
+            feature1=row[0],  # Replace with your actual column mappings
+            feature2=row[1],
+            feature3=row[2],
+            # Continue for all features
+            prediction_result=result
+        )
+        db.add(db_entry)
+    db.commit()
 
+    return {"prediction": result}
 
 #-Caso a gente divida em 2 modelos
 # @app.post("/predict_binary")
