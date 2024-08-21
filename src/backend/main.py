@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, Depends
+from fastapi import FastAPI, UploadFile, Depends, HTTPException
 import pandas as pd
 import torch
 import torch.nn as nn
@@ -112,3 +112,61 @@ async def predict(file: UploadFile, db: Session = Depends(get_db)):
 # 	if result:
 # 		result = call_ai_fail(df)
 # 		return {"prediction": result}
+
+@app.get("/predictions/")
+def read_predictions(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+    predictions = db.query(Prediction).offset(skip).limit(limit).all()
+    return predictions
+
+@app.get("/predictions/{prediction_id}")
+def read_prediction(prediction_id: int, db: Session = Depends(get_db)):
+    prediction = db.query(Prediction).filter(Prediction.id == prediction_id).first()
+    if prediction is None:
+        raise HTTPException(status_code=404, detail="Prediction not found")
+    return prediction
+
+@app.put("/predictions/{prediction_id}")
+def update_prediction(prediction_id: int, db: Session = Depends(get_db)):
+    prediction = db.query(Prediction).filter(Prediction.id == prediction_id).first()
+    if prediction is None:
+        raise HTTPException(status_code=404, detail="Prediction not found")
+
+    # Aqui você faria a atualização com novos valores, que podem ser extraídos de algum lugar (ex: request body)
+    # Por exemplo, aqui podemos usar dados fictícios, mas eles deveriam vir de algum lugar válido
+    prediction.feature1 = "new_value1"
+    prediction.feature2 = 1.234
+    prediction.feature3 = 5.678
+    prediction.prediction_result = 9.1011
+
+    db.commit()
+    db.refresh(prediction)
+    return prediction
+
+@app.delete("/predictions/{prediction_id}")
+def delete_prediction(prediction_id: int, db: Session = Depends(get_db)):
+    prediction = db.query(Prediction).filter(Prediction.id == prediction_id).first()
+    if prediction is None:
+        raise HTTPException(status_code=404, detail="Prediction not found")
+    db.delete(prediction)
+    db.commit()
+    return {"detail": "Prediction deleted"}
+
+@app.get("/healthcheck/model")
+def healthcheck_model():
+    try:
+        test_prediction = 1.0  # Simulação de predição de teste
+        return {"status": "ok", "prediction": test_prediction}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+@app.get("/healthcheck/db")
+def healthcheck_db(db: Session = Depends(get_db)):
+    try:
+        db.execute("SELECT 1")
+        return {"status": "ok"}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+@app.get("/healthcheck/backend")
+def healthcheck_backend():
+    return {"status": "ok"}
