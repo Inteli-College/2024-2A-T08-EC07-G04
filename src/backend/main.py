@@ -21,7 +21,7 @@ Base = declarative_base()
 class Prediction(Base):
     __tablename__ = "prediction_data"
 
-    ID = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    ID = Column(Integer, primary_key=True, index=True)
     KNR = Column(String)
     Date = Column(Float)
     Feature1 = Column(Float)
