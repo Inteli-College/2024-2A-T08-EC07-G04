@@ -5,6 +5,9 @@ import torch.nn as nn
 from sqlalchemy import create_engine, Column, Integer, String , Float
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
+import uuid
+import time
+import random
 
 DATABASE_URL = "postgresql://postgres:SENHA@localhost:5432/fillmore"
 
@@ -78,6 +81,21 @@ def get_db():
 #     # Step 4: Return the prediction as a scalar
 #     return prediction.item()
 
+def generate_uuidv7():
+    # Obtém o timestamp atual em milissegundos
+    timestamp_ms = int(time.time() * 1000)
+    
+    # Converte o timestamp para hexadecimal
+    time_hex = f'{timestamp_ms:x}'
+    
+    # Gera a parte aleatória do UUID
+    random_hex = ''.join([f'{random.randint(0, 15):x}' for _ in range(26)])
+    
+    # Constrói o UUIDv7 concatenando as partes (versão 7 indica com '7' no início da terceira parte)
+    uuidv7 = f'{time_hex[:8]}-{time_hex[8:12]}-7{time_hex[12:15]}-{random_hex[:4]}-{random_hex[4:]}'
+    
+    return uuidv7
+
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
@@ -119,7 +137,7 @@ def read_predictions(skip: int = 0, limit: int = 10, db: Session = Depends(get_d
     return predictions
 
 @app.get("/predictions/{prediction_id}")
-def read_prediction(prediction_id: int, db: Session = Depends(get_db)):
+def read_prediction(prediction_id: String, db: Session = Depends(get_db)):
     prediction = db.query(Prediction).filter(Prediction.id == prediction_id).first()
     if prediction is None:
         raise HTTPException(status_code=404, detail="Prediction not found")
