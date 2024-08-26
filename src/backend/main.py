@@ -156,7 +156,7 @@ def read_prediction(prediction_id: String, db: Session = Depends(get_db)):
     return prediction
 
 @app.put("/predictions/{prediction_id}")
-def update_prediction(prediction_id: int, db: Session = Depends(get_db)):
+def update_prediction(prediction_id: String, db: Session = Depends(get_db)):
     prediction = db.query(Prediction).filter(Prediction.id == prediction_id).first()
     if prediction is None:
         raise HTTPException(status_code=404, detail="Prediction not found")
@@ -173,7 +173,7 @@ def update_prediction(prediction_id: int, db: Session = Depends(get_db)):
     return prediction
 
 @app.delete("/predictions/{prediction_id}")
-def delete_prediction(prediction_id: int, db: Session = Depends(get_db)):
+def delete_prediction(prediction_id: String, db: Session = Depends(get_db)):
     prediction = db.query(Prediction).filter(Prediction.id == prediction_id).first()
     if prediction is None:
         raise HTTPException(status_code=404, detail="Prediction not found")
