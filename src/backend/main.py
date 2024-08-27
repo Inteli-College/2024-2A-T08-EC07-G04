@@ -82,7 +82,7 @@ async def root() -> dict:
 def mock_data(db: Session = Depends(get_db), num_records: int = 10):
     record = Prediction(
         ID=generate_uuidv7(),
-        KNR=f"4321",
+        KNR="4321",
         Date=(datetime.now() - timedelta(days=random.randint(0, 365))).timestamp(),
         Feature1=random.uniform(0.0, 100.0),
         Feature2=random.uniform(0.0, 100.0),
