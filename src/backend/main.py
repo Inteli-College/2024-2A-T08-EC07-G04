@@ -22,6 +22,7 @@ class Prediction(Base):
     __tablename__ = "teste"
 
     ID = Column(String, primary_key=True, index=True)
+    ID = Column(Integer, primary_key=True, index=True)
     KNR = Column(String)
     Date = Column(String)
     Feature1 = Column(Float)
