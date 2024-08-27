@@ -19,11 +19,11 @@ Base = declarative_base()
 
 # Define a SQLAlchemy model to save the data
 class Prediction(Base):
-    __tablename__ = "prediction_data"
+    __tablename__ = "teste"
 
-    ID = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    ID = Column(String, primary_key=True, index=True)
     KNR = Column(String)
-    Date = Column(Float)
+    Date = Column(String)
     Feature1 = Column(Float)
     Feature2 = Column(Float)
     Feature3 = Column(Float)
@@ -36,8 +36,8 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 # Load the PyTorch model
-model = torch.load('model.pt')
-model.eval()  # Set the model to evaluation mode
+# model = torch.load('model.pt')
+# model.eval()  # Set the model to evaluation mode
 
 # Dependency to get the DB session
 def get_db():
@@ -47,16 +47,16 @@ def get_db():
     finally:
         db.close()
 
-def call_ai(df: pd.DataFrame):
-    # Convert the DataFrame to a tensor
-    input_data = torch.tensor(df.values, dtype=torch.float32)
+# def call_ai(df: pd.DataFrame):
+#     # Convert the DataFrame to a tensor
+#     input_data = torch.tensor(df.values, dtype=torch.float32)
     
-    # Run the model prediction
-    with torch.no_grad():  # Disable gradient calculations for inference
-        predictions = model(input_data)
+#     # Run the model prediction
+#     with torch.no_grad():  # Disable gradient calculations for inference
+#         predictions = model(input_data)
     
-    # If your model returns a scalar value directly:
-    return float(predictions[0].item())  # Convert the tensor to a Python float
+#     # If your model returns a scalar value directly:
+#     return float(predictions[0].item())  # Convert the tensor to a Python float
 
 def generate_uuidv7():
     # Obtém o timestamp atual em milissegundos
@@ -74,60 +74,58 @@ def generate_uuidv7():
     return uuidv7
 
 @app.get("/")
-async def root():
+async def root() -> dict:
     return {"message": "Hello World"}
 
 @app.post("/mock")
 def mock_data(db: Session = Depends(get_db), num_records: int = 10):
-    records = []
-    for _ in range(num_records):
-        record = Prediction(
-            KNR=f"KNR_{random.randint(1000, 9999)}",
-            Date=(datetime.now() - timedelta(days=random.randint(0, 365))).timestamp(),
-            Feature1=random.uniform(0.0, 100.0),
-            Feature2=random.uniform(0.0, 100.0),
-            Feature3=random.uniform(0.0, 100.0),
-            Prediction_result=random.randint(0, 1),
-            Real_result=random.randint(0, 1)
-        )
-        records.append(record)
+    record = Prediction(
+        ID=generate_uuidv7(),
+        KNR=f"4321",
+        Date=(datetime.now() - timedelta(days=random.randint(0, 365))).timestamp(),
+        Feature1=random.uniform(0.0, 100.0),
+        Feature2=random.uniform(0.0, 100.0),
+        Feature3=random.uniform(0.0, 100.0),
+        Prediction_result=1,
+        Real_result=1
+    )
     
-    db.add_all(records)
+    db.add(record)
     db.commit()
 
     return {"message": f"{num_records} records inserted successfully."}
 
-@app.post("/predict")
-async def predict(file: UploadFile, db: Session = Depends(get_db)):
-    try:
-        # Step 1: Read the uploaded file into a DataFrame
-        df = pd.read_csv(file.file)
+# @app.post("/predict")
+# async def predict(file: UploadFile, db: Session = Depends(get_db)):
+#     try:
+#         # Step 1: Read the uploaded file into a DataFrame
+#         df = pd.read_csv(file.file)
 
-        # Step 2: Ensure the DataFrame has the correct number of features (adjust as needed)
-        if len(df.columns) != 10:
-            raise HTTPException(status_code=400, detail="File must have 10 columns")
+#         # Step 2: Ensure the DataFrame has the correct number of features (adjust as needed)
+#         if len(df.columns) != 10:
+#             raise HTTPException(status_code=400, detail="File must have 10 columns")
 
-        # Step 3: Call the AI inference function
-        result = call_ai(df)
+#         # Step 3: Call the AI inference function
+#         result = call_ai(df)
 
-        # Step 4: Save the data and prediction to the database
-        for _, row in df.iterrows():
-            db_entry = Prediction(
-                KNR=row[0],
-                Date=row[1],
-                Feature1=row[2],
-                Feature2=row[3],
-                Feature3=row[4],
-                Prediction_result=result,
-                Real_result=random.randint(0, 1)  # Replace with actual data if needed
-            )
-            db.add(db_entry)
-        db.commit()
+#         # Step 4: Save the data and prediction to the database
+#         for _, row in df.iterrows():
+#             db_entry = Prediction(
+#                 KNR=row[0],
+#                 Date=row[1],
+#                 Feature1=row[2],
+#                 Feature2=row[3],
+#                 Feature3=row[4],
+#                 Prediction_result=result,
+#                 Real_result=random.randint(0, 1)  # Replace with actual data if needed
+#             )
+#             db.add(db_entry)
+#         db.commit()
 
-        return {"prediction": result}
+#         return {"prediction": result}
 
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+    # except Exception as e:
+    #     raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
 
 # To run the app:
 # uvicorn main:app --reload
@@ -148,38 +146,38 @@ def read_predictions(skip: int = 0, limit: int = 10, db: Session = Depends(get_d
     predictions = db.query(Prediction).offset(skip).limit(limit).all()
     return predictions
 
-@app.get("/predictions/{prediction_id}")
-def read_prediction(prediction_id: String, db: Session = Depends(get_db)):
-    prediction = db.query(Prediction).filter(Prediction.id == prediction_id).first()
-    if prediction is None:
-        raise HTTPException(status_code=404, detail="Prediction not found")
-    return prediction
+# @app.get("/predictions/{prediction_id}")
+# def read_prediction(prediction_id: String, db: Session = Depends(get_db)):
+#     prediction = db.query(Prediction).filter(Prediction.id == prediction_id).first()
+#     if prediction is None:
+#         raise HTTPException(status_code=404, detail="Prediction not found")
+#     return prediction
 
-@app.put("/predictions/{prediction_id}")
-def update_prediction(prediction_id: String, db: Session = Depends(get_db)):
-    prediction = db.query(Prediction).filter(Prediction.id == prediction_id).first()
-    if prediction is None:
-        raise HTTPException(status_code=404, detail="Prediction not found")
+# @app.put("/predictions/{prediction_id}")
+# def update_prediction(prediction_id: String, db: Session = Depends(get_db)):
+#     prediction = db.query(Prediction).filter(Prediction.id == prediction_id).first()
+#     if prediction is None:
+#         raise HTTPException(status_code=404, detail="Prediction not found")
 
-    # Aqui você faria a atualização com novos valores, que podem ser extraídos de algum lugar (ex: request body)
-    # Por exemplo, aqui podemos usar dados fictícios, mas eles deveriam vir de algum lugar válido
-    prediction.feature1 = "new_value1"
-    prediction.feature2 = 1.234
-    prediction.feature3 = 5.678
-    prediction.prediction_result = 9.1011
+#     # Aqui você faria a atualização com novos valores, que podem ser extraídos de algum lugar (ex: request body)
+#     # Por exemplo, aqui podemos usar dados fictícios, mas eles deveriam vir de algum lugar válido
+#     prediction.feature1 = "new_value1"
+#     prediction.feature2 = 1.234
+#     prediction.feature3 = 5.678
+#     prediction.prediction_result = 9.1011
 
-    db.commit()
-    db.refresh(prediction)
-    return prediction
+#     db.commit()
+#     db.refresh(prediction)
+#     return prediction
 
-@app.delete("/predictions/{prediction_id}")
-def delete_prediction(prediction_id: String, db: Session = Depends(get_db)):
-    prediction = db.query(Prediction).filter(Prediction.id == prediction_id).first()
-    if prediction is None:
-        raise HTTPException(status_code=404, detail="Prediction not found")
-    db.delete(prediction)
-    db.commit()
-    return {"detail": "Prediction deleted"}
+# @app.delete("/predictions/{prediction_id}")
+# def delete_prediction(prediction_id: String, db: Session = Depends(get_db)):
+#     prediction = db.query(Prediction).filter(Prediction.id == prediction_id).first()
+#     if prediction is None:
+#         raise HTTPException(status_code=404, detail="Prediction not found")
+#     db.delete(prediction)
+#     db.commit()
+#     return {"detail": "Prediction deleted"}
 
 @app.get("/healthcheck/model")
 def healthcheck_model():
