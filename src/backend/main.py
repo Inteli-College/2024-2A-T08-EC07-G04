@@ -2,7 +2,7 @@ from fastapi import FastAPI, UploadFile, Depends, HTTPException
 import pandas as pd
 import torch
 import torch.nn as nn
-from sqlalchemy import create_engine, Column, Integer, String, Float
+from sqlalchemy import create_engine, Column, Integer, String, Float, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 import random
@@ -22,7 +22,6 @@ class Prediction(Base):
     __tablename__ = "teste"
 
     ID = Column(String, primary_key=True, index=True)
-    ID = Column(Integer, primary_key=True, index=True)
     KNR = Column(String)
     Date = Column(String)
     Feature1 = Column(Float)
@@ -147,38 +146,38 @@ def read_predictions(skip: int = 0, limit: int = 10, db: Session = Depends(get_d
     predictions = db.query(Prediction).offset(skip).limit(limit).all()
     return predictions
 
-# @app.get("/predictions/{prediction_id}")
-# def read_prediction(prediction_id: String, db: Session = Depends(get_db)):
-#     prediction = db.query(Prediction).filter(Prediction.id == prediction_id).first()
-#     if prediction is None:
-#         raise HTTPException(status_code=404, detail="Prediction not found")
-#     return prediction
+@app.get("/prediction_id/{ID}")
+def read_prediction(ID :str, db: Session = Depends(get_db)):
+    prediction = db.query(Prediction).filter(Prediction.ID == ID).first()
+    if prediction is None:
+        raise HTTPException(status_code=404, detail="Prediction not found")
+    return prediction
 
-# @app.put("/predictions/{prediction_id}")
-# def update_prediction(prediction_id: String, db: Session = Depends(get_db)):
-#     prediction = db.query(Prediction).filter(Prediction.id == prediction_id).first()
-#     if prediction is None:
-#         raise HTTPException(status_code=404, detail="Prediction not found")
+@app.put("/predictions/{ID}")
+def update_prediction(ID: str, db: Session = Depends(get_db)):
+    prediction = db.query(Prediction).filter(Prediction.ID == ID).first()
+    if prediction is None:
+        raise HTTPException(status_code=404, detail="Prediction not found")
 
-#     # Aqui você faria a atualização com novos valores, que podem ser extraídos de algum lugar (ex: request body)
-#     # Por exemplo, aqui podemos usar dados fictícios, mas eles deveriam vir de algum lugar válido
-#     prediction.feature1 = "new_value1"
-#     prediction.feature2 = 1.234
-#     prediction.feature3 = 5.678
-#     prediction.prediction_result = 9.1011
+    # Aqui você faria a atualização com novos valores, que podem ser extraídos de algum lugar (ex: request body)
+    # Por exemplo, aqui podemos usar dados fictícios, mas eles deveriam vir de algum lugar válido
+    prediction.feature1 = 2.1
+    prediction.feature2 = 1.234
+    prediction.feature3 = 5.678
+    prediction.prediction_result = 1
 
-#     db.commit()
-#     db.refresh(prediction)
-#     return prediction
+    db.commit()
+    db.refresh(prediction)
+    return prediction
 
-# @app.delete("/predictions/{prediction_id}")
-# def delete_prediction(prediction_id: String, db: Session = Depends(get_db)):
-#     prediction = db.query(Prediction).filter(Prediction.id == prediction_id).first()
-#     if prediction is None:
-#         raise HTTPException(status_code=404, detail="Prediction not found")
-#     db.delete(prediction)
-#     db.commit()
-#     return {"detail": "Prediction deleted"}
+@app.delete("/predictions/{ID}")
+def delete_prediction(ID: str, db: Session = Depends(get_db)):
+    prediction = db.query(Prediction).filter(Prediction.ID == ID).first()
+    if prediction is None:
+        raise HTTPException(status_code=404, detail="Prediction not found")
+    db.delete(prediction)
+    db.commit()
+    return {"detail": "Prediction deleted"}
 
 @app.get("/healthcheck/model")
 def healthcheck_model():
@@ -188,13 +187,13 @@ def healthcheck_model():
     except Exception as e:
         return {"status": "error", "message": str(e)}
 
-# @app.get("/healthcheck/db")
-# def healthcheck_db(db: Session = Depends(get_db)):
-#     try:
-#         db.execute("SELECT 1")
-#         return {"status": "ok"}
-#     except Exception as e:
-#         return {"status": "error", "message": str(e)}
+@app.get("/healthcheck/db")
+def healthcheck_db(db: Session = Depends(get_db)):
+    try:
+        db.execute(text("SELECT 1"))
+        return {"status": "ok"}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
 
 @app.get("/healthcheck/backend")
 def healthcheck_backend():
