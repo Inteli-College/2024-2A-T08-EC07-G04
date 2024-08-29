@@ -215,6 +215,9 @@ Este endpoint assegura que a conexão com o banco de dados está ativa e que o b
     }
     ```
 
+Figura x: FastApi Health Check Banco de dados
+![alt text](../../../static/img/image(6).png)
+
 #### Health Check do Backend
 
 Este endpoint verifica se o servidor backend está em execução. Ele não realiza verificações adicionais além de confirmar que o backend consegue responder a uma requisição HTTP. O status retornado é "ok" se o servidor está ativo.
@@ -226,6 +229,9 @@ Este endpoint verifica se o servidor backend está em execução. Ele não reali
     "status": "ok"
     }
     ```
+
+Figura x: FastApi Health Check Backend
+![alt text](../../../static/img/image(7).png)
 
 ## Geração de UUIDv7
 
