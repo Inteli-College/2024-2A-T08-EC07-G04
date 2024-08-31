@@ -1,7 +1,7 @@
 # Inteli - Instituto de Tecnologia e Liderança 
 
 <p align="center">
-<a href= "https://www.inteli.edu.br/"><img src="docs/static/img/inteli.png" alt="Inteli - Instituto de Tecnologia e Liderança" border="0"></a>
+<img src="https://github.com/user-attachments/assets/18d67961-2453-4d9b-b40e-9c96a7493ffd" alt="Inteli - Instituto de Tecnologia e Liderança" width="200">
 </p>
 
 # Grupo: Fillmore
@@ -10,16 +10,26 @@
 
 [![Demonstração da Solução Final](https://youtube.com)
 
-Para acessar a documentação do projeto, basta clicar [aqui](TODO).
+Para acessar a documentação do projeto, basta clicar [aqui].
+
+## Documentação
+
+  A documentação pode ser encontrada no botao abaixo:
+
+  [![Button Click]][Link]
+
+  [Button Click]: https://img.shields.io/badge/Documentação-37a779?style=for-the-badge
+  [Link]: https://inteli-college.github.io/2024-2A-T08-EC07-G04/
+
 
 ## :student: Integrantes:
 
-- <a href="https://www.linkedin.com/in/gustavo-machado-esteves-453b81248/">Gustavo Machado Esteves</a>
 - <a href="https://www.linkedin.com/in/gustavo-gouveia-583185271//">Gustavo Gouveia</a>
-- <a href="https://www.linkedin.com/in/rafaelarojas/">Rafaela Rojas Lemos</a>
+- <a href="https://www.linkedin.com/in/gustavo-machado-esteves-453b81248/">Gustavo Machado Esteves</a>
 - <a href="https://www.linkedin.com/in/lidiamariano/">Lídia Cruz Mariano</a>
 - <a href="https://www.linkedin.com/in/m%C3%A1rio-ventura-medeiros-123682291/">Mário Ventura Medeiros</a>
 - <a href="https://www.linkedin.com/in/olincosta/">Ólin Medeiros Costa</a>
+- <a href="https://www.linkedin.com/in/rafaelarojas/">Rafaela Rojas Lemos</a>
 
 ## :teacher: Professores:
 
@@ -42,16 +52,14 @@ Para acessar a documentação do projeto, basta clicar [aqui](TODO).
 
 
 ## :memo: Descrição do projeto
+O projeto, realizado em parceria com a Volkswagen, visa desenvolver um modelo preditivo e uma plataforma web para a visualização dos resultados. O modelo será treinado utilizando os dados fornecidos pela empresa, como resultados de testes, descrições de falhas e status de predições. A partir desses dados, o modelo terá a capacidade de prever possíveis falhas nos veículos, permitindo a potencial eliminação da etapa de rodagem, o que resultará em significativa redução de custos e benefícios ambientais.
+
+A plataforma web que implementará o modelo incluirá funcionalidades para a inserção de novos dados, exibição imediata dos resultados das predições e uma interface para visualização dos dados coletados por meio de dashboards interativos.
 
 ### Manutenção preditiva
 
 ## Problema
-
-TODO
-
-## Solução
-
-TODO
+ Temos a necessidade ser mais assertivos no tipo de inspeção que devemos realizar em determinados veículos na rodagem
 
 ## Inicialização
 
@@ -59,23 +67,26 @@ Para inicializar a documentação do projeto localmente, siga os passos abaixo:
 
 ### Pré-requisitos
 
-TODO
-
 ### Instruções
-
-TODO
 
 
 ## 📁 Estrutura de pastas
+```plaintext
 
-TODO
-
+└── 2024-2A-T08-EC07-G04
+    ├── .github/workflows
+    ├── docs
+    ├── src
+    ├── .gitignore
+    └── README.md
+```
 ## Histórico de lançamentos
 
 ### Sprint 1
-
-TODO
-
+- Economia Circular e Mapeamento do Ciclo de Produção e Consumo
+- Modelo Inicial
+- Apresentação dos Documentos de Análise de Negócios do Projeto
+- Requisitos de Viabilidade Técnica
 ### Sprint 2
 
 TODO
