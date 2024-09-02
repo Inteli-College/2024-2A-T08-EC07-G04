@@ -9,6 +9,7 @@ import random
 import uuid
 import time
 from datetime import datetime, timedelta
+from tensorflow.keras.models import load_model
 
 # Configurações do banco de dados
 DATABASE_URL = "postgresql://postgres:SENHA@localhost:5432/fillmore"
@@ -37,9 +38,9 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-# Carregamento do modelo PyTorch
-# model = torch.load('model.pt')
-# model.eval()  # Configura o modelo para o modo de avaliação
+#Carregamento do modelo PyTorch
+model = load_model('/model/lmodel.h5')
+model.eval()  # Configura o modelo para o modo de avaliação
 
 # Dependência para obter a sessão do DB
 def get_db():
@@ -96,6 +97,10 @@ async def predict(file: UploadFile, db: Session = Depends(get_db)):
                             '1_status_13', '2_status_13', '718_status_13']
         if list(df.columns) != expected_columns:
             raise HTTPException(status_code=400, detail=f"File must have the columns: {expected_columns}")
+        
+        #Expected csv = one collum of KNR united, with the collums listed above
+
+        #Future FEAT: recive a CSV with various lines of KNR, unite them with pandas and then after call the funtcion call_ai with the treated df
 
         result = call_ai(df)
 
