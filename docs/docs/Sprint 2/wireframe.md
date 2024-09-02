@@ -25,8 +25,8 @@ Para os gerentes de qualidade, o sistema oferece um dashboard robusto que permit
    - **Próxima Etapa:** Após o envio dos dados, o sistema processa a informação e apresenta um feedback imediato.
 
 3. **Tela de Feedback**
-![Tela Positivo](../../static\img\Fillmore_Positivo.png)
-![Tela Falhas](../../static\img\Fillmore_Falhas.png)
+![Tela Positivo](../../static/img/Fillmore_Positivo.png)
+![Tela Falhas](../../static/img/Fillmore_Falhas.png)
    - **Descrição:** O sistema retorna um feedback instantâneo ao operador, indicando se o veículo passou ou falhou nos testes específicos. Se o carro não estiver conforme, são exibidas instruções ou sugestões para correções.
    - **Próxima Etapa:** O operador pode então decidir se realiza novas ações com base no feedback recebido.
 
@@ -35,12 +35,12 @@ Para os gerentes de qualidade, o sistema oferece um dashboard robusto que permit
 **Fluxo de Trabalho:**
 
 1. **Tela de Login**
-![Tela de Login](../../static\img\Fillmore_Login.png)
+![Tela de Login](../../static/img/Fillmore_Login.png)
    - **Descrição:** O gerente de qualidade também começa na tela de login, onde insere suas credenciais para acessar o sistema.
    - **Próxima Etapa:** Após o login, o gerente é redirecionado para o dashboard de análise.
 
 2. **Dashboard de Análise**
-![Tela Dashboard](../../static\img\Fillmore_Dashboard.png)
+![Tela Dashboard](../../static/img/Fillmore_Dashboard.png)
    - **Descrição:** O dashboard oferece uma visão geral detalhada do desempenho dos veículos na linha de produção. Esta tela inclui gráficos, tabelas e outras visualizações de dados, como a porcentagem de conformidade e as falhas mais comuns.
    - **Próxima Etapa:** O gerente pode explorar os dados detalhadamente, clicando em diferentes elementos para visualizar informações específicas ou gerar relatórios.
 
