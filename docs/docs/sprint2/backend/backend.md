@@ -108,7 +108,7 @@ Busca uma lista de previsões armazenadas no banco de dados.
     ```json
     [
         {
-            "ID": "1",
+            "ID": "191b3272-34d-7-d700-dfd89e41e21ef7a0ca6f56",
             "KNR": "4321",
             "unique_names": 42.0,
             "status_10_1": 55.0,
@@ -135,7 +135,7 @@ Busca uma previsão específica pelo seu ID.
 - **Resposta:**
     ```json
     {
-        "ID": "1",
+        "ID": "191b3272-34d-7-d700-dfd89e41e21ef7a0ca6f56",
         "KNR": "4321",
         "unique_names": 42.0,
         "status_10_1": 55.0,
@@ -167,7 +167,7 @@ Atualiza as features e o resultado de previsão de uma previsão existente.
 - **Resposta:**
     ```json
     {
-        "ID": "1",
+        "ID": "191b3272-34d-7-d700-dfd89e41e21ef7a0ca6f56",
         "KNR": "4321",
         "unique_names": 2.1,
         "status_10_1": 1.234,
@@ -251,6 +251,23 @@ Realiza previsões com base em um arquivo CSV enviado pelo usuário.
     ```
 
  ![alt text](../../../static/img/endpoints/predict_post.png)   
+
+ Nota-se que essa rota espera um arquivo no formato csv com as seguintes colunas:
+
+- *KNR*
+- *unique_names*
+- *1_status_10*
+- *2_status_10*
+- *718_status_10*
+- *1_status_13*
+- *2_status_13*
+- *718_status_13*
+
+Para o modelo funcionar, cada uma dessas colunas deve conter apenas uma linha de informação, que representa todos os testes feitos naquele KNR.
+
+:::warinig
+Essa é apenas uma versão inicial e planeja-se melhorar essa rota para que consiga receber várias linhas de um KNR e juntar e tratar os dados automaticamente para que a IA funcione e não seja necessário um tratamento antes de utilizar a aplicação
+:::
 
 ### Endpoints de Health Check
 
