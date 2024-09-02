@@ -13,7 +13,7 @@ from tensorflow.keras.models import load_model
 import numpy as np
 
 # Configurações do banco de dados
-DATABASE_URL = "postgresql://postgres:oFXx2Lqzi2JFbUm@localhost:5432/fillmore"
+DATABASE_URL = "postgresql://postgres:SENHA@localhost:5432/fillmore"
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
