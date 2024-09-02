@@ -56,16 +56,20 @@ O modelo `Prediction` representa a estrutura da tabela teste no banco de dados, 
 
 ```python
 class Prediction(Base):
-    __tablename__ = "teste"
+    __tablename__ = "table"
 
     ID = Column(String, primary_key=True, index=True)
     KNR = Column(String)
-    Date = Column(String)
-    Feature1 = Column(Float)
-    Feature2 = Column(Float)
-    Feature3 = Column(Float)
+    unique_names = Column(Float)
+    status_10_1 = Column(Float)
+    status_10_2 = Column(Float)
+    status_10_718 = Column(Float)
+    status_13_1 = Column(Float)
+    status_13_2 = Column(Float)
+    status_13_718 = Column(Float)
     Prediction_result = Column(Integer)
     Real_result = Column(Integer)
+
 ```
 
 A tabela é criada automaticamente no banco de dados, caso ainda não exista:
@@ -73,6 +77,7 @@ A tabela é criada automaticamente no banco de dados, caso ainda não exista:
 ```bash
 Base.metadata.create_all(bind=engine)
 ``` 
+
 ## Endpoints da API
 
 ### Endpoint Root
@@ -87,104 +92,165 @@ O endpoint root fornece uma mensagem simples de "Hello World" para verificar se 
     }
     ```
 
-### Endpoint de Dados Simulados
-
-Este endpoint gera dados simulados e os insere na tabela teste.
-
-- Endpoint: `POST /mock`
-- Parâmetros:
-    - `num_records (int, default=10)`: O número de registros simulados a serem gerados.
-- Resposta:
-    ```json
-    {
-    "message": "{num_records} records inserted successfully."
-    }
-    ```
+![alt text](../../../static/img/endpoints/root.png)
 
 ### Endpoints de Previsão
 
-#### Recuperar Previsões
+### Recuperar Previsões
 
 Busca uma lista de previsões armazenadas no banco de dados.
 
-- Endpoint: `GET /predictions/`
-- Parâmetros:
+- **Endpoint:** `GET /predictions/`
+- **Parâmetros:**
     - `skip (int, default=0)`: Número de registros a serem ignorados.
     - `limit (int, default=10)`: Número máximo de registros a serem retornados.
-- Resposta:
+- **Resposta:**
     ```json
-    {
-    "message": "{num_records} records inserted successfully."
-    }
+    [
+        {
+            "ID": "1",
+            "KNR": "4321",
+            "unique_names": 42.0,
+            "status_10_1": 55.0,
+            "status_10_2": 62.0,
+            "status_10_718": 70.0,
+            "status_13_1": 20.0,
+            "status_13_2": 35.0,
+            "status_13_718": 40.0,
+            "Prediction_result": 1,
+            "Real_result": 1
+        }
+    ]
     ```
 
-#### Recuperar uma Previsão por ID
+![alt text](../../../static/img/endpoints/prediction_get.png)
+
+### Recuperar uma Previsão por ID
 
 Busca uma previsão específica pelo seu ID.
 
-- Endpoint: `GET /prediction_id/{ID}`
-- Parâmetros:
+- **Endpoint:** `GET /prediction_id/{ID}`
+- **Parâmetros:**
     - `ID (str)`: O identificador único da previsão.
-- Resposta:
+- **Resposta:**
     ```json
     {
-    "ID": "1",
-    "KNR": "4321",
-    "Date": "1627852800",
-    "Feature1": 42.0,
-    "Feature2": 55.0,
-    "Feature3": 62.0,
-    "Prediction_result": 1,
-    "Real_result": 1
+        "ID": "1",
+        "KNR": "4321",
+        "unique_names": 42.0,
+        "status_10_1": 55.0,
+        "status_10_2": 62.0,
+        "status_10_718": 70.0,
+        "status_13_1": 20.0,
+        "status_13_2": 35.0,
+        "status_13_718": 40.0,
+        "Prediction_result": 1,
+        "Real_result": 1
     }
     ```
-- Resposta de Erro:
+- **Resposta de Erro:**
     ```json
     {
-    "detail": "Prediction not found"
+        "detail": "Prediction not found"
     }
     ```
 
-#### Atualizar uma Previsão
+![alt text](../../../static/img/endpoints/prediction_id_get].png)
+
+### Atualizar uma Previsão
 
 Atualiza as features e o resultado de previsão de uma previsão existente.
 
-- Endpoint: `PUT /predictions/{ID}`
-- Parâmetros:
+- **Endpoint:** `PUT /predictions/{ID}`
+- **Parâmetros:**
     - `ID (str)`: O identificador único da previsão a ser atualizada.
-- Resposta:
+- **Resposta:**
     ```json
     {
-    "ID": "1",
-    "KNR": "4321",
-    "Date": "1627852800",
-    "Feature1": 2.1,
-    "Feature2": 1.234,
-    "Feature3": 5.678,
-    "Prediction_result": 1,
-    "Real_result": 1
+        "ID": "1",
+        "KNR": "4321",
+        "unique_names": 2.1,
+        "status_10_1": 1.234,
+        "status_10_2": 5.678,
+        "status_10_718": 70.0,
+        "status_13_1": 20.0,
+        "status_13_2": 35.0,
+        "status_13_718": 40.0,
+        "Prediction_result": 1,
+        "Real_result": 1
     }
     ```
-- Resposta do Erro:
+- **Resposta de Erro:**
     ```json
     {
-    "detail": "Prediction not found"
+        "detail": "Prediction not found"
     }
     ```
 
-#### Deletar uma Previsão
+![alt text](../../../static/img/endpoints/predictions_id_put.png)
+
+### Deletar uma Previsão
 
 Deleta uma previsão específica pelo seu ID.
 
-- Endpoint: `DELETE /predictions/{ID}`
-- Parâmetros:
+- **Endpoint:** `DELETE /predictions/{ID}`
+- **Parâmetros:**
     - `ID (str)`: O identificador único da previsão a ser deletada.
-- Resposta:
+- **Resposta:**
     ```json
     {
-    "detail": "Prediction deleted"
+        "detail": "Prediction deleted"
     }
     ```
+
+![alt text](../../../static/img/endpoints/predictions_id_del.png)
+
+### Inserir Dados Fictícios
+
+Insere dados fictícios na tabela de previsões.
+
+- **Endpoint:** `POST /mock`
+- **Parâmetros:**
+    - `num_records (int, default=10)`: O número de registros fictícios a serem inseridos.
+- **Resposta:**
+    ```json
+    {
+        "message": "10 records inserted successfully."
+    }
+    ```
+
+![alt text](../../../static/img/endpoints/mock_post.png)
+
+### Realizar Previsões
+
+Realiza previsões com base em um arquivo CSV enviado pelo usuário.
+
+- **Endpoint:** `POST /predict`
+- **Parâmetros:**
+    - `file (UploadFile)`: Arquivo CSV contendo os dados para previsão.
+- **Resposta:**
+    ```json
+    {
+        "prediction": 1.0
+    }
+    ```
+
+    OU 
+
+    ```json
+    {
+        "prediction": 0.0
+    }
+    ``` 
+
+- **Resposta de Erro:**
+    ```json
+    {
+        "detail": "An error occurred: <error_message>"
+    }
+    ```
+
+ ![alt text](../../../static/img/endpoints/predict_post.png)   
 
 ### Endpoints de Health Check
 
@@ -203,6 +269,8 @@ Este endpoint verifica se o modelo de machine learning está operacional. No có
     }
     ```
 
+![alt text](../../../static/img/endpoints/health_get.png)
+
 #### Health Check do Banco de Dados
 
 Este endpoint assegura que a conexão com o banco de dados está ativa e que o banco pode responder a consultas. Ele executa uma simples consulta SQL (SELECT 1) para confirmar a conexão. Se o banco de dados responde corretamente, o status retornado é "ok".
@@ -215,8 +283,7 @@ Este endpoint assegura que a conexão com o banco de dados está ativa e que o b
     }
     ```
 
-Figura x: FastApi Health Check Banco de dados
-![alt text](../../../static/img/image(6).png)
+![alt text](../../../static/img/endpoints/health_db.png)
 
 #### Health Check do Backend
 
@@ -230,8 +297,7 @@ Este endpoint verifica se o servidor backend está em execução. Ele não reali
     }
     ```
 
-Figura x: FastApi Health Check Backend
-![alt text](../../../static/img/image(7).png)
+![alt text](../../../static/img/endpoints/health_back.png)
 
 ## Geração de UUIDv7
 
