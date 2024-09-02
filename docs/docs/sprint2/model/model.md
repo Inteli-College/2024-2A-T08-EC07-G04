@@ -1,6 +1,6 @@
 ---
 title: Documentação do modelo
-slug: /modelo.md
+slug: /Modelo.md
 ---
 
 # Documentação do modelo
