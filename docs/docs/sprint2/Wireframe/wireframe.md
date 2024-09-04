@@ -33,7 +33,7 @@ Para os gerentes de qualidade, o sistema oferece um dashboard robusto que permit
 ![Tela Positivo](../../../static/img/Fillmore_Positivo.png)
 ![Tela Falhas](../../../static/img/Fillmore_Falhas.png)
    - **Descrição:** O sistema retorna um feedback instantâneo ao operador, indicando se o veículo passou ou falhou nos testes específicos. Se o carro não estiver conforme, são exibidas instruções ou sugestões para correções.
-   - **Próxima Etapa:** O operador pode então decidir se realiza novas ações com base no feedback recebido.
+   - **Próxima Etapa:** O operador pode então decidir se realoiza novas ações com base no feedback recebido.
 
 ### 2. Gerente de Qualidade
 
