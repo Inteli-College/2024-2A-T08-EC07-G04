@@ -13,7 +13,7 @@ model = load_model('models/model.h5')
 def root():
     return {"message": "Hello World"}
 
-def mock_data(db: Session, num_records: int = 10):
+def mock_data(db: Session = Depends(get_db), num_records: int = 10):
     for _ in range(num_records):
         record = Prediction(
             ID=generate_uuidv7(),
@@ -33,7 +33,7 @@ def mock_data(db: Session, num_records: int = 10):
 
     return {"message": f"{num_records} records inserted successfully."}
 
-async def predict(file: UploadFile, db: Session):
+async def predict(file: UploadFile, db: Session = Depends(get_db)):
     try:
         df = pd.read_csv(file.file)
         expected_columns = ['KNR','unique_names', '1_status_10', '2_status_10', '718_status_10',
@@ -68,17 +68,17 @@ async def predict(file: UploadFile, db: Session):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
 
-def read_predictions(skip: int, limit: int, db: Session):
+def read_predictions(skip: int, limit: int, db: Session = Depends(get_db)):
     predictions = db.query(Prediction).offset(skip).limit(limit).all()
     return predictions
 
-def read_prediction(ID: str, db: Session):
+def read_prediction(ID: str, db: Session = Depends(get_db)):
     prediction = db.query(Prediction).filter(Prediction.ID == ID).first()
     if prediction is None:
         raise HTTPException(status_code=404, detail="Prediction not found")
     return prediction
 
-def update_prediction(ID: str, db: Session):
+def update_prediction(ID: str, db: Session = Depends(get_db)):
     prediction = db.query(Prediction).filter(Prediction.ID == ID).first()
     if prediction is None:
         raise HTTPException(status_code=404, detail="Prediction not found")
@@ -92,7 +92,7 @@ def update_prediction(ID: str, db: Session):
     db.refresh(prediction)
     return prediction
 
-def delete_prediction(ID: str, db: Session):
+def delete_prediction(ID: str, db: Session = Depends(get_db)):
     prediction = db.query(Prediction).filter(Prediction.ID == ID).first()
     if prediction is None:
         raise HTTPException(status_code=404, detail="Prediction not found")
