@@ -7,8 +7,7 @@ const Header: React.FC = () => {
   return (
     <header className="bg-white shadow-md text-gray-800">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        {/* Menu Hambúrguer */}
-        <div className="flex items-center md:hidden">
+        <div className="flex items-center">
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="focus:outline-none"
@@ -29,32 +28,31 @@ const Header: React.FC = () => {
               ></path>
             </svg>
           </button>
-          {isMenuOpen && (
-            <nav className="absolute top-16 left-0 w-full bg-white text-gray-800 rounded-lg shadow-lg py-2 md:hidden">
-              <a
-                href="/upload"
-                className="block px-4 py-2 hover:bg-gray-200"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Upload
-              </a>
-            </nav>
-          )}
-        </div>
+      </div>
+
+        {/* Verificação se o menu está aberto */}
+        {isMenuOpen && (
+          <nav className="absolute top-16 left-0 w-full bg-white text-gray-800 rounded-lg shadow-lg py-2 md:hidden">
+            <a
+              href="/upload"
+              className="block px-4 py-2 hover:bg-gray-200"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Upload
+            </a>
+          </nav>
+        )}
 
         {/* Logo */}
         <div className="flex justify-center items-center">
           <a href="/">
-          <img src="https://inteli-college.github.io/2024-2A-T08-EC07-G04/img/logo_fillmore.png" alt="Logo" width="80" />
+            <img
+              src="https://inteli-college.github.io/2024-2A-T08-EC07-G04/img/logo_fillmore.png"
+              alt="Logo"
+              width="100"
+            />
           </a>
         </div>
-
-        {/* Menu para telas grandes */}
-        <nav className="hidden md:flex ml-4">
-          <a href="/upload" className="text-gray-800 hover:text-gray-600">
-            Upload
-          </a>
-        </nav>
 
         {/* Login de Usuário */}
         <div className="relative">
