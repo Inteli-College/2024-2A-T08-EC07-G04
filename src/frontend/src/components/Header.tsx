@@ -43,9 +43,9 @@ const Header: React.FC = () => {
         </div>
 
         {/* Logo */}
-        <div className="text-center flex-1">
-          <a href="/" className="text-2xl font-bold">
-            Minha Logo
+        <div className="flex justify-center items-center">
+          <a href="/">
+          <img src="https://inteli-college.github.io/2024-2A-T08-EC07-G04/img/logo_fillmore.png" alt="Logo" width="80" />
           </a>
         </div>
 
