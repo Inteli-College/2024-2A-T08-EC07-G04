@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import text
-from fastapi import HTTPException
+from fastapi import HTTPException, Depends
+from models.database import get_db
 
 def healthcheck_model():
     try:
@@ -9,7 +10,7 @@ def healthcheck_model():
     except Exception as e:
         return {"status": "error", "message": str(e)}
 
-def healthcheck_db(db: Session):
+def healthcheck_db(db: Session = Depends(get_db)):
     try:
         db.execute(text("SELECT 1"))
         return {"status": "ok"}

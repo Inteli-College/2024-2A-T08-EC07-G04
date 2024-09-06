@@ -86,8 +86,8 @@ def update_prediction(ID: str, db: Session = Depends(get_db)):
     prediction.unique_names = 2.1
     prediction.status_10_1 = 1.234
     prediction.status_10_2 = 5.678
-    prediction.Prediction_result = 1 
-
+    prediction.Prediction_result = 1
+    
     db.commit()
     db.refresh(prediction)
     return prediction
