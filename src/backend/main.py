@@ -11,8 +11,8 @@ from datetime import datetime, timedelta
 import uuid
 import numpy as np
 
-DATABASE_URL = "postgresql://postgres:SENHA@localhost:5432/fillmore"
-
+DATABASE_URL = "postgresql://postgres:KXQDTu5XrbsVDhe@localhost:5432/fillmore"
+ 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
@@ -148,38 +148,38 @@ def read_predictions(skip: int = 0, limit: int = 10, db: Session = Depends(get_d
     predictions = db.query(Prediction).offset(skip).limit(limit).all()
     return predictions
 
-@app.get("/predictions/{prediction_id}")
-def read_prediction(prediction_id: String, db: Session = Depends(get_db)):
-    prediction = db.query(Prediction).filter(Prediction.id == prediction_id).first()
-    if prediction is None:
-        raise HTTPException(status_code=404, detail="Prediction not found")
-    return prediction
+# @app.get("/predictions/{prediction_id}")
+# def read_prediction(prediction_id: String, db: Session = Depends(get_db)):
+#     prediction = db.query(Prediction).filter(Prediction.id == prediction_id).first()
+#     if prediction is None:
+#         raise HTTPException(status_code=404, detail="Prediction not found")
+#     return prediction
 
-@app.put("/predictions/{prediction_id}")
-def update_prediction(prediction_id: String, db: Session = Depends(get_db)):
-    prediction = db.query(Prediction).filter(Prediction.id == prediction_id).first()
-    if prediction is None:
-        raise HTTPException(status_code=404, detail="Prediction not found")
+# @app.put("/predictions/{prediction_id}")
+# def update_prediction(prediction_id: String, db: Session = Depends(get_db)):
+#     prediction = db.query(Prediction).filter(Prediction.id == prediction_id).first()
+#     if prediction is None:
+#         raise HTTPException(status_code=404, detail="Prediction not found")
 
-    # Aqui você faria a atualização com novos valores, que podem ser extraídos de algum lugar (ex: request body)
-    # Por exemplo, aqui podemos usar dados fictícios, mas eles deveriam vir de algum lugar válido
-    prediction.feature1 = "new_value1"
-    prediction.feature2 = 1.234
-    prediction.feature3 = 5.678
-    prediction.prediction_result = 9.1011
+#     # Aqui você faria a atualização com novos valores, que podem ser extraídos de algum lugar (ex: request body)
+#     # Por exemplo, aqui podemos usar dados fictícios, mas eles deveriam vir de algum lugar válido
+#     prediction.feature1 = "new_value1"
+#     prediction.feature2 = 1.234
+#     prediction.feature3 = 5.678
+#     prediction.prediction_result = 9.1011
 
-    db.commit()
-    db.refresh(prediction)
-    return prediction
+#     db.commit()
+#     db.refresh(prediction)
+#     return prediction
 
-@app.delete("/predictions/{prediction_id}")
-def delete_prediction(prediction_id: String, db: Session = Depends(get_db)):
-    prediction = db.query(Prediction).filter(Prediction.id == prediction_id).first()
-    if prediction is None:
-        raise HTTPException(status_code=404, detail="Prediction not found")
-    db.delete(prediction)
-    db.commit()
-    return {"detail": "Prediction deleted"}
+# @app.delete("/predictions/{prediction_id}")
+# def delete_prediction(prediction_id: String, db: Session = Depends(get_db)):
+#     prediction = db.query(Prediction).filter(Prediction.id == prediction_id).first()
+#     if prediction is None:
+#         raise HTTPException(status_code=404, detail="Prediction not found")
+#     db.delete(prediction)
+#     db.commit()
+#     return {"detail": "Prediction deleted"}
 
 @app.get("/healthcheck/model")
 def healthcheck_model():
