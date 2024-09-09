@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
 const Header: React.FC = () => {
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -57,15 +56,20 @@ const Header: React.FC = () => {
             </svg>
           </button>
 
-          <nav className="mt-16">
+          <nav className="mt-16 px-4">
+            <h2 className="text-lg font-bold mb-4">Bem-vindo! Faça login ou cadastre-se.</h2>
             <a
-              href="/upload"
-              className="block px-4 py-2 hover:bg-gray-200"
-              onClick={() => setIsMenuOpen(false)}
+              href="/login"
+              className="block w-full bg-blue-500 text-white text-center px-4 py-2 rounded mb-2 hover:bg-blue-600"
             >
-              Upload
+              Login
             </a>
-            {/* Adicione mais itens de menu aqui, se necessário */}
+            <a
+              href="/register"
+              className="block w-full bg-gray-300 text-gray-800 text-center px-4 py-2 rounded hover:bg-gray-400"
+            >
+              Cadastro
+            </a>
           </nav>
         </div>
 
@@ -78,34 +82,6 @@ const Header: React.FC = () => {
               width="100"
             />
           </a>
-        </div>
-
-        {/* Login de Usuário */}
-        <div className="relative">
-          <button
-            onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-            className="focus:outline-none"
-          >
-            <span className="text-gray-800">Login</span>
-          </button>
-          {isUserMenuOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded-lg shadow-lg py-2">
-              <a
-                href="/profile"
-                className="block px-4 py-2 hover:bg-gray-200"
-                onClick={() => setIsUserMenuOpen(false)}
-              >
-                Perfil
-              </a>
-              <a
-                href="/logout"
-                className="block px-4 py-2 hover:bg-gray-200"
-                onClick={() => setIsUserMenuOpen(false)}
-              >
-                Logout
-              </a>
-            </div>
-          )}
         </div>
       </div>
     </header>
