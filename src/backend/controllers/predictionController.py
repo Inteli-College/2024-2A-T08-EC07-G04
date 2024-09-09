@@ -3,31 +3,25 @@ import pandas as pd
 import random
 import numpy as np
 from sqlalchemy.orm import Session
-from models.predictionModel import Prediction
+from models.predictionModel import Prediction, Features, Model, Values
 from models.database import get_db
 from tensorflow.keras.models import load_model
 from utils.helpers import call_ai, generate_uuidv7
+from typing import List
 
 model = load_model('models/model.h5')
 
 def root():
     return {"message": "Hello World"}
 
-def mock_data(db: Session = Depends(get_db), num_records: int = 10):
+def mock_data(table:str , db: Session = Depends(get_db), num_records: int = 10):
     for _ in range(num_records):
-        record = Prediction(
-            ID=generate_uuidv7(),
-            KNR="4321",
-            unique_names=random.uniform(0.0, 100.0),
-            status_10_1=random.uniform(0.0, 100.0),
-            status_10_2=random.uniform(0.0, 100.0),
-            status_10_718=random.uniform(0.0, 100.0),
-            status_13_1=random.uniform(0.0, 100.0),
-            status_13_2=random.uniform(0.0, 100.0),
-            status_13_718=random.uniform(0.0, 100.0),
-            Prediction_result=1,
-            Real_result=1
-        )
+        if table == 'Model':
+            record = Model(
+                ID_modelo=1,
+                model='progression_V1',
+                URL_modelo="http://example.com/model_1"
+            )
         db.add(record)
     db.commit()
 
@@ -68,9 +62,33 @@ async def predict(file: UploadFile, db: Session = Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
 
-def read_predictions(skip: int, limit: int, db: Session = Depends(get_db)):
-    predictions = db.query(Prediction).offset(skip).limit(limit).all()
-    return predictions
+def read_predictions(table: str, skip: int, limit: int, db: Session = Depends(get_db)) -> List[dict]:
+    # Map table names to their corresponding SQLAlchemy model classes
+    table_map = {
+        'Prediction': Prediction,
+        'Features': Features,
+        'Model': Model,
+        'Values': Values
+    }
+    
+    # Check if the table exists in the table map
+    if table not in table_map:
+        raise HTTPException(status_code=400, detail=f"Table '{table}' not recognized.")
+    
+    # Get the model class corresponding to the table name
+    model_class = table_map[table]
+    
+    # Query the database for the specified table
+    records = db.query(model_class).offset(skip).limit(limit).all()
+    
+    # Convert the SQLAlchemy objects to dictionaries for better display
+    result = [record.__dict__ for record in records]
+    
+    # Remove the SQLAlchemy internal state from the dictionary
+    for record in result:
+        record.pop('_sa_instance_state', None)
+    
+    return result
 
 def read_prediction(ID: str, db: Session = Depends(get_db)):
     prediction = db.query(Prediction).filter(Prediction.ID == ID).first()
