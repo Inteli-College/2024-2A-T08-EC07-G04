@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 import uuid
 import numpy as np
 
-DATABASE_URL = "postgresql://postgres:KXQDTu5XrbsVDhe@localhost:5432/fillmore"
+DATABASE_URL = "postgresql://postgres:SENHA@localhost:5432/fillmore"
  
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
