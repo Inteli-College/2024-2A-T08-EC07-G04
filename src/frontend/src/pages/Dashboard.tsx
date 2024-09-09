@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import NavBar from '../components/NavBar';
-import DateFilter from '../components/DateFilter'; // Import do componente de filtro de data
+import NavBar from '../components/NavBar'; // Certifique-se que NavBar existe
+import DateFilter from '../components/DateFilter'; // Certifique-se que DateFilter existe
+import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, Legend, ResponsiveContainer } from 'recharts';
 
+// Componente de card para exibir estatísticas
 const DashboardCard: React.FC<{ title: string; value: string; icon: React.ReactNode }> = ({ title, value, icon }) => {
   return (
     <div className="bg-white p-6 rounded-lg shadow-md flex items-center space-x-4">
@@ -14,6 +16,32 @@ const DashboardCard: React.FC<{ title: string; value: string; icon: React.ReactN
   );
 };
 
+// Dados de exemplo para o gráfico
+const data = [
+  { month: 'Jan', totalCars: 4000, faultyCars: 240 },
+  { month: 'Feb', totalCars: 3000, faultyCars: 139 },
+  { month: 'Mar', totalCars: 2000, faultyCars: 98 },
+  { month: 'Apr', totalCars: 2780, faultyCars: 390 },
+  { month: 'May', totalCars: 1890, faultyCars: 48 },
+];
+
+// Componente de gráfico
+const CarFailureChart: React.FC = () => {
+  return (
+    <ResponsiveContainer width="100%" height={400}>
+      <BarChart data={data}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="month" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Bar dataKey="totalCars" fill="#2f94bf" name="Total de Carros" />
+        <Bar dataKey="faultyCars" fill="#ff4d4d" name="Carros com Falha" />
+      </BarChart>
+    </ResponsiveContainer>
+  );
+};
+
 const App: React.FC = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -21,8 +49,7 @@ const App: React.FC = () => {
   const handleDateFilter = (startDate: string, endDate: string) => {
     setStartDate(startDate);
     setEndDate(endDate);
-    console.log('Filtering data from:', startDate, 'to:', endDate);
-    // Aqui você pode realizar a lógica de filtragem dos dados com base nas datas selecionadas
+    console.log('Filtrando dados de:', startDate, 'até:', endDate);
   };
 
   return (
@@ -31,7 +58,7 @@ const App: React.FC = () => {
       <main className="p-8 bg-gray-100 min-h-screen">
         <h1 className="text-4xl font-bold mb-8">Dashboard</h1>
 
-        {/* Componente de Filtro de Data */}
+        {/* Filtro de Data */}
         <div className="mb-8">
           <DateFilter onFilter={handleDateFilter} />
         </div>
@@ -39,19 +66,19 @@ const App: React.FC = () => {
         {/* Cards de Estatísticas */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <DashboardCard
-            title={`Total Falhas - Janeiro`}
+            title="Total Falhas - Janeiro"
             value="1,200"
             icon={<i className="fas fa-users"></i>}
           />
           <DashboardCard
             title="Total Carros"
             value="40,000"
-            icon={<i className="fas fa-dollar-sign"></i>}
+            icon={<i className="fas fa-car"></i>} // Corrigido ícone
           />
           <DashboardCard
             title="Novas Falhas"
             value="320"
-            icon={<i className="fas fa-shopping-cart"></i>}
+            icon={<i className="fas fa-exclamation-triangle"></i>} // Corrigido ícone
           />
           <DashboardCard
             title="Falhas Hoje"
@@ -60,21 +87,18 @@ const App: React.FC = () => {
           />
         </div>
 
-        {/* Gráficos Placeholder */}
+        {/* Gráficos */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold mb-4">Sales Overview</h2>
-            <div className="h-64 bg-gray-200 flex items-center justify-center">
-              {/* Placeholder for Chart */}
-              <span className="text-gray-500">[Chart]</span>
-            </div>
+            <h2 className="text-xl font-semibold mb-4">Carros e Falhas Detectadas por Mês</h2>
+            <CarFailureChart />
           </div>
 
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold mb-4">User Engagement</h2>
             <div className="h-64 bg-gray-200 flex items-center justify-center">
-              {/* Placeholder for Chart */}
-              <span className="text-gray-500">[Chart]</span>
+              {/* Placeholder for another Chart */}
+              <span className="text-gray-500">[Chart Placeholder]</span>
             </div>
           </div>
         </div>
