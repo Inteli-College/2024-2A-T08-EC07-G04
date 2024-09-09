@@ -28,11 +28,36 @@ const Header: React.FC = () => {
               ></path>
             </svg>
           </button>
-      </div>
+        </div>
 
-        {/* Verificação se o menu está aberto */}
-        {isMenuOpen && (
-          <nav className="absolute top-16 left-0 w-full bg-white text-gray-800 rounded-lg shadow-lg py-2 md:hidden">
+        {/* Sidebar Menu */}
+        <div
+          className={`fixed inset-y-0 left-0 transform ${
+            isMenuOpen ? 'translate-x-0' : '-translate-x-full'
+          } transition-transform duration-300 ease-in-out bg-white w-64 shadow-lg z-50`}
+        >
+          <button
+            onClick={() => setIsMenuOpen(false)}
+            className="absolute top-4 right-4 focus:outline-none"
+            aria-label="Close menu"
+          >
+            <svg
+              className="w-6 h-6 text-gray-800"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+
+          <nav className="mt-16">
             <a
               href="/upload"
               className="block px-4 py-2 hover:bg-gray-200"
@@ -40,8 +65,9 @@ const Header: React.FC = () => {
             >
               Upload
             </a>
+            {/* Adicione mais itens de menu aqui, se necessário */}
           </nav>
-        )}
+        </div>
 
         {/* Logo */}
         <div className="flex justify-center items-center">
