@@ -2,12 +2,13 @@ import random
 import time
 import numpy as np
 import pandas as pd
-from tensorflow.keras.models import load_model
 import os
 import requests
 import tensorflow as tf
 from models.predictionModel import Model
 from sqlalchemy.orm import Session
+from fastapi import Depends, HTTPException
+from models.database import get_db
 
 
 def call_ai(df: pd.DataFrame, model):
@@ -31,7 +32,7 @@ def generate_uuidv7():
 
 def load_model_from_url(url: str):
     # Generate a unique file name for the model
-    unique_filename = f"temp_model_{generate_uuidv7().hex}.h5"
+    unique_filename = f"temp_model_{generate_uuidv7()}.h5"
     
     # Download the model from the URL
     response = requests.get(url)
@@ -43,14 +44,19 @@ def load_model_from_url(url: str):
     
     # Optionally, remove the file after loading the model to clean up
     os.remove(unique_filename)
+
+    print("Model loaded successfully")
     
     return model
 
-def get_model_url(db: Session, id_modelo: str) -> str:
-    # Query the Model table for the URL_modelo using the provided ID_modelo
-    model_record = db.query(Model).filter(Model.ID_modelo == id_modelo).first()
-    
-    if model_record is None:
-        raise HTTPException(status_code=404, detail="Model ID not found")
-    
-    return model_record.URL_modelo
+def get_model_url(ID_modelo: str, db: Session = Depends(get_db)) -> str:
+    # Query the Model table to find the record with the given ID_modelo
+    record = db.query(Model).filter(Model.ID_modelo == ID_modelo).first()
+
+    if not record:
+        raise HTTPException(status_code=404, detail="Model not found")
+
+    # Accessing the actual string value
+    url_modelo = record.URL_modelo
+
+    return url_modelo

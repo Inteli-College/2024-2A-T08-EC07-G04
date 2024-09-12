@@ -38,12 +38,14 @@ def mock_data(table: str, db: Session = Depends(get_db), num_records: int = 10):
 
     return {"message": f"{num_records} records inserted successfully."}
 
-async def predict(file: UploadFile, id_modelo:int, db: Session = Depends(get_db)):
+async def predict(file: UploadFile, id_modelo:str, db: Session = Depends(get_db)):
     try:
-
-        model_url = get_model_url(db, id_model)
+        print("Predicting...")
+        model_url = get_model_url(id_modelo, db)
+        print("Model URL: ", model_url)
 
         model = load_model_from_url(model_url)
+        print("Model loaded successfully")
 
         df = pd.read_csv(file.file)
         expected_columns = ['KNR','unique_names', '1_status_10', '2_status_10', '718_status_10',
@@ -147,3 +149,19 @@ def delete_prediction(ID: str, db: Session = Depends(get_db)):
     db.delete(prediction)
     db.commit()
     return {"detail": "Prediction deleted"}
+
+def update_model(ID: str, db: Session = Depends(get_db)):
+    # Fetch the record to update by ID
+    record = db.query(Model).filter(Model.ID_modelo == ID).first()
+
+    if not record:
+        raise HTTPException(status_code=404, detail="Model not found")
+
+    # Update the record with new values
+    record.model = 'sequencial_V1'
+    record.URL_modelo = "http://10.128.0.87:8090/api/files/fillmore/2h194oy6ffh41ye/model_mXtPVYz9QH.h5"
+    
+    db.commit()  # Commit the transaction to save the changes
+    db.refresh(record)  # Optional: Refresh the instance with the latest data from the database
+
+    return record  # Optionally return the updated record
