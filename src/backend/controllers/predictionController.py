@@ -6,10 +6,21 @@ from sqlalchemy.orm import Session
 from models.predictionModel import Prediction, Features, Model, Values
 from models.database import get_db
 from tensorflow.keras.models import load_model
-from utils.helpers import call_ai, generate_uuidv7
+from utils.helpers import call_ai, generate_uuidv7, load_model_from_url, get_model_url
 from typing import List
+from pocketbase import PocketBase
+from pocketbase.utils import ClientResponseError
 
-model = load_model('models/model.h5')
+pb = PocketBase("http://10.128.0.87:8090")
+
+try:
+    auth_data = pb.admins.auth_with_password("teste@gmail.com", "testeteste")
+    print("Authenticated successfully!")
+except ClientResponseError as e:
+    print(f"Client Response Error: {e}")
+    print(f"Raw Response: {e.response.content.decode(errors='replace')}")
+except Exception as e:
+    print(f"Unexpected error: {e}")
 
 def root():
     return {"message": "Hello World"}
@@ -27,8 +38,13 @@ def mock_data(table: str, db: Session = Depends(get_db), num_records: int = 10):
 
     return {"message": f"{num_records} records inserted successfully."}
 
-async def predict(file: UploadFile, db: Session = Depends(get_db)):
+async def predict(file: UploadFile, id_modelo:int, db: Session = Depends(get_db)):
     try:
+
+        model_url = get_model_url(db, id_model)
+
+        model = load_model_from_url(model_url)
+
         df = pd.read_csv(file.file)
         expected_columns = ['KNR','unique_names', '1_status_10', '2_status_10', '718_status_10',
                             '1_status_13', '2_status_13', '718_status_13']
@@ -38,8 +54,9 @@ async def predict(file: UploadFile, db: Session = Depends(get_db)):
         knr = df['KNR'].iloc[0]
         df = df.drop(columns=['KNR'])
 
-        result = call_ai(df)
+        result = call_ai(df, model)
 
+<<<<<<< HEAD
         prediction_id = generate_uuidv7()
         for _, row in df.iterrows():
             prediction_entry = Prediction(
@@ -76,6 +93,24 @@ async def predict(file: UploadFile, db: Session = Depends(get_db)):
                 db.add(values_entry)
 
         db.commit()
+=======
+        # for _, row in df.iterrows():
+        #     db_entry = Prediction(
+        #         ID=generate_uuidv7(),
+        #         KNR=knr,
+        #         unique_names=row['unique_names'],
+        #         status_10_1=row['1_status_10'],
+        #         status_10_2=row['2_status_10'],
+        #         status_10_718=row['718_status_10'],
+        #         status_13_1=row['1_status_13'],
+        #         status_13_2=row['2_status_13'],
+        #         status_13_718=row['718_status_13'],
+        #         Prediction_result=int(result),
+        #         Real_result=random.randint(0, 1)
+        #     )
+        #     db.add(db_entry)
+        # db.commit()
+>>>>>>> 3fe7eeebb3a854a81334a9e9b75ebc07356c8c40
 
         return {"prediction": result}
 
