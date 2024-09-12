@@ -56,7 +56,7 @@ async def predict(file: UploadFile, id_modelo:int, db: Session = Depends(get_db)
 
         result = call_ai(df, model)
 
-<<<<<<< HEAD
+
         prediction_id = generate_uuidv7()
         for _, row in df.iterrows():
             prediction_entry = Prediction(
@@ -93,24 +93,6 @@ async def predict(file: UploadFile, id_modelo:int, db: Session = Depends(get_db)
                 db.add(values_entry)
 
         db.commit()
-=======
-        # for _, row in df.iterrows():
-        #     db_entry = Prediction(
-        #         ID=generate_uuidv7(),
-        #         KNR=knr,
-        #         unique_names=row['unique_names'],
-        #         status_10_1=row['1_status_10'],
-        #         status_10_2=row['2_status_10'],
-        #         status_10_718=row['718_status_10'],
-        #         status_13_1=row['1_status_13'],
-        #         status_13_2=row['2_status_13'],
-        #         status_13_718=row['718_status_13'],
-        #         Prediction_result=int(result),
-        #         Real_result=random.randint(0, 1)
-        #     )
-        #     db.add(db_entry)
-        # db.commit()
->>>>>>> 3fe7eeebb3a854a81334a9e9b75ebc07356c8c40
 
         return {"prediction": result}
 
