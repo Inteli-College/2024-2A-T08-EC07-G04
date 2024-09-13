@@ -1,3 +1,8 @@
+---
+title: Documentação do DataBase
+slug: /database.md
+---
+
 # O que é um Data Lake?
 
 Um **Data Lake** é um repositório centralizado que permite armazenar uma grande quantidade de dados em sua forma bruta, sejam eles estruturados, semiestruturados ou não estruturados. Diferente de um Data Warehouse, que requer que os dados sejam limpos, transformados e organizados antes de serem armazenados, o Data Lake armazena os dados em seu estado original, sem a necessidade de um esquema predefinido. Essa flexibilidade é uma de suas principais características, permitindo que dados de diversas fontes, como bancos de dados, logs de aplicativos, sensores IoT, redes sociais, entre outros, sejam armazenados de maneira simples e escalável.
