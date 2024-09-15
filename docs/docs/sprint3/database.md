@@ -1,32 +1,60 @@
 ---
-title: Documentação do DataBase
-slug: /database.md
+title: Remodelagem do banco de dados  
+slug: /database.md  
 ---
 
-# O que é um Data Lake?
+# Introdução
 
-Um **Data Lake** é um repositório centralizado que permite armazenar uma grande quantidade de dados em sua forma bruta, sejam eles estruturados, semiestruturados ou não estruturados. Diferente de um Data Warehouse, que requer que os dados sejam limpos, transformados e organizados antes de serem armazenados, o Data Lake armazena os dados em seu estado original, sem a necessidade de um esquema predefinido. Essa flexibilidade é uma de suas principais características, permitindo que dados de diversas fontes, como bancos de dados, logs de aplicativos, sensores IoT, redes sociais, entre outros, sejam armazenados de maneira simples e escalável.
+A modelagem do banco de dados foi criada inicialmente com uma tabela apenas, contendo informações de identificação da predição (`ID`), o carro que foi analisado (`KNR`), as features do modelo (uma coluna para cada feature), o resultado da predição e o resultado após os testes, como pode ser observado abaixo:
 
-# Como Funciona um Data Lake?
+![old database](../../static/img/database/old_database.png)
 
-O funcionamento de um Data Lake envolve a ingestão de dados de diferentes fontes, que podem ser carregados em tempo real ou em lotes. Esses dados são armazenados em sua forma original e podem ser processados posteriormente com o uso de ferramentas de Big Data, como Apache Spark e Hadoop, que facilitam a realização de análises desde relatórios simples até modelos avançados de aprendizado de máquina. Apesar de armazenar dados em sua forma bruta, um Data Lake também oferece mecanismos de governança para garantir a segurança, qualidade e conformidade dos dados, utilizando controles de acesso e monitoramento rigorosos.
+Porém, com o avanço do projeto, foi observada a necessidade de nossa aplicação usar mais de um modelo. Sendo assim, teria que ser adicionada a informação de qual modelo foi utilizado e suas features, que podem variar de modelo para modelo. Portanto, o banco de dados foi remodelado para atender a esses requisitos.
 
-# Por Que Não Utilizar um Data Lake no Projeto com a Volkswagen?
+# Novo banco de dados
 
-No entanto, um Data Lake pode não ser a melhor opção para todos os tipos de projetos, especialmente para o projeto que estamos desenvolvendo para a Volkswagen. O projeto visa criar um modelo preditivo para classificar veículos quanto às possíveis falhas que podem ocorrer durante o processo de inspeção de rodagem. Nesse contexto, optar por um Data Lake apresentaria algumas desvantagens.
+Após a remodelagem do banco de dados, foram criadas 4 tabelas:
 
-Em primeiro lugar, a implementação e manutenção de um Data Lake introduziriam uma complexidade significativa. A infraestrutura necessária para um Data Lake envolve não apenas o armazenamento de dados, mas também a configuração de pipelines de ingestão, governança de dados, segurança, e uma equipe especializada para gerenciar tudo isso. Para o nosso projeto, que é relativamente focado e possui um escopo bem definido, essa complexidade seria um excesso desnecessário.
+- `Prediction`: contém a identificação da predição em si, o identificador da predição, o identificador do carro, o resultado da predição e o resultado real.
 
-# A Natureza dos Dados e a Eficiência do Projeto
+- `Features`: contém o identificador da feature e seu nome.
 
-Além disso, o projeto da Volkswagen envolve a manipulação de um conjunto de dados relativamente estruturado e específico, como dados de sensores e logs de testes de veículos. Utilizar um Data Lake, que é ideal para ambientes com grandes volumes de dados diversos e heterogêneos, não traria os benefícios esperados. Em vez disso, um banco de dados relacional ou um Data Warehouse, que oferece acesso rápido e eficiente a dados organizados, seria mais adequado para as necessidades específicas de nosso modelo preditivo.
+- `Model`: contém o identificador do modelo, o nome do modelo e a sua URL.
 
-# Desempenho e Custo
+- `Values`: contém as features e seus valores, o identificador da predição e o identificador do modelo.
 
-Outro ponto a considerar é a latência e o tempo de resposta. A arquitetura de um Data Lake pode resultar em maior latência para consultas específicas e análises interativas, o que não é ideal para o ambiente de inspeção de rodagem da Volkswagen, onde a agilidade na tomada de decisões é crucial. No nosso caso, soluções mais otimizadas e direcionadas, como bancos de dados que suportam consultas rápidas, podem fornecer um desempenho mais adequado.
+## Prediction
 
-Por fim, o custo e a manutenção de um Data Lake podem ser significativos. Para o nosso projeto, onde os recursos precisam ser utilizados de maneira eficiente, a adoção de um Data Lake poderia significar um gasto desnecessário com infraestrutura e pessoal. Nosso foco é desenvolver um modelo preditivo eficaz dentro das limitações de tempo e orçamento, e uma solução mais simples e direta é suficiente para alcançar os objetivos definidos.
+![prediction table](../../static/img/database/prediction.png)
 
-# Conclusão
+Essa tabela foi criada com o intuito de armazenar todas as informações relacionadas à predição em si. Sendo assim, há um ID como chave primária que é o identificador da predição, o carro em que a predição foi feita, o modelo utilizado para essa predição, o resultado da predição e o resultado real. 
 
-Portanto, ao considerar o escopo, os objetivos e os requisitos específicos do projeto com a Volkswagen, a escolha de não utilizar um Data Lake se baseia na busca por uma solução que seja mais eficiente, menos complexa, mais rápida e de menor custo, garantindo que o modelo preditivo seja implementado de forma eficaz e atenda às expectativas da empresa.
+Com essas informações, é possível ter acesso a todas as informações relacionadas à predição diretamente. O resultado real refere-se ao fato de, após os testes realizados, haver ou não realmente uma falha no carro. Foi pensado em armazenar essa informação também para facilitar à Volkswagen medir se o modelo está sendo performático ou não.
+
+## Features
+
+![features table](../../static/img/database/features.png)
+
+Essa tabela foi criada com o intuito de armazenar todas as features que vão ser utilizadas, independentemente do modelo. Como pode ser observado na figura acima, a tabela `Features` não apresenta a informação da feature como uma coluna, mas sim como uma linha. Sendo assim, caso no futuro seja criado um modelo que utilize features diferentes das presentes no banco de dados, a modelagem do banco permite que seja adicionada uma linha com a nova feature, fazendo com que essa nova informação consiga entrar no banco de dados facilmente, sem a necessidade de remodelar o banco em si.
+
+## Model
+
+![model table](../../static/img/database/model.png)
+
+Essa tabela foi criada com o intuito de armazenar todos os modelos que vão ser utilizados no projeto. Sendo assim, do mesmo jeito que a tabela `Features` foi modelada, a tabela `Model` também foi criada para ser extensível. Porém, a tabela `Model` apresenta uma informação a mais: a URL. Essa URL faz referência à URL presente no Pocketbase, sistema usado para armazenar os modelos. Com essa URL, o backend da aplicação consegue utilizar o modelo sem ter que carregá-lo nativamente no backend. Para um modelo só, não faz tanta diferença, porém, quando forem adicionados vários modelos, carregar apenas o que será utilizado pela URL dará ganho de performance para a aplicação.
+
+## Values
+
+![values table](../../static/img/database/values.png)
+
+Essa tabela foi criada com o intuito de armazenar os valores das features que foram utilizados para realizar a predição. Sendo assim, essa tabela armazena o ID da predição, o ID do modelo utilizado, o ID da feature e seu valor. Porém, nenhuma dessas informações é um identificador único para a tabela `Values`, pois utiliza 3 foreign keys, mas nenhuma primary key. 
+
+Para resolver o problema, foi criada a compound key, que é uma união dos valores das 3 foreign keys presentes na tabela. Para ela ser um valor único, basta que uma das 3 foreign keys não se repita. Exemplificando: quando é feita uma predição com um determinado modelo e 5 features, haverá 5 linhas de conteúdo no banco de dados, com o ID da predição igual, o ID do modelo igual, mas o ID da feature será diferente. Quando realizada outra predição com o mesmo modelo, o ID do modelo e das features nas 5 linhas será igual em comparação com as 5 linhas da predição anterior, mas o ID da predição em si será diferente. Como uma das 3 foreign keys é diferente, o nosso banco terá um identificador único, já que é a junção das informações das 3 foreign keys.
+
+# Relação entre as tabelas
+
+Além da relação de primary key e foreign key normal de um banco de dados estruturado, foram definidas explicitamente relações entre as tabelas na criação do banco para facilitar a coleta de informações das tabelas no backend. Exemplificando, caso eu precise do KNR - que está presente na tabela `Prediction` - e do valor das features - que está presente na tabela `Values` -, se eu definir que as duas tabelas têm uma relação entre elas, a coleta de informações se torna facilitada, mesmo que sejam valores de duas tabelas diferentes. Sendo assim, a definição da relação das tabelas serve para ajudar a captar as informações que estão espalhadas pelas 4 tabelas criadas. Dito isso, caso no futuro haja necessidade de relacionar mais alguma tabela, ajustes serão feitos nessas relações, então o que está aqui é somente uma versão inicial e pode sofrer alterações no futuro.
+
+As relações presentes atualmente são entre apenas duas tabelas: `Prediction` e `Values`. A tabela `Prediction` faz uma relação unilateral com a tabela `Model`, ou seja, caso eu chame a tabela `Prediction`, mas eu queira informações do nome do modelo, essa informação será trazida mais facilmente. Porém, como é uma relação unilateral, caso eu chame a tabela `Model`, eu não consigo acessar as informações da `Prediction` tão facilmente. Na mesma lógica, `Values` tem uma chamada unilateral com `Features` e `Model`, para conseguir acessar as informações do nome das features e do modelo mais facilmente. Foi criada de forma unilateral, pois as rotas do backend, quando chamam as tabelas `Features` e `Model`, não precisam de informações adicionais que estão fora dessas tabelas. 
+
+Nessa linha, as tabelas `Prediction` e `Values` também apresentam uma relação, porém essa relação é bidimensional nesse caso, já que nas rotas apresentadas comumente é necessário obter informações de `Values` quando a `Prediction` é chamada e vice-versa.
