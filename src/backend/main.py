@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 from tensorflow.keras.models import load_model
 import numpy as np
 
-DATABASE_URL = "postgresql://postgres:KXQDTu5XrbsVDhe@localhost:5432/fillmore"
+DATABASE_URL = "postgresql://postgres:SENHA@localhost:5432/fillmore"
  
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -42,6 +42,8 @@ app = FastAPI()
 app.include_router(predictionRoutes.router)
 app.include_router(healthChecksRoutes.router)
 
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
