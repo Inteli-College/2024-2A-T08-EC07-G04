@@ -20,18 +20,19 @@ No contexto do projeto de manutenção preditiva para a Volkswagen do Brasil, o 
 **Imagem do Business Model Canvas:**
 
 ![Business Model Canvas](../../static/img/Business_Model_Canvas.png)
+[Business Model Canvas](https://www.canva.com/design/DAGDPG8976Y/tf-Zg0P5Mq_P0Bwiepr2Mg/edit?utm_content=DAGDPG8976Y&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 **Explicação do Conteúdo:**
 
-- **Segmentos de Clientes:** Identifica os principais grupos de clientes que serão beneficiados pelo projeto, como os departamentos de inspeção de veículos e manutenção da Volkswagen.
-- **Proposta de Valor:** Descreve os benefícios e valores únicos que o projeto oferece, como aumento da eficiência operacional e redução de custos.
-- **Canais:** Define os meios através dos quais o projeto se conectará com os clientes, incluindo a integração com sistemas de TI existentes e dashboards de visualização.
-- **Relacionamento com Clientes:** Detalha como o projeto irá manter e melhorar o relacionamento com os clientes, através de suporte técnico contínuo e feedback regular.
-- **Fontes de Receita:** Especifica como o projeto gerará valor financeiro, principalmente através da economia operacional e melhorias na qualidade.
-- **Recursos Principais:** Lista os recursos essenciais necessários para a implementação do projeto, como dados de inspeção e infraestrutura de TI.
-- **Atividades-chave:** Descreve as principais atividades que devem ser realizadas para o sucesso do projeto, incluindo o desenvolvimento e treinamento do modelo preditivo.
-- **Parcerias Principais:** Identifica as principais parcerias necessárias para o projeto, como fornecedores de tecnologia e consultorias em IA.
-- **Estrutura de Custos:** Detalha os principais custos envolvidos no projeto, como desenvolvimento do sistema e infraestrutura de TI.
+- **Segmentos de Clientes:** Este bloco define os diferentes grupos de pessoas ou organizações que uma empresa busca alcançar e atender. É aqui que se define e segmenta o público-alvo, identificando os principais grupos de clientes que serão beneficiados pelo projeto, como os departamentos de qualidade de veículos e manutenção da Volkswagen.
+- **Proposta de Valor:** Este bloco descreve o conjunto de razões pelas quais os clientes optarão pelo seu produto ou serviço. A proposta de valor deve destacar os benefícios e o valor único que o produto ou serviço oferece. No caso do projeto, isso pode incluir o aumento da eficiência operacional e a redução de custos na Volkswagen.
+- **Canais:** Esta seção descreve como o seu negócio se comunica e distribui o produto ou serviço aos clientes. Os canais podem ser diretos (proprietários, pertencentes à própria empresa) ou indiretos (canais de terceiros). Para o projeto, isso pode envolver a integração com sistemas de TI existentes e dashboards de visualização.
+- **Relacionamento com Clientes:** Este bloco descreve as estratégias e os meios que serão utilizados para estabelecer e manter o relacionamento com os clientes. Essas relações podem variar de pessoais a automatizadas e podem ter o objetivo de conquistar novos clientes ou reter os atuais. No projeto, isso pode ser feito através de suporte técnico contínuo e feedback regular.
+- **Fontes de Receita:** Este bloco representa como o seu negócio vai gerar receita através da venda de produtos e serviços, e as formas de capturar esse valor. No caso do projeto, a geração de valor financeiro ocorre principalmente por meio da economia operacional e melhorias na qualidade.
+- **Recursos Principais:** Este bloco descreve os recursos mais importantes para o funcionamento do modelo de negócios. Para o projeto, os recursos essenciais incluem dados de inspeção e infraestrutura de TI.
+- **Atividades-chave:** Este bloco descreve as ações mais importantes que a empresa deve realizar para que o modelo de negócios funcione. As atividades-chave podem estar ligadas à produção, prestação de serviços ou tarefas administrativas. No contexto do projeto, isso inclui o desenvolvimento e o treinamento do modelo preditivo.
+- **Parcerias Principais:** Este bloco refere-se à rede de fornecedores e parceiros que ajudam a otimizar e reduzir os riscos do negócio. Qualquer tarefa ou insumo essencial fornecido por outra empresa que garanta o funcionamento do modelo de negócios deve ser listado aqui. No projeto, isso pode incluir fornecedores de tecnologia e consultorias em IA.
+- **Estrutura de Custos:** Este bloco do Business Model Canvas aborda todos os custos envolvidos na operação do modelo de negócios. Esses custos geralmente derivam dos blocos de recursos, atividades e parcerias-chave. No projeto, os principais custos incluem o desenvolvimento do sistema e a infraestrutura de TI.
 
 ## 2. Introdução à Matriz de Risco
 
