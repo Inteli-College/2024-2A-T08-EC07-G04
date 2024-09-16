@@ -265,7 +265,7 @@ Realiza previsões com base em um arquivo CSV enviado pelo usuário.
 
 Para o modelo funcionar, cada uma dessas colunas deve conter apenas uma linha de informação, que representa todos os testes feitos naquele KNR.
 
-:::warinig
+:::warning
 Essa é apenas uma versão inicial e planeja-se melhorar essa rota para que consiga receber várias linhas de um KNR e juntar e tratar os dados automaticamente para que a IA funcione e não seja necessário um tratamento antes de utilizar a aplicação
 :::
 
