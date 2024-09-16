@@ -1,6 +1,6 @@
 ---
 title: Documentação das Rotas Implementadas no Backend
-slug: /docker.md
+slug: /rotas.md
 ---
 # Heath Check Controllers
 O arquivo ```healthCheckController.py``` contém três funções principais que servem para verificar a saúde e o funcionamento correto de diferentes aspectos da aplicação backend.
