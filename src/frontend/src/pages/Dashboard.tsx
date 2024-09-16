@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import NavBar from '../components/NavBar'; // Certifique-se que NavBar existe
-import DateFilter from '../components/DateFilter'; // Certifique-se que DateFilter existe
+import NavBar from '../components/NavBar';
+import DateFilter from '../components/DateFilter';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, Legend, ResponsiveContainer } from 'recharts';
+import AreaStatusChart from '../components/Graph2'; 
+import Graph3 from '../components/Graph3';
 
 // Componente de card para exibir estatísticas
 const DashboardCard: React.FC<{ title: string; value: string; icon: React.ReactNode }> = ({ title, value, icon }) => {
@@ -25,7 +27,6 @@ const data = [
   { month: 'May', totalCars: 1890, faultyCars: 48 },
 ];
 
-// Componente de gráfico
 const CarFailureChart: React.FC = () => {
   return (
     <ResponsiveContainer width="100%" height={400}>
@@ -73,12 +74,12 @@ const App: React.FC = () => {
           <DashboardCard
             title="Total Carros"
             value="40,000"
-            icon={<i className="fas fa-car"></i>} // Corrigido ícone
+            icon={<i className="fas fa-car"></i>}
           />
           <DashboardCard
             title="Novas Falhas"
             value="320"
-            icon={<i className="fas fa-exclamation-triangle"></i>} // Corrigido ícone
+            icon={<i className="fas fa-exclamation-triangle"></i>}
           />
           <DashboardCard
             title="Falhas Hoje"
@@ -95,13 +96,16 @@ const App: React.FC = () => {
           </div>
 
           <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold mb-4">User Engagement</h2>
-            <div className="h-64 bg-gray-200 flex items-center justify-center">
-              {/* Placeholder for another Chart */}
-              <span className="text-gray-500">[Chart Placeholder]</span>
-            </div>
+            <h2 className="text-xl font-semibold mb-4">Acumulação de Ocorrências de Status</h2>
+            <AreaStatusChart />
           </div>
         </div>
+
+        <div className="bg-white p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold mb-4">Sem Falha vs Com Falha</h2>
+            <Graph3 />
+          </div>
+      
       </main>
     </div>
   );
