@@ -13,9 +13,11 @@ O funcionamento de um Data Lake envolve a ingestão de dados de diferentes fonte
 
 # Por Que Não Utilizar um Data Lake no Projeto com a Volkswagen?
 
-No entanto, um Data Lake pode não ser a melhor opção para todos os tipos de projetos, especialmente para o projeto que estamos desenvolvendo para a Volkswagen. O projeto visa criar um modelo preditivo para classificar veículos quanto às possíveis falhas que podem ocorrer durante o processo de inspeção de rodagem. Nesse contexto, optar por um Data Lake apresentaria algumas desvantagens.
+No entanto, um Data Lake pode não ser a melhor opção para todos os tipos de projetos, pois seus benefícios podem ser extraídos de outra forma no projeto, dependendo da arquitetura. Os maiores benefícios de um Data Lake seriam a possibilidade de quartar altas quantidades de informação, de qualquer forma (estruturada, semi-estruturada e não estruturada) e conseguir tratar os dados dentro do datalake. 
 
-Em primeiro lugar, a implementação e manutenção de um Data Lake introduziriam uma complexidade significativa. A infraestrutura necessária para um Data Lake envolve não apenas o armazenamento de dados, mas também a configuração de pipelines de ingestão, governança de dados, segurança, e uma equipe especializada para gerenciar tudo isso. Para o nosso projeto, que é relativamente focado e possui um escopo bem definido, essa complexidade seria um excesso desnecessário.
+Porém, no nosso projeto, como os dados são fornecidos pela Volkswagen e não recebemos os dados brutos coletados, eles já apresentam um tratamento inicial de dados. Sendo assim, todas as informações conseguem ser guardadas por um banco de dados relacional, que apresenta dados estruturados. Pela arquitetura criada do banco de dados, consegue-se armazenar todos os dados que serão utilizados no projeto, assim não havia necessidade de aumentar a complexidade do projeto para esse ponto.
+
+Quanto ao armazenamento de modelos, que podem ser considerados dados semi-estruturados ou não estruturados, optou-se por utilizar o `Pocketbase`. O `Pocketbase` é uma ferramenta leve e versátil que permite o armazenamento e gerenciamento de dados através de uma interface simples e eficiente. Neste projeto, ele está sendo utilizado exclusivamente para armazenar os modelos de machine learning. A principal vantagem é que o `Pocketbase` gera URLs para cada modelo armazenado, facilitando o carregamento e a utilização desses modelos na aplicação. Assim, podemos acessar e utilizar os modelos diretamente a partir dos URLs gerados pelo `Pocketbase`, integrando-os de forma eficiente ao fluxo de trabalho do projeto.
 
 # A Natureza dos Dados e a Eficiência do Projeto
 
