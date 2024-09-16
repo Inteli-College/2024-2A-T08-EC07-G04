@@ -49,12 +49,52 @@ Para o projeto de manutenção preditiva da Volkswagen, a Matriz de Risco foi ut
 **Imagem da Matriz de Risco:**
 
 ![Matriz de Risco](../../static/img/Matriz_de_Risco.png)
+[Matriz de Risco](https://www.canva.com/design/DAGNXaZ1txY/TNvaRr3aX0vE98Dg0E6aFQ/edit?utm_content=DAGNXaZ1txY&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 **Explicação do Conteúdo:**
 
 - **Ameaças:** O lado esquerdo da matriz identifica e avalia os principais riscos que podem impactar negativamente o projeto. Esses riscos variam de problemas técnicos, como falhas na coleta de dados, até desafios operacionais, como atrasos no cronograma e resistência à mudança.
 - **Oportunidades:** O lado direito da matriz foca nas oportunidades que podem ser exploradas para melhorar o sucesso do projeto. Isso inclui melhorias na eficiência operacional, redução de custos e potencial expansão do projeto para outras fábricas.
 - **Probabilidade e Impacto:** A matriz categoriza cada risco e oportunidade com base em sua probabilidade de ocorrência e impacto no projeto. Isso ajuda a priorizar as ações a serem tomadas, focando nos riscos mais críticos e nas oportunidades mais promissoras.
+
+Para amenizar os impactos dos riscos da matriz de risco, é importante definir estratégias de mitigação específicas para cada risco, por isso selecionamos 3 dos maiores riscos:
+
+## 1. Falha na Coleta de Dados
+- **Descrição do Risco:** Problemas na coleta de dados podem levar à falta de informações essenciais para o modelo preditivo, comprometendo a qualidade das previsões.
+- **Impacto Potencial:** Resultados imprecisos, decisões erradas, e possível retrabalho.
+
+**Ações de Mitigação:**
+
+- **Estabelecer Redundância de Fontes de Dados:** Utilizar múltiplas fontes de dados para garantir que, se uma fonte falhar, outra possa fornecer as informações necessárias.
+- **Implementar Monitoramento Contínuo:** Desenvolver um sistema de monitoramento para verificar a qualidade e a consistência dos dados em tempo real, alertando quando a coleta de dados for interrompida ou apresentar anomalias.
+- **Realizar Testes Regulares de Coleta de Dados:** Criar um cronograma de testes regulares para validar os processos de coleta de dados, verificando a integridade e a completude dos dados recebidos.
+- **Treinamento da Equipe:** Capacitar a equipe responsável pela coleta de dados para identificar rapidamente problemas e corrigi-los de forma eficaz.
+
+## 2. Baixa Precisão do Modelo Preditivo
+- **Descrição do Risco:** O modelo preditivo pode apresentar baixa precisão devido a dados inadequados, sobreajuste (overfitting), subajuste (underfitting), ou erros de modelagem.
+- **Impacto Potencial:** Tomada de decisão incorreta, perda de confiança dos usuários, e necessidade de retrabalho no desenvolvimento do modelo.
+
+**Ações de Mitigação:**
+
+- **Realizar Análise de Qualidade dos Dados:** Antes de alimentar o modelo, garantir que os dados sejam limpos, completos e relevantes.
+- **Utilizar Validação Cruzada e Testes de Robustez:** Implementar técnicas de validação cruzada para avaliar a performance do modelo e garantir que ele generalize bem em diferentes cenários.
+- **Iteração e Refinamento Contínuos do Modelo:** Monitorar continuamente o desempenho do modelo e ajustar hiperparâmetros ou a arquitetura conforme necessário.
+- **Incluir Feedback dos Usuários:** Coletar feedback dos usuários finais para ajustar o modelo e melhorar a sua precisão, levando em consideração os casos de uso específicos.
+- **Diversificar os Algoritmos de Modelagem:** Testar diferentes algoritmos e técnicas de aprendizado de máquina para encontrar a abordagem mais adequada ao problema específico.
+
+## 3. Integração com Sistemas Existentes
+- **Descrição do Risco:** Problemas ao integrar o novo sistema com os sistemas de TI já existentes na organização, resultando em falhas de comunicação ou incompatibilidades técnicas.
+- **Impacto Potencial:** Interrupções no fluxo de trabalho, aumento de custos e atrasos na entrega do projeto.
+
+**Ações de Mitigação:**
+
+- **Realizar Análise de Compatibilidade Prévia:** Antes de iniciar a integração, conduzir uma análise detalhada para identificar possíveis incompatibilidades e pontos críticos.
+- **Implementar Integração Incremental:** Adotar uma abordagem gradual de integração, testando cada componente antes de prosseguir para o próximo, reduzindo o risco de falhas globais.
+- **Estabelecer Padrões e Protocolos de Comunicação:** Definir e documentar padrões de comunicação claros entre os sistemas para garantir que eles possam se comunicar efetivamente.
+- **Desenvolver um Plano de Contingência:** Preparar um plano de contingência que inclua procedimentos para reverter rapidamente as mudanças em caso de problemas sérios durante a integração.
+- **Colaborar com Especialistas em TI:** Envolver equipes de TI com experiência nos sistemas existentes desde o início do projeto para garantir um processo de integração suave.
+
+Essas estratégias de mitigação podem ajudar a reduzir o impacto potencial dos riscos identificados, aumentando a probabilidade de sucesso do seu projeto.
 
 ## 3. Análise Financeira
 
