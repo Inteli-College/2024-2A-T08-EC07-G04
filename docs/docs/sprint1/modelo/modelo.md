@@ -9,7 +9,7 @@ slug: /modelo
 
 #### **Random Forest:**
 
-O primeiro modelo implementado foi o **Random Forest**,  uma técnica de aprendizado supervisionado que combina múltiplas árvores de decisão para melhorar a capacidade preditiva e reduzir o risco de overfitting. 
+O primeiro modelo implementado foi o **Random Forest**,  uma técnica de aprendizado supervisionado que combina múltiplas árvores de decisão para melhorar a capacidade preditiva e reduzir o risco de overfitting. O Random Forest foi escolhido para ser o primeiro pois é um modelo simples de ser implementado, assim poderíamos entender mais o comportamento de dados em um modelo supervisionado, bem como foi escolhido pela capacidade de capturar interações não lineares entre as features. Além disso, o modelo foi preferido por sua habilidade de lidar com grandes volumes de dados e variáveis categóricas, uma característica importante para este projeto, que envolve múltiplos componentes e status diferentes de produção. 
 
 Neste projeto, o modelo foi treinado utilizando as features selecionadas durante a fase de preparação dos dados. O treinamento incluiu features como `TOTAL OK`, `TOTAL NOK`, `RESULTADO`, além das novas features relacionadas ao status dos componentes (por exemplo, `ID1 S OK`, `ID2 S OK`, etc.). A escolha dessas features visou maximizar a informação relevante disponível para o modelo.
 
