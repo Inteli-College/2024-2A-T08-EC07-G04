@@ -44,9 +44,9 @@ const CarFailureChart: React.FC = () => {
 };
 
 const App: React.FC = () => {
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-
+  const [, setStartDate] = useState('');
+  const [, setEndDate] = useState('');
+  
   const handleDateFilter = (startDate: string, endDate: string) => {
     setStartDate(startDate);
     setEndDate(endDate);

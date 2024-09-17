@@ -8,19 +8,30 @@ from models.database import get_db
 from tensorflow.keras.models import load_model
 from utils.helpers import call_ai, generate_uuidv7, load_model_from_url, get_model_url
 from typing import List
-from pocketbase import PocketBase
-from pocketbase.utils import ClientResponseError
+import requests
 
-pb = PocketBase("http://10.128.0.87:8090")
+# PocketBase configuration
+POCKETBASE_URL = "http://10.128.0.87:8090"
 
-try:
-    auth_data = pb.admins.auth_with_password("teste@gmail.com", "testeteste")
-    print("Authenticated successfully!")
-# except ClientResponseError as e:
-#     print(f"Client Response Error: {e}")
-#     print(f"Raw Response: {e.response.content.decode(errors='replace')}")
-except Exception as e:
-    print(f"Unexpected error: {e}")
+def authenticate_pocketbase():
+    try:
+        auth_data = {
+            "identity": "teste@gmail.com",
+            "password": "testeteste"
+        }
+        response = requests.post(f"{POCKETBASE_URL}/api/admins/auth-with-password", json=auth_data)
+
+        if response.status_code == 200:
+            print("Authenticated successfully!")
+            return response.json()["token"]
+        else:
+            raise HTTPException(status_code=response.status_code, detail="Authentication failed.")
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+
+# Initialize PocketBase authentication (you can save this token for further requests)
+pocketbase_token = authenticate_pocketbase()
 
 def root():
     return {"message": "Hello World"}
@@ -57,7 +68,6 @@ async def predict(file: UploadFile, id_modelo:str, db: Session = Depends(get_db)
         df = df.drop(columns=['KNR'])
 
         result = call_ai(df, model)
-
 
         prediction_id = generate_uuidv7()
         for _, row in df.iterrows():

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
 const Header: React.FC = () => {
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (

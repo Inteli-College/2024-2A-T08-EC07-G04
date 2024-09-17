@@ -6,16 +6,32 @@ services:
     environment:
       NEXT_PUBLIC_BACKEND_URL: "http://backend:8000"
     ports:
-      - "8000:8000"
+      - "5173:4173"  # Vite's preview mode port exposed to network
     depends_on:
       - backend
-    container_name: fillmore-frontend  
+    container_name: fillmore-frontend
+    command: npm run preview -- --host 0.0.0.0  # Expose Vite
+
   backend:
     build: ./backend
     image: src/backend
     restart: unless-stopped
     environment:
-      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_URL: "postgresql://postgres:KXQDTu5XrbsVDhe@postgres:5432/fillmore"
+      TF_ENABLE_ONEDNN_OPTS: 0  # Disable TensorFlow oneDNN optimizations
     ports:
       - "8001:8000"
+    depends_on:
+      - postgres
     container_name: fillmore-backend
+
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: KXQDTu5XrbsVDhe
+      POSTGRES_DB: fillmore
+    ports:
+      - "5433:5432"  # Changed port to avoid conflicts
+    container_name: fillmore-postgres
+    restart: unless-stopped
