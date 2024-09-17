@@ -16,9 +16,9 @@ pb = PocketBase("http://10.128.0.87:8090")
 try:
     auth_data = pb.admins.auth_with_password("teste@gmail.com", "testeteste")
     print("Authenticated successfully!")
-except ClientResponseError as e:
-    print(f"Client Response Error: {e}")
-    print(f"Raw Response: {e.response.content.decode(errors='replace')}")
+# except ClientResponseError as e:
+#     print(f"Client Response Error: {e}")
+#     print(f"Raw Response: {e.response.content.decode(errors='replace')}")
 except Exception as e:
     print(f"Unexpected error: {e}")
 
