@@ -5,7 +5,6 @@ import numpy as np
 from sqlalchemy.orm import Session
 from models.predictionModel import Prediction, Features, Model, Values
 from models.database import get_db
-from tensorflow.keras.models import load_model
 from utils.helpers import call_ai, generate_uuidv7, load_model_from_url, get_model_url
 from typing import List
 import requests
