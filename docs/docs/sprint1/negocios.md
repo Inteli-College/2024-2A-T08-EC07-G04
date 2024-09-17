@@ -20,18 +20,19 @@ No contexto do projeto de manutenção preditiva para a Volkswagen do Brasil, o 
 **Imagem do Business Model Canvas:**
 
 ![Business Model Canvas](../../static/img/Business_Model_Canvas.png)
+[Business Model Canvas](https://www.canva.com/design/DAGDPG8976Y/tf-Zg0P5Mq_P0Bwiepr2Mg/edit?utm_content=DAGDPG8976Y&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 **Explicação do Conteúdo:**
 
-- **Segmentos de Clientes:** Identifica os principais grupos de clientes que serão beneficiados pelo projeto, como os departamentos de inspeção de veículos e manutenção da Volkswagen.
-- **Proposta de Valor:** Descreve os benefícios e valores únicos que o projeto oferece, como aumento da eficiência operacional e redução de custos.
-- **Canais:** Define os meios através dos quais o projeto se conectará com os clientes, incluindo a integração com sistemas de TI existentes e dashboards de visualização.
-- **Relacionamento com Clientes:** Detalha como o projeto irá manter e melhorar o relacionamento com os clientes, através de suporte técnico contínuo e feedback regular.
-- **Fontes de Receita:** Especifica como o projeto gerará valor financeiro, principalmente através da economia operacional e melhorias na qualidade.
-- **Recursos Principais:** Lista os recursos essenciais necessários para a implementação do projeto, como dados de inspeção e infraestrutura de TI.
-- **Atividades-chave:** Descreve as principais atividades que devem ser realizadas para o sucesso do projeto, incluindo o desenvolvimento e treinamento do modelo preditivo.
-- **Parcerias Principais:** Identifica as principais parcerias necessárias para o projeto, como fornecedores de tecnologia e consultorias em IA.
-- **Estrutura de Custos:** Detalha os principais custos envolvidos no projeto, como desenvolvimento do sistema e infraestrutura de TI.
+- **Segmentos de Clientes:** Este bloco define os diferentes grupos de pessoas ou organizações que uma empresa busca alcançar e atender. É aqui que se define e segmenta o público-alvo, identificando os principais grupos de clientes que serão beneficiados pelo projeto, como os departamentos de qualidade de veículos e manutenção da Volkswagen.
+- **Proposta de Valor:** Este bloco descreve o conjunto de razões pelas quais os clientes optarão pelo seu produto ou serviço. A proposta de valor deve destacar os benefícios e o valor único que o produto ou serviço oferece. No caso do projeto, isso pode incluir o aumento da eficiência operacional e a redução de custos na Volkswagen.
+- **Canais:** Esta seção descreve como o seu negócio se comunica e distribui o produto ou serviço aos clientes. Os canais podem ser diretos (proprietários, pertencentes à própria empresa) ou indiretos (canais de terceiros). Para o projeto, isso pode envolver a integração com sistemas de TI existentes e dashboards de visualização.
+- **Relacionamento com Clientes:** Este bloco descreve as estratégias e os meios que serão utilizados para estabelecer e manter o relacionamento com os clientes. Essas relações podem variar de pessoais a automatizadas e podem ter o objetivo de conquistar novos clientes ou reter os atuais. No projeto, isso pode ser feito através de suporte técnico contínuo e feedback regular.
+- **Fontes de Receita:** Este bloco representa como o seu negócio vai gerar receita através da venda de produtos e serviços, e as formas de capturar esse valor. No caso do projeto, a geração de valor financeiro ocorre principalmente por meio da economia operacional e melhorias na qualidade.
+- **Recursos Principais:** Este bloco descreve os recursos mais importantes para o funcionamento do modelo de negócios. Para o projeto, os recursos essenciais incluem dados de inspeção e infraestrutura de TI.
+- **Atividades-chave:** Este bloco descreve as ações mais importantes que a empresa deve realizar para que o modelo de negócios funcione. As atividades-chave podem estar ligadas à produção, prestação de serviços ou tarefas administrativas. No contexto do projeto, isso inclui o desenvolvimento e o treinamento do modelo preditivo.
+- **Parcerias Principais:** Este bloco refere-se à rede de fornecedores e parceiros que ajudam a otimizar e reduzir os riscos do negócio. Qualquer tarefa ou insumo essencial fornecido por outra empresa que garanta o funcionamento do modelo de negócios deve ser listado aqui. No projeto, isso pode incluir fornecedores de tecnologia e consultorias em IA.
+- **Estrutura de Custos:** Este bloco do Business Model Canvas aborda todos os custos envolvidos na operação do modelo de negócios. Esses custos geralmente derivam dos blocos de recursos, atividades e parcerias-chave. No projeto, os principais custos incluem o desenvolvimento do sistema e a infraestrutura de TI.
 
 ## 2. Introdução à Matriz de Risco
 
@@ -48,12 +49,52 @@ Para o projeto de manutenção preditiva da Volkswagen, a Matriz de Risco foi ut
 **Imagem da Matriz de Risco:**
 
 ![Matriz de Risco](../../static/img/Matriz_de_Risco.png)
+[Matriz de Risco](https://www.canva.com/design/DAGNXaZ1txY/TNvaRr3aX0vE98Dg0E6aFQ/edit?utm_content=DAGNXaZ1txY&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 **Explicação do Conteúdo:**
 
 - **Ameaças:** O lado esquerdo da matriz identifica e avalia os principais riscos que podem impactar negativamente o projeto. Esses riscos variam de problemas técnicos, como falhas na coleta de dados, até desafios operacionais, como atrasos no cronograma e resistência à mudança.
 - **Oportunidades:** O lado direito da matriz foca nas oportunidades que podem ser exploradas para melhorar o sucesso do projeto. Isso inclui melhorias na eficiência operacional, redução de custos e potencial expansão do projeto para outras fábricas.
 - **Probabilidade e Impacto:** A matriz categoriza cada risco e oportunidade com base em sua probabilidade de ocorrência e impacto no projeto. Isso ajuda a priorizar as ações a serem tomadas, focando nos riscos mais críticos e nas oportunidades mais promissoras.
+
+Para amenizar os impactos dos riscos da matriz de risco, é importante definir estratégias de mitigação específicas para cada risco, por isso selecionamos 3 dos maiores riscos:
+
+## 1. Falha na Coleta de Dados
+- **Descrição do Risco:** Problemas na coleta de dados podem levar à falta de informações essenciais para o modelo preditivo, comprometendo a qualidade das previsões.
+- **Impacto Potencial:** Resultados imprecisos, decisões erradas, e possível retrabalho.
+
+**Ações de Mitigação:**
+
+- **Estabelecer Redundância de Fontes de Dados:** Utilizar múltiplas fontes de dados para garantir que, se uma fonte falhar, outra possa fornecer as informações necessárias.
+- **Implementar Monitoramento Contínuo:** Desenvolver um sistema de monitoramento para verificar a qualidade e a consistência dos dados em tempo real, alertando quando a coleta de dados for interrompida ou apresentar anomalias.
+- **Realizar Testes Regulares de Coleta de Dados:** Criar um cronograma de testes regulares para validar os processos de coleta de dados, verificando a integridade e a completude dos dados recebidos.
+- **Treinamento da Equipe:** Capacitar a equipe responsável pela coleta de dados para identificar rapidamente problemas e corrigi-los de forma eficaz.
+
+## 2. Baixa Precisão do Modelo Preditivo
+- **Descrição do Risco:** O modelo preditivo pode apresentar baixa precisão devido a dados inadequados, sobreajuste (overfitting), subajuste (underfitting), ou erros de modelagem.
+- **Impacto Potencial:** Tomada de decisão incorreta, perda de confiança dos usuários, e necessidade de retrabalho no desenvolvimento do modelo.
+
+**Ações de Mitigação:**
+
+- **Realizar Análise de Qualidade dos Dados:** Antes de alimentar o modelo, garantir que os dados sejam limpos, completos e relevantes.
+- **Utilizar Validação Cruzada e Testes de Robustez:** Implementar técnicas de validação cruzada para avaliar a performance do modelo e garantir que ele generalize bem em diferentes cenários.
+- **Iteração e Refinamento Contínuos do Modelo:** Monitorar continuamente o desempenho do modelo e ajustar hiperparâmetros ou a arquitetura conforme necessário.
+- **Incluir Feedback dos Usuários:** Coletar feedback dos usuários finais para ajustar o modelo e melhorar a sua precisão, levando em consideração os casos de uso específicos.
+- **Diversificar os Algoritmos de Modelagem:** Testar diferentes algoritmos e técnicas de aprendizado de máquina para encontrar a abordagem mais adequada ao problema específico.
+
+## 3. Integração com Sistemas Existentes
+- **Descrição do Risco:** Problemas ao integrar o novo sistema com os sistemas de TI já existentes na organização, resultando em falhas de comunicação ou incompatibilidades técnicas.
+- **Impacto Potencial:** Interrupções no fluxo de trabalho, aumento de custos e atrasos na entrega do projeto.
+
+**Ações de Mitigação:**
+
+- **Realizar Análise de Compatibilidade Prévia:** Antes de iniciar a integração, conduzir uma análise detalhada para identificar possíveis incompatibilidades e pontos críticos.
+- **Implementar Integração Incremental:** Adotar uma abordagem gradual de integração, testando cada componente antes de prosseguir para o próximo, reduzindo o risco de falhas globais.
+- **Estabelecer Padrões e Protocolos de Comunicação:** Definir e documentar padrões de comunicação claros entre os sistemas para garantir que eles possam se comunicar efetivamente.
+- **Desenvolver um Plano de Contingência:** Preparar um plano de contingência que inclua procedimentos para reverter rapidamente as mudanças em caso de problemas sérios durante a integração.
+- **Colaborar com Especialistas em TI:** Envolver equipes de TI com experiência nos sistemas existentes desde o início do projeto para garantir um processo de integração suave.
+
+Essas estratégias de mitigação podem ajudar a reduzir o impacto potencial dos riscos identificados, aumentando a probabilidade de sucesso do seu projeto.
 
 ## 3. Análise Financeira
 
