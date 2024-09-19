@@ -7,6 +7,8 @@ WORKDIR /app
 # Copy the requirements.txt first to cache dependencies
 COPY requirements.txt .
 
+ENV PIP_DEFAULT_TIMEOUT=2000
+
 # Install the Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 

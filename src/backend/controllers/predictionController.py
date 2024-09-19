@@ -10,7 +10,7 @@ from typing import List
 import requests
 
 # PocketBase configuration
-POCKETBASE_URL = "http://10.128.0.87:8090"
+POCKETBASE_URL = "http://0.0.0.0:8090"
 
 def authenticate_pocketbase():
     try:
