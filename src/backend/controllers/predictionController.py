@@ -10,11 +10,10 @@ from typing import List
 import requests
 
 # PocketBase configuration
-POCKETBASE_URL = "http://0.0.0.0:8090"
+POCKETBASE_URL = "http://localhost:8091"
 
 def authenticate_pocketbase():
-    pass
-    try:
+    try: 
         auth_data = {
             "identity": "teste@gmail.com",
             "password": "testeteste"
@@ -31,7 +30,7 @@ def authenticate_pocketbase():
         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
 
 # Initialize PocketBase authentication (you can save this token for further requests)
-# pocketbase_token = authenticate_pocketbase()
+pocketbase_token = authenticate_pocketbase()
 
 def root():
     return {"message": "Hello World"}
@@ -40,9 +39,9 @@ def mock_data(table: str, db: Session = Depends(get_db), num_records: int = 10):
     for _ in range(num_records):
         if table == 'Model':
             record = Model(
-                ID_modelo=generate_uuidv7(),
+                ID_modelo=1,
                 model='sequencial_V1',
-                URL_modelo="http://example.com/model_1"
+                URL_modelo="http://localhost:8091/api/files/4forqd5s2ez9ydw/wwpjocvw1obr90r/modelo_0cJQGhMAmk.h5"
             )
         db.add(record)
     db.commit()
