@@ -10,7 +10,8 @@ from typing import List
 import requests
 
 # PocketBase configuration
-POCKETBASE_URL = "http://localhost:8091"
+POCKETBASE_URL = "http://pocketbase:8090"
+
 
 def authenticate_pocketbase():
     try: 
@@ -41,7 +42,7 @@ def mock_data(table: str, db: Session = Depends(get_db), num_records: int = 10):
             record = Model(
                 ID_modelo=1,
                 model='sequencial_V1',
-                URL_modelo="http://localhost:8091/api/files/4forqd5s2ez9ydw/wwpjocvw1obr90r/modelo_0cJQGhMAmk.h5"
+                URL_modelo="http://pocketbase:8090/api/files/4forqd5s2ez9ydw/wwpjocvw1obr90r/modelo_0cJQGhMAmk.h5"
             )
         db.add(record)
     db.commit()
@@ -63,47 +64,53 @@ async def predict(file: UploadFile, id_modelo:str, db: Session = Depends(get_db)
         if list(df.columns) != expected_columns:
             raise HTTPException(status_code=400, detail=f"File must have the columns: {expected_columns}")
         
+        print("Data loaded successfully")
+
         knr = df['KNR'].iloc[0]
         df = df.drop(columns=['KNR'])
 
+        print("Calling AI model...")
+
         result = call_ai(df, model)
 
-        prediction_id = generate_uuidv7()
-        for _, row in df.iterrows():
-            prediction_entry = Prediction(
-                ID=prediction_id,
-                KNR=knr,
-                ID_modelo="1", 
-                Prediction_result=int(result),
-                Real_result=random.randint(0, 1)
-            )
-            db.add(prediction_entry)
+        print("Prediction result: ", result)
 
-            features = [
-                ('1_status_10', row['1_status_10']),
-                ('2_status_10', row['2_status_10']),
-                ('718_status_10', row['718_status_10']),
-                ('1_status_13', row['1_status_13']),
-                ('2_status_13', row['2_status_13']),
-                ('718_status_13', row['718_status_13']),
-            ]
+        # prediction_id = generate_uuidv7()
+        # for _, row in df.iterrows():
+        #     prediction_entry = Prediction(
+        #         ID=prediction_id,
+        #         KNR=knr,
+        #         ID_modelo="1", 
+        #         Prediction_result=int(result),
+        #         Real_result=random.randint(0, 1)
+        #     )
+        #     db.add(prediction_entry)
 
-            for feature_name, feature_value in features:
-                feature = db.query(Features).filter(Features.name_feature == feature_name).first()
-                if not feature:
-                    feature = Features(name_feature=feature_name)
-                    db.add(feature)
-                    db.commit()  
+        #     features = [
+        #         ('1_status_10', row['1_status_10']),
+        #         ('2_status_10', row['2_status_10']),
+        #         ('718_status_10', row['718_status_10']),
+        #         ('1_status_13', row['1_status_13']),
+        #         ('2_status_13', row['2_status_13']),
+        #         ('718_status_13', row['718_status_13']),
+        #     ]
 
-                values_entry = Values(
-                    ID_feature=feature.ID_feature,
-                    ID=prediction_id,
-                    ID_modelo="1",  
-                    value_feature=feature_value
-                )
-                db.add(values_entry)
+        #     for feature_name, feature_value in features:
+        #         feature = db.query(Features).filter(Features.name_feature == feature_name).first()
+        #         if not feature:
+        #             feature = Features(name_feature=feature_name)
+        #             db.add(feature)
+        #             db.commit()  
 
-        db.commit()
+        #         values_entry = Values(
+        #             ID_feature=feature.ID_feature,
+        #             ID=prediction_id,
+        #             ID_modelo="1",  
+        #             value_feature=feature_value
+        #         )
+        #         db.add(values_entry)
+
+        # db.commit()
 
         return {"prediction": result}
 

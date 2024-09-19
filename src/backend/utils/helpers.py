@@ -17,10 +17,20 @@ def call_ai(df: pd.DataFrame, model):
     if not all(col in df.columns for col in required_columns):
         raise ValueError(f"The input DataFrame does not have the required columns: {required_columns}")
     
+    print("Data loaded successfully 2")
+
     input_data = df.values.astype(np.float32)
+
+    print("Calling AI model 2...")
+
     input_data = np.reshape(input_data, (input_data.shape[0], input_data.shape[1]))
 
+    print("nao deu erro")
+
     predictions = model.predict(input_data)
+
+    print("Prediction result 2: ", float(predictions[0]))
+    
     return float(predictions[0])
 
 def generate_uuidv7():
