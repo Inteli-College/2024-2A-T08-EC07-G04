@@ -6,24 +6,21 @@ services:
     environment:
       NEXT_PUBLIC_BACKEND_URL: "http://backend:8000"
     ports:
-      - "5173:4173"  # Vite's preview mode port exposed to network
+      - "5173:4173"
     depends_on:
       - backend
     container_name: fillmore-frontend
-    command: npm run preview -- --host 0.0.0.0  # Expose Vite
+    command: npm run preview -- --host 0.0.0.0
 
-  backend:
-    build: ./backend
-    image: src/backend
-    restart: unless-stopped
-    environment:
-      DATABASE_URL: "postgresql://postgres:KXQDTu5XrbsVDhe@postgres:5432/fillmore"
-      TF_ENABLE_ONEDNN_OPTS: 0  # Disable TensorFlow oneDNN optimizations
+  pocketbase:
+    build: ./backend/pocketbase  # Path to the Dockerfile for PocketBase
+    container_name: fillmore-pocketbase
+    working_dir: /app
     ports:
-      - "8001:8000"
-    depends_on:
-      - postgres
-    container_name: fillmore-backend
+      - "8090:8090"
+    restart: unless-stopped
+    volumes:
+      - ./pocketbase_data:/app/pb_data  # Persistent storage for PocketBase
 
   postgres:
     image: postgres:13
@@ -32,6 +29,23 @@ services:
       POSTGRES_PASSWORD: KXQDTu5XrbsVDhe
       POSTGRES_DB: fillmore
     ports:
-      - "5433:5432"  # Changed port to avoid conflicts
+      - "5433:5432"
     container_name: fillmore-postgres
     restart: unless-stopped
+
+
+  backend:
+    build: ./backend
+    image: src/backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: "postgresql://postgres:KXQDTu5XrbsVDhe@localhost:5432/fillmore"
+      TF_ENABLE_ONEDNN_OPTS: 0
+      POCKETBASE_URL: "http://0.0.0.0:8090"
+    ports:
+      - "8001:8000"
+    depends_on:
+      - postgres
+      - pocketbase
+    container_name: fillmore-backend
+

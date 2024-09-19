@@ -13,6 +13,7 @@ import requests
 POCKETBASE_URL = "http://0.0.0.0:8090"
 
 def authenticate_pocketbase():
+    pass
     try:
         auth_data = {
             "identity": "teste@gmail.com",
@@ -30,7 +31,7 @@ def authenticate_pocketbase():
         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
 
 # Initialize PocketBase authentication (you can save this token for further requests)
-pocketbase_token = authenticate_pocketbase()
+# pocketbase_token = authenticate_pocketbase()
 
 def root():
     return {"message": "Hello World"}

@@ -1,19 +1,19 @@
-# Utilizar a imagem alpine como base para um container leve
+# Use alpine as the base image for a lightweight container
 FROM alpine:latest
 
-# Definir o diretório de trabalho dentro do container
+# Define the working directory inside the container
 WORKDIR /app
 
-# Instalar dependências necessárias
-RUN apk add --no-cache wget
+# Install wget and unzip to download PocketBase
+RUN apk add --no-cache wget unzip
 
-# Baixar o binário do PocketBase (ajuste a versão conforme necessário)
+# Download the PocketBase binary (adjust the version as needed)
 RUN wget https://github.com/pocketbase/pocketbase/releases/download/v0.12.0/pocketbase_0.12.0_linux_amd64.zip \
     && unzip pocketbase_0.12.0_linux_amd64.zip \
     && rm pocketbase_0.12.0_linux_amd64.zip
 
-# Expor a porta padrão do PocketBase
+# Expose PocketBase's default port
 EXPOSE 8090
 
-# Comando para iniciar o PocketBase
-CMD ["./pocketbase.exe", "serve", "--http", "0.0.0.0:8090"]
+# Command to start PocketBase (note no `.exe` here)
+CMD ["./pocketbase", "serve", "--http", "0.0.0.0:8090"]
