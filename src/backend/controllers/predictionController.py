@@ -175,7 +175,7 @@ def update_model(ID: str, db: Session = Depends(get_db)):
 
     # Update the record with new values
     record.model = 'sequencial_V1'
-    record.URL_modelo = "http://10.128.0.87:8090/api/files/fillmore/2h194oy6ffh41ye/model_mXtPVYz9QH.h5"
+    record.URL_modelo = "http://pocketbase:8090/api/files/4forqd5s2ez9ydw/nel4f0k3tw7k8uq/model_VCjEboMsys.h5"
     
     db.commit()  # Commit the transaction to save the changes
     db.refresh(record)  # Optional: Refresh the instance with the latest data from the database
