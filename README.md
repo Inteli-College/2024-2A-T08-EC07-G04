@@ -70,15 +70,23 @@ Para inicializar a documentação do projeto localmente, siga os passos abaixo:
 - Docker
 
 ### Instruções
-Para iniciar o sistema, entre no diretório ```src``` e execute o comando:
+Siga o passo a passo abaixo para iniciar a aplicação:
+1. Em primeiro lugar, vá para o diretório ```src```:
 ```bash
-docker compose up --build
+cd src
 ```
-Caso seja sua primeira vez utilizando a Docker, será necessário utilzar o comando abaixo:
+2. Em seguida, altere as permissões da pasta ```postgres```:
+```bash
+sudo chdmod 777 -R 777 postgres/
+```
+3. Caso seja sua primeira vez utilizando a Docker, execute o comando:
 ```bash
 sudo systemctl start docker
 ```
-
+4. Por fim, execute o compose:
+```bash
+docker compose up --build
+```
 ## 📁 Estrutura de pastas
 ```plaintext
 
