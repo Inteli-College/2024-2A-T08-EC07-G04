@@ -66,9 +66,18 @@ A plataforma web que implementará o modelo incluirá funcionalidades para a ins
 Para inicializar a documentação do projeto localmente, siga os passos abaixo:
 
 ### Pré-requisitos
+- Python3.X
+- Docker
 
 ### Instruções
-
+Para iniciar o sistema, entre no diretório ```src``` e execute o comando:
+```bash
+docker compose up --build
+```
+Caso seja sua primeira vez utilizando a Docker, será necessário utilzar o comando abaixo:
+```bash
+sudo systemctl start docker
+```
 
 ## 📁 Estrutura de pastas
 ```plaintext
