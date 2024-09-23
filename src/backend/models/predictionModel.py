@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, String, Float, Integer, ForeignKey, PrimaryKeyConstraint
+from sqlalchemy import create_engine, Column, String, Float, Integer, ForeignKey, PrimaryKeyConstraint, ARRAY
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from models.database import Base
@@ -25,7 +25,7 @@ class Model(Base):
     model = Column(String)
     URL_modelo = Column(String)
     # precision = Column(Float)
-    # features = Column(List(Integer))
+    # features = Column(ARRAY(Integer))
     
 
 class Values(Base):

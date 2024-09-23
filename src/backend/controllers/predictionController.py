@@ -49,7 +49,7 @@ def mock_data(table: str, db: Session = Depends(get_db), num_records: int = 10):
 
     return {"message": f"{num_records} records inserted successfully."}
 
-async def predict(file: UploadFile, id_modelo:str, db: Session = Depends(get_db)):
+async def predict(file: UploadFile, id_modelo: str, db: Session = Depends(get_db)):
     try:
         print("Predicting...")
         model_url = get_model_url(id_modelo, db)
@@ -59,11 +59,11 @@ async def predict(file: UploadFile, id_modelo:str, db: Session = Depends(get_db)
         print("Model loaded successfully")
 
         df = pd.read_csv(file.file)
-        expected_columns = ['KNR','unique_names', '1_status_10', '2_status_10', '718_status_10',
+        expected_columns = ['KNR', 'unique_names', '1_status_10', '2_status_10', '718_status_10',
                             '1_status_13', '2_status_13', '718_status_13']
         if list(df.columns) != expected_columns:
             raise HTTPException(status_code=400, detail=f"File must have the columns: {expected_columns}")
-        
+
         print("Data loaded successfully")
 
         knr = df['KNR'].iloc[0]
@@ -75,47 +75,56 @@ async def predict(file: UploadFile, id_modelo:str, db: Session = Depends(get_db)
 
         print("Prediction result: ", result)
 
-        # prediction_id = generate_uuidv7()
-        # for _, row in df.iterrows():
-        #     prediction_entry = Prediction(
-        #         ID=prediction_id,
-        #         KNR=knr,
-        #         ID_modelo="1", 
-        #         Prediction_result=int(result),
-        #         Real_result=random.randint(0, 1)
-        #     )
-        #     db.add(prediction_entry)
+        # Start a transaction
+        prediction_id = generate_uuidv7()  # Replace with your UUID function
 
-        #     features = [
-        #         ('1_status_10', row['1_status_10']),
-        #         ('2_status_10', row['2_status_10']),
-        #         ('718_status_10', row['718_status_10']),
-        #         ('1_status_13', row['1_status_13']),
-        #         ('2_status_13', row['2_status_13']),
-        #         ('718_status_13', row['718_status_13']),
-        #     ]
+        for _, row in df.iterrows():
+            # Insert into Prediction table
+            prediction_entry = Prediction(
+                ID=prediction_id,
+                KNR=knr,
+                ID_modelo=id_modelo,
+                Prediction_result=int(result)
+            )
+            db.add(prediction_entry)
 
-        #     for feature_name, feature_value in features:
-        #         feature = db.query(Features).filter(Features.name_feature == feature_name).first()
-        #         if not feature:
-        #             feature = Features(name_feature=feature_name)
-        #             db.add(feature)
-        #             db.commit()  
+            # Define the features and values
+            features = [
+                ('1_status_10', row['1_status_10']),
+                ('2_status_10', row['2_status_10']),
+                ('718_status_10', row['718_status_10']),
+                ('1_status_13', row['1_status_13']),
+                ('2_status_13', row['2_status_13']),
+                ('718_status_13', row['718_status_13']),
+            ]
 
-        #         values_entry = Values(
-        #             ID_feature=feature.ID_feature,
-        #             ID=prediction_id,
-        #             ID_modelo="1",  
-        #             value_feature=feature_value
-        #         )
-        #         db.add(values_entry)
+            # Insert each feature and its value in Features and Values tables
+            for feature_name, feature_value in features:
+                # Check if the feature already exists
+                feature = db.query(Features).filter(Features.name_feature == feature_name).first()
+                if not feature:
+                    feature = Features(name_feature=feature_name)
+                    db.add(feature)
+                    db.commit()  # Commit after adding new feature to get its ID_feature
 
-        # db.commit()
+                # Insert the value corresponding to the feature
+                values_entry = Values(
+                    ID_feature=feature.ID_feature,
+                    ID=prediction_id,
+                    ID_modelo=id_modelo,  
+                    value_feature=feature_value
+                )
+                db.add(values_entry)
+
+        # Commit the transaction
+        db.commit()
 
         return {"prediction": result}
 
     except Exception as e:
+        db.rollback()  # Rollback if there is an error
         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+
 
 def read_predictions(table: str, skip: int, limit: int, db: Session = Depends(get_db)) -> List[dict]:
 
