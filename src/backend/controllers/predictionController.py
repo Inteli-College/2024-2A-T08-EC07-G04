@@ -5,33 +5,12 @@ import numpy as np
 from sqlalchemy.orm import Session
 from models.predictionModel import Prediction, Features, Model, Values
 from models.database import get_db
-from utils.helpers import call_ai, generate_uuidv7, load_model_from_url, get_model_url
+from utils.helpers import call_ai, generate_uuidv7, load_model_from_url, get_model_url, authenticate_pocketbase
 from typing import List
 import requests
 
-# PocketBase configuration
-POCKETBASE_URL = "http://0.0.0.0:8090"
 
-def authenticate_pocketbase():
-    pass
-    try:
-        auth_data = {
-            "identity": "teste@gmail.com",
-            "password": "testeteste"
-        }
-        response = requests.post(f"{POCKETBASE_URL}/api/admins/auth-with-password", json=auth_data)
-
-        if response.status_code == 200:
-            print("Authenticated successfully!")
-            return response.json()["token"]
-        else:
-            raise HTTPException(status_code=response.status_code, detail="Authentication failed.")
-    except Exception as e:
-        print(f"Unexpected error: {e}")
-        raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
-
-# Initialize PocketBase authentication (you can save this token for further requests)
-# pocketbase_token = authenticate_pocketbase()
+pocketbase_token = authenticate_pocketbase()
 
 def root():
     return {"message": "Hello World"}

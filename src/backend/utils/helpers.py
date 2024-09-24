@@ -9,6 +9,56 @@ from models.predictionModel import Model
 from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException
 from models.database import get_db
+import os
+import tempfile
+import logging
+
+logger = logging.getLogger(__name__)
+
+POCKETBASE_URL = "http://pocketbase:8090"
+
+def authenticate_pocketbase():
+    pass
+    try:
+        auth_data = {
+            "identity": "teste@gmail.com",
+            "password": "testeteste"
+        }
+        response = requests.post(f"{POCKETBASE_URL}/api/admins/auth-with-password", json=auth_data)
+
+        if response.status_code == 200:
+            print("Authenticated successfully!")
+            return response.json()["token"]
+        else:
+            raise HTTPException(status_code=response.status_code, detail="Authentication failed.")
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+    
+pocketbase_tocken = authenticate_pocketbase()
+
+def upload_model_to_pocketbase(file_path: str, token: str) -> str:
+    try:
+        collection_name = 'models'
+        files = {
+            'file': open(file_path, 'rb')
+        }
+        headers = {
+            'Authorization': f'Bearer {token}'
+        }
+        response = requests.post(
+            f"{POCKETBASE_URL}/api/collections/{collection_name}/records",
+            files=files,
+            headers=headers
+        )
+        response.raise_for_status()
+        file_info = response.json()
+        file_url = f"{POCKETBASE_URL}/api/files/{collection_name}/{file_info['id']}/{file_info['file']}"
+        logger.info(f"Model uploaded to PocketBase successfully. URL: {file_url}")
+        return file_url
+    except Exception as e:
+        logger.error(f"Failed to upload model to PocketBase: {e}")
+        raise Exception("Model upload to PocketBase failed.")
 
 
 def call_ai(df: pd.DataFrame, model):
@@ -31,32 +81,30 @@ def generate_uuidv7():
     return uuidv7
 
 def load_model_from_url(url: str):
-    # Generate a unique file name for the model
-    unique_filename = f"temp_model_{generate_uuidv7()}.h5"
-    
-    # Download the model from the URL
-    response = requests.get(url)
-    with open(unique_filename, "wb") as f:
-        f.write(response.content)
-    
-    # Load the model
-    model = tf.keras.models.load_model(unique_filename)
-    
-    # Optionally, remove the file after loading the model to clean up
-    os.remove(unique_filename)
+    try:
+        with tempfile.NamedTemporaryFile(suffix='.h5', delete=False) as tmp_file:
+            response = requests.get(url)
+            response.raise_for_status()
+            tmp_file.write(response.content)
+            temp_filename = tmp_file.name
 
-    print("Model loaded successfully")
-    
-    return model
+        model = tf.keras.models.load_model(temp_filename)
+        logger.info("Model loaded successfully from URL.")
+        return model
+    except Exception as e:
+        logger.error(f"Failed to load model from URL: {e}")
+        raise Exception("Failed to load model.")
+    finally:
+        if 'temp_filename' in locals() and os.path.exists(temp_filename):
+            os.remove(temp_filename)
+
 
 def get_model_url(ID_modelo: str, db: Session = Depends(get_db)) -> str:
-    # Query the Model table to find the record with the given ID_modelo
     record = db.query(Model).filter(Model.ID_modelo == ID_modelo).first()
 
     if not record:
         raise HTTPException(status_code=404, detail="Model not found")
 
-    # Accessing the actual string value
     url_modelo = record.URL_modelo
 
     return url_modelo
