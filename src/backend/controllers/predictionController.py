@@ -182,9 +182,18 @@ def update_model(ID: str, db: Session = Depends(get_db)):
     if not record:
         raise HTTPException(status_code=404, detail="Model not found")
 
+    features = [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+    ]
+
     # Update the record with new values
-    record.model = 'sequencial_V1'
-    record.URL_modelo = "http://pocketbase:8090/api/files/4forqd5s2ez9ydw/nel4f0k3tw7k8uq/model_VCjEboMsys.h5"
+    record.precision = 0.90
+    record.features = features
     
     db.commit()  # Commit the transaction to save the changes
     db.refresh(record)  # Optional: Refresh the instance with the latest data from the database
