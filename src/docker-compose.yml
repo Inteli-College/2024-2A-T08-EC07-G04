@@ -37,10 +37,9 @@ services:
     networks:
       - app-tier
     volumes:
-      - ./postgres:/var/lib/postgresql/data
+      - ./new-postgres-data:/var/lib/postgresql/data
     container_name: fillmore-postgres
     restart: unless-stopped
-
 
   backend:
     build: ./backend
@@ -49,9 +48,9 @@ services:
     environment:
       DATABASE_URL: "postgresql://postgres:KXQDTu5XrbsVDhe@postgres:5432/fillmore"
       TF_ENABLE_ONEDNN_OPTS: 0
-      POCKETBASE_URL: "http://pocketbase:8090"
+      POCKETBASE_URL: "http://172.18.0.1:8090"
     ports:
-      - "8001:8000"
+      - "8000:8000"
     depends_on:
       - postgres
       - pocketbase
@@ -59,6 +58,27 @@ services:
     networks:
       - app-tier
 
+  healthcheck:
+    build: ./healthcheck  # Path to the Dockerfile for the FastAPI healthcheck
+    image: src/healthcheck
+    container_name: fillmore-healthcheck
+    ports:
+      - "9000:9000"
+    environment:
+      DATABASE_URL: "postgresql://postgres:KXQDTu5XrbsVDhe@postgres:5432/fillmore"
+    depends_on:
+      - backend
+      - postgres
+      - pocketbase
+      - frontend
+    networks:
+      - app-tier
+    restart: unless-stopped
+
 networks:
   app-tier:
     driver: bridge
+
+volumes:
+  pgdata:
+    external: false
