@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from models.database import engine, Base
-from routes import predictionRoutes, healthChecksRoutes
+from routes import predictionRoutes, healthChecksRoutes, retrainingRoutes
 
 # Criação da tabela no banco de dados
 Base.metadata.create_all(bind=engine)
@@ -10,6 +10,7 @@ app = FastAPI()
 # Registro das rotas
 app.include_router(predictionRoutes.router)
 app.include_router(healthChecksRoutes.router)
+app.include_router(retrainingRoutes.router)
 
 if __name__ == "__main__":
     import uvicorn

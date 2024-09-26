@@ -9,7 +9,55 @@ from models.predictionModel import Model
 from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException
 from models.database import get_db
+import os
+import logging
 
+logger = logging.getLogger(__name__)
+
+POCKETBASE_URL = "http://pocketbase:8090"
+
+def authenticate_pocketbase():
+    pass
+    try:
+        auth_data = {
+            "identity": "teste@gmail.com",
+            "password": "testeteste"
+        }
+        response = requests.post(f"{POCKETBASE_URL}/api/admins/auth-with-password", json=auth_data)
+
+        if response.status_code == 200:
+            print("Authenticated successfully!")
+            return response.json()["token"]
+        else:
+            raise HTTPException(status_code=response.status_code, detail="Authentication failed.")
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+    
+pocketbase_tocken = authenticate_pocketbase()
+
+def upload_model_to_pocketbase(file_path: str, token: str) -> str:
+    try:
+        collection_name = 'models'
+        files = {
+            'file': open(file_path, 'rb')
+        }
+        headers = {
+            'Authorization': f'Bearer {token}'
+        }
+        response = requests.post(
+            f"{POCKETBASE_URL}/api/collections/{collection_name}/records",
+            files=files,
+            headers=headers
+        )
+        response.raise_for_status()
+        file_info = response.json()
+        file_url = f"{POCKETBASE_URL}/api/files/{collection_name}/{file_info['id']}/{file_info['file']}"
+        logger.info(f"Model uploaded to PocketBase successfully. URL: {file_url}")
+        return file_url
+    except Exception as e:
+        logger.error(f"Failed to upload model to PocketBase: {e}")
+        raise Exception("Model upload to PocketBase failed.")
 
 def call_ai(df: pd.DataFrame, model):
     required_columns = ['unique_names', '1_status_10', '2_status_10', '718_status_10',
