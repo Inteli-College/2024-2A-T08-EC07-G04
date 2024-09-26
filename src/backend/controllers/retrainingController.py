@@ -19,6 +19,12 @@ async def retrain_model(file: UploadFile, id_modelo: str, db: Session = Depends(
         model_url = get_model_url(id_modelo, db)
         model = load_model_from_url(model_url)
 
+        model.compile(
+            optimizer='adam',  
+            loss='binary_crossentropy',  
+            metrics=['accuracy']  
+        )
+
         df = pd.read_csv(file.file)
 
         expected_columns = [
@@ -40,11 +46,13 @@ async def retrain_model(file: UploadFile, id_modelo: str, db: Session = Depends(
             )
 
         feature_columns = [
-            'unique_names', '1_status_10', '2_status_10', '718_status_10', '1_status_13', '2_status_13', '718_status_13',
-            '_unit_count', '%_unit_count', 'Clicks_unit_count', 'Deg_unit_count', 'Grad_unit_count', 'Nm_unit_count',
-            'Unnamed:5_unit_count', 'V_unit_count', 'kg_unit_count', 'min_unit_count', 'mm_unit_count', '_unit_mean',
-            '%_unit_mean', 'Clicks_unit_mean', 'Deg_unit_mean', 'Grad_unit_mean', 'Nm_unit_mean', 'Unnamed:5_unit_mean',
-            'V_unit_mean', 'kg_unit_mean', 'min_unit_mean', 'mm_unit_mean'
+            'KNR',
+            'unique_names',
+            '1_status_10',
+            '2_status_10',
+            '718_status_10',
+            '1_status_13',
+            '2_status_13'
         ]
         label_column = '718_status_13'
 
@@ -54,7 +62,13 @@ async def retrain_model(file: UploadFile, id_modelo: str, db: Session = Depends(
         X = X.values.astype(np.float32)
         y = y.values.astype(np.float32)
 
-        model.fit(X, y, epochs=5, batch_size=1, validation_split=0.1)
+        num_samples = len(X)
+        if num_samples > 1:
+            validation_split = 0.1  
+        else:
+            validation_split = 0.0  
+
+        model.fit(X, y, epochs=5, batch_size=1, validation_split=validation_split)
 
         new_model_filename = f"model_{generate_uuidv7()}.h5"
         model_save_path = os.path.join("model", new_model_filename)
@@ -64,6 +78,9 @@ async def retrain_model(file: UploadFile, id_modelo: str, db: Session = Depends(
         model.save(model_save_path)
 
         new_model_url = upload_model_to_pocketbase(model_save_path, token)
+
+        if not new_model_url:
+            raise Exception("Failed to upload the model to PocketBase.")
 
         model_record = db.query(Model).filter(Model.ID_modelo == id_modelo).first()
         if not model_record:
@@ -86,6 +103,6 @@ async def retrain_model(file: UploadFile, id_modelo: str, db: Session = Depends(
         logger.error(f"Error during model retraining: {e}")
         raise HTTPException(
             status_code=500,
-            detail="An error occurred during model retraining."
+            detail=f"An error occurred during model retraining: {str(e)}"
         )
 

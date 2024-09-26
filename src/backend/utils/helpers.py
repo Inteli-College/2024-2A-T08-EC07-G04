@@ -34,27 +34,37 @@ def authenticate_pocketbase():
         print(f"Unexpected error: {e}")
         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
     
-pocketbase_tocken = authenticate_pocketbase()
+pocketbase_token = authenticate_pocketbase()
 
 def upload_model_to_pocketbase(file_path: str, token: str) -> str:
     try:
-        collection_name = 'models'
-        files = {
-            'file': open(file_path, 'rb')
-        }
+        POCKETBASE_URL = os.getenv('POCKETBASE_URL', 'http://localhost:8090')
+        collection_name = 'models'  
+        file_field_name = 'model_file'  
+
+        url = f"{POCKETBASE_URL}/api/collections/{collection_name}/records"
+
+        files = {file_field_name: open(file_path, 'rb')}
+        data = {}
         headers = {
-            'Authorization': f'Bearer {token}'
+            'Authorization': f'Admin {token}'
         }
-        response = requests.post(
-            f"{POCKETBASE_URL}/api/collections/{collection_name}/records",
-            files=files,
-            headers=headers
-        )
+
+        response = requests.post(url, data=data, files=files, headers=headers)
         response.raise_for_status()
-        file_info = response.json()
-        file_url = f"{POCKETBASE_URL}/api/files/{collection_name}/{file_info['id']}/{file_info['file']}"
+
+        record = response.json()
+        file_id = record['id']
+        file_name = record[file_field_name]
+
+        file_url = f"{POCKETBASE_URL}/api/files/{collection_name}/{file_id}/{file_name}"
+
         logger.info(f"Model uploaded to PocketBase successfully. URL: {file_url}")
         return file_url
+    except requests.HTTPError as e:
+        logger.error(f"Error uploading file: {e.response.status_code}")
+        logger.error(f"Response content: {e.response.content}")
+        raise Exception("Model upload to PocketBase failed.")
     except Exception as e:
         logger.error(f"Failed to upload model to PocketBase: {e}")
         raise Exception("Model upload to PocketBase failed.")

@@ -52,11 +52,9 @@ async def predict(file: UploadFile, id_modelo: str, db: Session = Depends(get_db
 
         print("Prediction result: ", result)
 
-        # Start a transaction
-        prediction_id = generate_uuidv7()  # Replace with your UUID function
+        prediction_id = generate_uuidv7()  
 
         for _, row in df.iterrows():
-            # Insert into Prediction table
             prediction_entry = Prediction(
                 ID=prediction_id,
                 KNR=knr,
@@ -65,7 +63,6 @@ async def predict(file: UploadFile, id_modelo: str, db: Session = Depends(get_db
             )
             db.add(prediction_entry)
 
-            # Define the features and values
             features = [
                 ('1_status_10', row['1_status_10']),
                 ('2_status_10', row['2_status_10']),
@@ -75,16 +72,15 @@ async def predict(file: UploadFile, id_modelo: str, db: Session = Depends(get_db
                 ('718_status_13', row['718_status_13']),
             ]
 
-            # Insert each feature and its value in Features and Values tables
+           
+    
             for feature_name, feature_value in features:
-                # Check if the feature already exists
                 feature = db.query(Features).filter(Features.name_feature == feature_name).first()
                 if not feature:
                     feature = Features(name_feature=feature_name)
                     db.add(feature)
-                    db.commit()  # Commit after adding new feature to get its ID_feature
+                    db.commit()  
 
-                # Insert the value corresponding to the feature
                 values_entry = Values(
                     ID_feature=feature.ID_feature,
                     ID=prediction_id,
@@ -93,13 +89,12 @@ async def predict(file: UploadFile, id_modelo: str, db: Session = Depends(get_db
                 )
                 db.add(values_entry)
 
-        # Commit the transaction
         db.commit()
 
         return {"prediction": result}
 
     except Exception as e:
-        db.rollback()  # Rollback if there is an error
+        db.rollback()  
         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
 
 
@@ -153,7 +148,6 @@ def delete_prediction(ID: str, db: Session = Depends(get_db)):
     return {"detail": "Prediction deleted"}
 
 def update_model(ID: str, db: Session = Depends(get_db)):
-    # Fetch the record to update by ID
     record = db.query(Model).filter(Model.ID_modelo == ID).first()
 
     if not record:
@@ -168,11 +162,10 @@ def update_model(ID: str, db: Session = Depends(get_db)):
         6
     ]
 
-    # Update the record with new values
     record.precision = 0.90
     record.features = features
     
-    db.commit()  # Commit the transaction to save the changes
-    db.refresh(record)  # Optional: Refresh the instance with the latest data from the database
+    db.commit()  
+    db.refresh(record)  
 
-    return record  # Optionally return the updated record
+    return record  
