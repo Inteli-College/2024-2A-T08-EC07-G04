@@ -47,15 +47,20 @@ def count_unique_knr_and_prediction_result(db: Session, start_date: datetime, en
 
     return {"carros": unique_knr_count, "falhas": prediction_result_count}
 
-def get_timestamp_from_uuid(uuid_str: str) -> datetime:
+def get_timestamp_from_uuid(id_str: str) -> datetime:
     try:
-        # Extract the timestamp part from the UUID and convert it to a datetime object
-        uuid_obj = uuid.UUID(uuid_str)
-        timestamp = uuid_obj.time / 1e7 - 12219292800  # Convert UUID time to UNIX timestamp
-        return datetime.utcfromtimestamp(timestamp)
-    except ValueError:
-        # Handle invalid UUID strings
+        # Extract the timestamp portion from the UUID (first two segments combined)
+        timestamp_hex = id_str.split('-')[0] + id_str.split('-')[1]
+        
+        # Convert hex timestamp to milliseconds
+        timestamp_ms = int(timestamp_hex, 16)
+        
+        # Convert milliseconds to seconds for the datetime conversion
+        return datetime.utcfromtimestamp(timestamp_ms / 1000)
+    except ValueError as e:
+        print(f"Error parsing timestamp: {e}")
         return None
+
 
 def read_predictions_current_week(skip: int, limit: int, db: Session = Depends(get_db)) -> List[dict]:
     # Calculate the start of the current week (Monday at 00:00)
@@ -69,6 +74,7 @@ def read_predictions_current_week(skip: int, limit: int, db: Session = Depends(g
     result = []
     for record in records:
         timestamp = get_timestamp_from_uuid(record.ID)
+        print(timestamp)
         if timestamp and timestamp >= start_of_week:
             record_dict = record.__dict__
             record_dict.pop('_sa_instance_state', None)
