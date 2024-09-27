@@ -82,6 +82,25 @@ def read_predictions_current_week(skip: int, limit: int, db: Session = Depends(g
     
     return result
 
+def read_predictions_current_day(skip: int, limit: int, db: Session = Depends(get_db)) -> List[dict]:
+    # Calculate the start of the current week (Monday at 00:00)
+    today = datetime.utcnow()
+
+    # Query all records from the Prediction table
+    records = db.query(Prediction).offset(skip).limit(limit).all()
+    
+    # Filter records that are within the current week based on the UUID timestamp
+    result = []
+    for record in records:
+        timestamp = get_timestamp_from_uuid(record.ID)
+        print(timestamp)
+        if timestamp == today:
+            record_dict = record.__dict__
+            record_dict.pop('_sa_instance_state', None)
+            result.append(record_dict)
+    
+    return result
+
 
 
 def get_unique_knr_predictions_last_5_months(db: Session = Depends(get_db)) -> Dict[str, Dict[str, int]]:
