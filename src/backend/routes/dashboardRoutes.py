@@ -1,9 +1,12 @@
 from fastapi import APIRouter, Depends, UploadFile
 from sqlalchemy.orm import Session
-from controllers.dashboardController import (read_predictions_current_week, get_timestamp_from_uuid,read_predictions_current_day)
+from controllers.dashboardController import (read_predictions_current_week, get_timestamp_from_uuid,read_predictions_current_day,count_unique_knr_last_month,count_predictions_last_month,get_unique_knr_predictions_last_5_months)
 from models.database import get_db
 
 router = APIRouter()
 
 router.get("/dashboard/week")(read_predictions_current_week)
 router.get("/dashboard/day")(read_predictions_current_day)
+router.get("/dashboard/knr_month")(count_unique_knr_last_month)
+router.get("/dashboard/predictions_month")(count_predictions_last_month)
+router.get("/dashboard/knr_5_months")(get_unique_knr_predictions_last_5_months)

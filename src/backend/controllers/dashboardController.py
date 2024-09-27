@@ -7,12 +7,11 @@ from models.database import get_db
 from typing import List
 from typing import Dict
 
-def normalize_to_last_month():
+def normalize_to_current_month():
     today = datetime.utcnow()
     first_day_of_this_month = today.replace(day=1)
-    last_day_of_last_month = first_day_of_this_month - timedelta(days=1)
-    first_day_of_last_month = last_day_of_last_month.replace(day=1)
-    return first_day_of_last_month, last_day_of_last_month
+    last_day_of_current_month = today  # The current day will be the end of the range
+    return first_day_of_this_month, last_day_of_current_month
 
 def get_last_5_months_ranges() -> List[Dict[str, datetime]]:
     today = datetime.utcnow()
@@ -105,36 +104,59 @@ def read_predictions_current_day(skip: int, limit: int, db: Session = Depends(ge
 
 def get_unique_knr_predictions_last_5_months(db: Session = Depends(get_db)) -> Dict[str, Dict[str, int]]:
     result = {}
-    
+
     # Get the date ranges for the last 5 months
     ranges = get_last_5_months_ranges()
+
+    # Query all records from the Prediction table
+    records = db.query(Prediction).all()
 
     for i, date_range in enumerate(ranges):
         start_date = date_range["start_date"]
         end_date = date_range["end_date"]
+
+        # Count unique KNR and prediction result for each month
+        unique_knr_set = set()
+        prediction_count = 0
+        for record in records:
+            timestamp = get_timestamp_from_uuid(record.ID)
+            if timestamp and start_date <= timestamp <= end_date:
+                unique_knr_set.add(record.KNR)
+                if record.Prediction_result == 1:
+                    prediction_count += 1
         
-        month_data = count_unique_knr_and_prediction_result(db, start_date, end_date)
-        result[f"mes{i+1}"] = month_data
-    
-    return result
+        result[f"mes{i+1}"] = {"carros": len(unique_knr_set), "falhas": prediction_count}
 
-def count_unique_knr_last_month(db: Session = Depends(get_db)):
-    start_date, end_date = normalize_to_last_month()
+    return result  # Return the JSON-like structure
 
-    # Count the number of distinct KNR within the last month
-    unique_count = db.query(Prediction.KNR).filter(
-        Prediction.created_at.between(start_date, end_date)
-    ).distinct().count()
 
-    return {"unique_count": unique_count}
+def count_unique_knr_last_month(db: Session = Depends(get_db)) -> int:
+    start_date, end_date = normalize_to_current_month()
 
-def count_predictions_last_month(db: Session = Depends(get_db)):
-    start_date, end_date = normalize_to_last_month()
+    # Query all records from the Prediction table
+    records = db.query(Prediction).all()
 
-    # Count how many predictions have prediction_result = 1 within the last month
-    count = db.query(Prediction).filter(
-        Prediction.prediction_result == 1,
-        Prediction.created_at.between(start_date, end_date)
-    ).count()
+    # Count the number of distinct KNR within the last month based on the UUID timestamp
+    unique_knr_set = set()
+    for record in records:
+        timestamp = get_timestamp_from_uuid(record.ID)
+        if timestamp and start_date <= timestamp <= end_date:
+            unique_knr_set.add(record.KNR)
 
-    return {"count": count}
+    return len(unique_knr_set)  # Return just the integer count
+
+
+def count_predictions_last_month(db: Session = Depends(get_db)) -> int:
+    start_date, end_date = normalize_to_current_month()
+
+    # Query all records from the Prediction table
+    records = db.query(Prediction).all()
+
+    # Count how many predictions have prediction_result = 1 within the last month based on UUID timestamp
+    prediction_count = 0
+    for record in records:
+        timestamp = get_timestamp_from_uuid(record.ID)
+        if timestamp and start_date <= timestamp <= end_date and record.Prediction_result == 1:
+            prediction_count += 1
+
+    return prediction_count  # Return just the integer count
