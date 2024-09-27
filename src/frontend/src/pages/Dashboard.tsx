@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import NavBar from '../components/NavBar';
 import DateFilter from '../components/DateFilter';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, Legend, ResponsiveContainer } from 'recharts';
 import AreaStatusChart from '../components/Graph2'; 
 import Graph3 from '../components/Graph3';
 
+type PredictionItem = {
+  ID: string;
+  Prediction_result: number;
+  // Include any other fields returned by the endpoint as needed
+};
 // Componente de card para exibir estatísticas
 const DashboardCard: React.FC<{ title: string; value: string; icon: React.ReactNode }> = ({ title, value, icon }) => {
   return (
@@ -17,6 +22,8 @@ const DashboardCard: React.FC<{ title: string; value: string; icon: React.ReactN
     </div>
   );
 };
+
+
 
 // Dados de exemplo para o gráfico
 const data = [
@@ -46,6 +53,51 @@ const CarFailureChart: React.FC = () => {
 const App: React.FC = () => {
   const [, setStartDate] = useState('');
   const [, setEndDate] = useState('');
+  const [weekCount, setWeekCount] = useState(0);
+  const [dayCount, setDayCount] = useState(0);
+
+
+  useEffect(() => {
+    // Define an async function to fetch the data
+    const fetchWeekPredictions = async () => {
+      try {
+        const response = await fetch('http://localhost:8001/dashboard/week?skip=0&limit=30');
+        const data: PredictionItem[] = await response.json();
+        
+        // Count entities where "Prediction_result" is 1
+        const predictionCount = data.filter((item: PredictionItem) => item.Prediction_result === 1).length;
+        
+        setWeekCount(predictionCount);
+        console.log('Prediction count:', predictionCount);
+      } catch (error) {
+        console.error('Error fetching predictions:', error);
+      }
+    };
+
+    fetchWeekPredictions();
+  }, []); // Empty dependency array to run once on component mount
+
+  useEffect(() => {
+    // Define an async function to fetch the data
+    const fetchDayPredictions = async () => {
+      try {
+        const response = await fetch('http://localhost:8001/dashboard/day?skip=0&limit=30');
+        const data: PredictionItem[] = await response.json();
+        
+        // Count entities where "Prediction_result" is 1
+        const predictionCount = data.filter((item: PredictionItem) => item.Prediction_result === 1).length;
+        
+        setDayCount(predictionCount);
+        console.log('Prediction count:', predictionCount);
+      } catch (error) {
+        console.error('Error fetching predictions:', error);
+      }
+    };
+
+    fetchDayPredictions();
+  }, []); // Empty dependency array to run once on component mount
+  
+  
   
   const handleDateFilter = (startDate: string, endDate: string) => {
     setStartDate(startDate);
@@ -67,13 +119,13 @@ const App: React.FC = () => {
         {/* Cards de Estatísticas */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <DashboardCard
-            title="Total Falhas - Janeiro"
-            value="1,200"
+            title="Falhas essa semana"
+            value={weekCount.toString()}
             icon={<i className="fas fa-users"></i>}
           />
           <DashboardCard
-            title="Total Carros"
-            value="40,000"
+            title="Falhas hoje"
+            value={dayCount.toString()}
             icon={<i className="fas fa-car"></i>}
           />
           <DashboardCard
