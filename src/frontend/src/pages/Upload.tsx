@@ -4,10 +4,12 @@ import FileUpload from '../components/Upload';
 
 const App: React.FC = () => {
   return (
-    <div>
+    <div className="bg-[#000475] min-h-screen flex flex-col">
       <NavBar />
-      <main className="p-8 bg-gray-100 min-h-screen">
-        <FileUpload />
+      <main className="p-8 flex flex-col items-center justify-center text-white flex-grow">
+      <div className="bg-white shadow-lg rounded-lg p-6 max-w-4xl w-full h-30">
+            <FileUpload />
+        </div>
       </main>
     </div>
   );
