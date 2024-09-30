@@ -95,11 +95,20 @@ def call_ai(df: pd.DataFrame, model):
     return float(predictions[0])
 
 def generate_uuidv7():
+    # Get the current timestamp in milliseconds
     timestamp_ms = int(time.time() * 1000)
-    time_hex = f'{timestamp_ms:x}'
-    random_hex = ''.join([f'{random.randint(0, 15):x}' for _ in range(26)])
-    uuidv7 = f'{time_hex[:8]}-{time_hex[8:12]}-7{time_hex[12:15]}-{random_hex[:4]}-{random_hex[4:]}'
+    
+    # Convert the timestamp to a hex string and ensure it is 12 characters long
+    time_hex = f'{timestamp_ms:012x}'
+    
+    # Generate 10 random hex characters for the random portion of the UUID
+    random_hex = ''.join([f'{random.randint(0, 15):x}' for _ in range(10)])
+    
+    # Construct the UUIDv7 string with version 7 and proper structure
+    uuidv7 = f'{time_hex[:8]}-{time_hex[8:12]}-7{random_hex[:3]}-{random_hex[3:7]}-{random_hex[7:]}'
+    
     return uuidv7
+
 
 def load_model_from_url(url: str):
     unique_filename = f"temp_model_{generate_uuidv7()}.h5"

@@ -21,6 +21,14 @@ def mock_data(table: str, db: Session = Depends(get_db), num_records: int = 10):
                 model='sequencial_V1',
                 URL_modelo="http://pocketbase:8090/api/files/4forqd5s2ez9ydw/wwpjocvw1obr90r/modelo_0cJQGhMAmk.h5"
             )
+        elif table == 'Prediction':
+            record = Prediction(
+                KNR="2024.12",
+                ID = generate_uuidv7(),
+                Real_result=1,
+                ID_modelo="1",
+                Prediction_result=1
+            )
         db.add(record)
     db.commit()
 
