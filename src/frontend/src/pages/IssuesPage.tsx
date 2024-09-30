@@ -1,7 +1,7 @@
 import React from 'react';
 import NavBar from '../components/NavBar';
 import IssuesTable from '../components/IssuesTable';
-import { HiX } from 'react-icons/hi'; // Importando um ícone para o 'X'
+import { HiX } from 'react-icons/hi';
 
 const IssuesPage: React.FC = () => {
   const mockIssues = ['Falha no sistema de freio', 'Desgaste excessivo de pneus', 'Problemas no motor'];
@@ -23,7 +23,6 @@ const IssuesPage: React.FC = () => {
       <NavBar />
       <div className="flex flex-col items-center justify-center mt-8">
         
-        {/* Caixa para a tabela */}
         <div className="relative bg-white shadow-lg rounded-lg p-4 mb-6">
           <div className="flex justify-between items-center mb-4"> {/* Flex container para o título e ícone */}
             <div className="text-black text-xl font-bold">Possíveis falhas</div>

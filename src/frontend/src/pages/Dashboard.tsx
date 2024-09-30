@@ -5,7 +5,6 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, Legend, Responsive
 import AreaStatusChart from '../components/Graph2'; 
 import Graph3 from '../components/Graph3';
 
-// Componente de card para exibir estatísticas
 const DashboardCard: React.FC<{ title: string; value: string; icon: React.ReactNode }> = ({ title, value, icon }) => {
   return (
     <div className="bg-gradient-to-br from-white to-gray-50 p-6 rounded-lg shadow-md flex items-center space-x-4 transition duration-300 transform hover:scale-105 hover:shadow-lg">
@@ -18,7 +17,6 @@ const DashboardCard: React.FC<{ title: string; value: string; icon: React.ReactN
   );
 };
 
-// Dados de exemplo para o gráfico
 const data = [
   { month: 'Jan', totalCars: 4000, faultyCars: 240 },
   { month: 'Feb', totalCars: 3000, faultyCars: 139 },
@@ -62,12 +60,10 @@ const App: React.FC = () => {
       <main className="p-8 bg-gray-100 min-h-screen">
         <h1 className="text-4xl font-bold mb-8 text-center">Dashboard</h1>
 
-        {/* Filtro de Data */}
         <div className="mb-8">
           <DateFilter onFilter={handleDateFilter} />
         </div>
 
-        {/* Cards de Estatísticas */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <DashboardCard title="Total Falhas - Janeiro" value="1,200" icon={<i className="fas fa-users"></i>} />
           <DashboardCard title="Total Carros" value="40,000" icon={<i className="fas fa-car"></i>} />
@@ -75,7 +71,6 @@ const App: React.FC = () => {
           <DashboardCard title="Falhas Hoje" value="12" icon={<i className="fas fa-tasks"></i>} />
         </div>
 
-        {/* Gráficos */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold mb-4">Carros e Falhas Detectadas por Mês</h2>

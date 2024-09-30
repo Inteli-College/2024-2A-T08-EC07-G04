@@ -6,10 +6,8 @@ const NoIssuesPage: React.FC = () => {
 
   return (
     <div className="bg-[#000475] min-h-screen flex flex-col">
-      {/* Navbar fixada no topo */}
       <NavBar />
 
-      {/* Conteúdo centralizado */}
       <div className="flex flex-grow flex-col items-center justify-center">
         <div className="bg-white rounded-lg shadow-lg px-8 py-10 flex flex-col items-center justify-center w-full max-w-lg">
           <svg
