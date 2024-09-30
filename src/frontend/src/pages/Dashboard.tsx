@@ -1,95 +1,80 @@
-import React, { useState } from 'react';
-import NavBar from '../components/NavBar';
-import DateFilter from '../components/DateFilter';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, Legend, ResponsiveContainer } from 'recharts';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import CarFailureChart from '../components/Graph';
 import AreaStatusChart from '../components/Graph2'; 
-import Graph3 from '../components/Graph3';
 
-const DashboardCard: React.FC<{ title: string; value: string; icon: React.ReactNode }> = ({ title, value, icon }) => {
-  return (
-    <div className="bg-gradient-to-br from-white to-gray-50 p-6 rounded-lg shadow-md flex items-center space-x-4 transition duration-300 transform hover:scale-105 hover:shadow-lg">
-      <div className="text-blue-500 text-4xl">{icon}</div>
-      <div>
-        <h3 className="text-2xl font-semibold">{title}</h3>
-        <p className="text-gray-600 text-lg">{value}</p>
-      </div>
+const DashboardCard = ({ title, value, icon }) => (
+  <div className="bg-gradient-to-br from-white to-gray-50 p-6 rounded-lg shadow-md flex items-center space-x-4 transition duration-300 transform hover:scale-105 hover:shadow-lg">
+    <div className="text-blue-500 text-4xl">{icon}</div>
+    <div>
+      <h3 className="text-2xl font-semibold">{title}</h3>
+      <p className="text-gray-600 text-lg">{value}</p>
     </div>
-  );
-};
+  </div>
+);
 
-const data = [
-  { month: 'Jan', totalCars: 4000, faultyCars: 240 },
-  { month: 'Feb', totalCars: 3000, faultyCars: 139 },
-  { month: 'Mar', totalCars: 2000, faultyCars: 98 },
-  { month: 'Apr', totalCars: 2780, faultyCars: 390 },
-  { month: 'May', totalCars: 1890, faultyCars: 48 },
-];
+const Dashboard = () => {
+  const [carFailureData, setCarFailureData] = useState([]);
+  const [statusData, setStatusData] = useState([]);
+  const [weeklyPredictions, setWeeklyPredictions] = useState(0);
+  const [dailyPredictions, setDailyPredictions] = useState(0);
+  const [uniqueKnrLastMonth, setUniqueKnrLastMonth] = useState(0);
+  const [predictionsLastMonth, setPredictionsLastMonth] = useState(0);
 
-const CarFailureChart: React.FC = () => {
-  return (
-    <div className="bg-gradient-to-br from-white to-gray-100 p-6 rounded-xl shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
-      <h2 className="text-2xl font-bold text-gray-700 mb-6 text-center">Falhas de Carros por Mês</h2>
-      <ResponsiveContainer width="100%" height={400}>
-        <BarChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-          <XAxis dataKey="month" tick={{ fill: '#555555' }} />
-          <YAxis tick={{ fill: '#555555' }} />
-          <Tooltip contentStyle={{ backgroundColor: '#ffffff', borderRadius: '10px', padding: '10px' }} />
-          <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: 10 }} />
-          <Bar dataKey="totalCars" fill="#2f94bf" radius={[10, 10, 0, 0]} animationDuration={1500} />
-          <Bar dataKey="faultyCars" fill="#ff4d4d" radius={[10, 10, 0, 0]} animationDuration={1500} />
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
-  );
-};
+  useEffect(() => {
+    axios.get('/dashboard/knr_5_months')
+      .then(response => setCarFailureData(response.data))
+      .catch(error => console.error('Erro ao buscar KNR 5 meses:', error));
 
-const App: React.FC = () => {
-  const [, setStartDate] = useState('');
-  const [, setEndDate] = useState('');
-  
-  const handleDateFilter = (startDate: string, endDate: string) => {
-    setStartDate(startDate);
-    setEndDate(endDate);
-    console.log('Filtrando dados de:', startDate, 'até:', endDate);
-  };
+    axios.get('/dashboard/week')
+      .then(response => setWeeklyPredictions(response.data))
+      .catch(error => console.error('Erro ao buscar previsões semanais:', error));
+
+    axios.get('/dashboard/day')
+      .then(response => setDailyPredictions(response.data))
+      .catch(error => console.error('Erro ao buscar previsões diárias:', error));
+
+    axios.get('/dashboard/knr_month')
+      .then(response => setUniqueKnrLastMonth(response.data))
+      .catch(error => console.error('Erro ao buscar KNR do mês passado:', error));
+
+    axios.get('/dashboard/predictions_month')
+      .then(response => setPredictionsLastMonth(response.data))
+      .catch(error => console.error('Erro ao buscar previsões do mês passado:', error));
+
+    axios.get('/dashboard/status_data')
+      .then(response => setStatusData(response.data))
+      .catch(error => console.error('Erro ao buscar dados de status:', error));
+  }, []);
 
   return (
     <div>
-      <NavBar />
       <main className="p-8 bg-gray-100 min-h-screen">
         <h1 className="text-4xl font-bold mb-8 text-center">Dashboard</h1>
 
-        <div className="mb-8">
-          <DateFilter onFilter={handleDateFilter} />
-        </div>
-
+        {/* Cards do Dashboard */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <DashboardCard title="Total Falhas - Janeiro" value="1,200" icon={<i className="fas fa-users"></i>} />
-          <DashboardCard title="Total Carros" value="40,000" icon={<i className="fas fa-car"></i>} />
-          <DashboardCard title="Novas Falhas" value="320" icon={<i className="fas fa-exclamation-triangle"></i>} />
-          <DashboardCard title="Falhas Hoje" value="12" icon={<i className="fas fa-tasks"></i>} />
+          <DashboardCard title="Falhas na Semana" value={weeklyPredictions.toString()} icon={<i className="fas fa-chart-line"></i>} />
+          <DashboardCard title="Falhas no Dia" value={dailyPredictions.toString()} icon={<i className="fas fa-calendar-day"></i>} />
+          <DashboardCard title="KNR Mês Passado" value={uniqueKnrLastMonth.toString()} icon={<i className="fas fa-car"></i>} />
+          <DashboardCard title="Previsões Mês Passado" value={predictionsLastMonth.toString()} icon={<i className="fas fa-exclamation-triangle"></i>} />
         </div>
 
+        {/* Gráficos */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold mb-4">Carros e Falhas Detectadas por Mês</h2>
-            <CarFailureChart />
+            <h2 className="text-xl font-semibold mb-4">Carros e Falhas Detectadas nos Últimos 5 Meses</h2>
+            <CarFailureChart data={carFailureData} />
           </div>
 
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold mb-4">Acumulação de Ocorrências de Status</h2>
-            <AreaStatusChart />
+            <AreaStatusChart data={statusData} />
           </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-lg shadow-md mt-6">
-          <h2 className="text-xl font-semibold mb-4">Sem Falha vs Com Falha</h2>
-          <Graph3 />
         </div>
       </main>
     </div>
   );
 };
 
-export default App;
+export default Dashboard;
