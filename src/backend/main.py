@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from models.database import engine, Base
-from routes import predictionRoutes, healthChecksRoutes, dashboardRoutes
+from routes import predictionRoutes, healthChecksRoutes, dashboardRoutes, retrainingRoutes
 from fastapi.middleware.cors import CORSMiddleware
 
 # Criação da tabela no banco de dados
@@ -21,6 +21,7 @@ app.add_middleware(
 app.include_router(predictionRoutes.router)
 app.include_router(healthChecksRoutes.router)
 app.include_router(dashboardRoutes.router)
+app.include_router(retrainingRoutes.router)
 
 if __name__ == "__main__":
     import uvicorn
