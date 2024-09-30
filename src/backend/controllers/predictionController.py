@@ -5,22 +5,10 @@ import numpy as np
 from sqlalchemy.orm import Session
 from models.predictionModel import Prediction, Features, Model, Values
 from models.database import get_db
-from tensorflow.keras.models import load_model
-from utils.helpers import call_ai, generate_uuidv7, load_model_from_url, get_model_url
+from utils.helpers import call_ai, generate_uuidv7, load_model_from_url, get_model_url, authenticate_pocketbase
 from typing import List
-from pocketbase import PocketBase
-from pocketbase.utils import ClientResponseError
 
-pb = PocketBase("http://10.128.0.87:8090")
-
-try:
-    auth_data = pb.admins.auth_with_password("teste@gmail.com", "testeteste")
-    print("Authenticated successfully!")
-except ClientResponseError as e:
-    print(f"Client Response Error: {e}")
-    print(f"Raw Response: {e.response.content.decode(errors='replace')}")
-except Exception as e:
-    print(f"Unexpected error: {e}")
+pocketbase_token = authenticate_pocketbase()
 
 def root():
     return {"message": "Hello World"}
@@ -29,16 +17,24 @@ def mock_data(table: str, db: Session = Depends(get_db), num_records: int = 10):
     for _ in range(num_records):
         if table == 'Model':
             record = Model(
-                ID_modelo=generate_uuidv7(),
+                ID_modelo=1,
                 model='sequencial_V1',
-                URL_modelo="http://example.com/model_1"
+                URL_modelo="http://pocketbase:8090/api/files/4forqd5s2ez9ydw/wwpjocvw1obr90r/modelo_0cJQGhMAmk.h5"
+            )
+        elif table == 'Prediction':
+            record = Prediction(
+                KNR="2024.12",
+                ID = generate_uuidv7(),
+                Real_result=1,
+                ID_modelo="1",
+                Prediction_result=1
             )
         db.add(record)
     db.commit()
 
     return {"message": f"{num_records} records inserted successfully."}
 
-async def predict(file: UploadFile, id_modelo:str, db: Session = Depends(get_db)):
+async def predict(file: UploadFile, id_modelo: str, db: Session = Depends(get_db)):
     try:
         print("Predicting...")
         model_url = get_model_url(id_modelo, db)
@@ -48,25 +44,30 @@ async def predict(file: UploadFile, id_modelo:str, db: Session = Depends(get_db)
         print("Model loaded successfully")
 
         df = pd.read_csv(file.file)
-        expected_columns = ['KNR','unique_names', '1_status_10', '2_status_10', '718_status_10',
+        expected_columns = ['KNR', 'unique_names', '1_status_10', '2_status_10', '718_status_10',
                             '1_status_13', '2_status_13', '718_status_13']
         if list(df.columns) != expected_columns:
             raise HTTPException(status_code=400, detail=f"File must have the columns: {expected_columns}")
-        
+
+        print("Data loaded successfully")
+
         knr = df['KNR'].iloc[0]
         df = df.drop(columns=['KNR'])
 
+        print("Calling AI model...")
+
         result = call_ai(df, model)
 
+        print("Prediction result: ", result)
 
-        prediction_id = generate_uuidv7()
+        prediction_id = generate_uuidv7()  
+
         for _, row in df.iterrows():
             prediction_entry = Prediction(
                 ID=prediction_id,
                 KNR=knr,
-                ID_modelo="1", 
-                Prediction_result=int(result),
-                Real_result=random.randint(0, 1)
+                ID_modelo=id_modelo,
+                Prediction_result=int(result)
             )
             db.add(prediction_entry)
 
@@ -79,6 +80,8 @@ async def predict(file: UploadFile, id_modelo:str, db: Session = Depends(get_db)
                 ('718_status_13', row['718_status_13']),
             ]
 
+           
+    
             for feature_name, feature_value in features:
                 feature = db.query(Features).filter(Features.name_feature == feature_name).first()
                 if not feature:
@@ -89,7 +92,7 @@ async def predict(file: UploadFile, id_modelo:str, db: Session = Depends(get_db)
                 values_entry = Values(
                     ID_feature=feature.ID_feature,
                     ID=prediction_id,
-                    ID_modelo="1",  
+                    ID_modelo=id_modelo,  
                     value_feature=feature_value
                 )
                 db.add(values_entry)
@@ -99,7 +102,9 @@ async def predict(file: UploadFile, id_modelo:str, db: Session = Depends(get_db)
         return {"prediction": result}
 
     except Exception as e:
+        db.rollback()  
         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+
 
 def read_predictions(table: str, skip: int, limit: int, db: Session = Depends(get_db)) -> List[dict]:
 
@@ -151,17 +156,24 @@ def delete_prediction(ID: str, db: Session = Depends(get_db)):
     return {"detail": "Prediction deleted"}
 
 def update_model(ID: str, db: Session = Depends(get_db)):
-    # Fetch the record to update by ID
     record = db.query(Model).filter(Model.ID_modelo == ID).first()
 
     if not record:
         raise HTTPException(status_code=404, detail="Model not found")
 
-    # Update the record with new values
-    record.model = 'sequencial_V1'
-    record.URL_modelo = "http://10.128.0.87:8090/api/files/fillmore/2h194oy6ffh41ye/model_mXtPVYz9QH.h5"
-    
-    db.commit()  # Commit the transaction to save the changes
-    db.refresh(record)  # Optional: Refresh the instance with the latest data from the database
+    features = [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+    ]
 
-    return record  # Optionally return the updated record
+    record.precision = 0.90
+    record.features = features
+    
+    db.commit()  
+    db.refresh(record)  
+
+    return record  

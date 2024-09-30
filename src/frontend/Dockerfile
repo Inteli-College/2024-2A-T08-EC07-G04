@@ -13,11 +13,11 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
-# Build the Next.js application
+# Build the Vite application
 RUN npm run build
 
-# Expose port 3000 to the outside world
+# Expose port 5173 for Vite
 EXPOSE 5173
 
-# Command to run the Next.js application
-CMD ["npm", "start"]
+# Command to run Vite's preview mode
+CMD ["npm", "run", "preview"]

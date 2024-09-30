@@ -1,20 +1,22 @@
-# Usar uma imagem base com Python
-FROM python:3.11-slim
+# Use an official Python image as a base image
+FROM python:3.11
 
-# Definir o diretório de trabalho dentro do container
+# Set the working directory in the container
 WORKDIR /app
 
-# Copiar o arquivo de requisitos para dentro do container
+# Copy the requirements.txt first to cache dependencies
 COPY requirements.txt .
 
-# Instalar as dependências do projeto
+ENV PIP_DEFAULT_TIMEOUT=2000
+
+# Install the Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiar o restante do código para o diretório de trabalho
+# Copy the rest of the project files
 COPY . .
 
-# Expor a porta que o FastAPI vai usar
+# Expose the port the app runs on
 EXPOSE 8000
 
-# Comando para rodar a aplicação FastAPI
+# Define the command to start the backend service
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
