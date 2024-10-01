@@ -29,7 +29,6 @@ const Header: React.FC = () => {
           </button>
         </div>
 
-        {/* Sidebar Menu */}
         <div
           className={`fixed inset-y-0 left-0 transform ${
             isMenuOpen ? 'translate-x-0' : '-translate-x-full'
@@ -73,7 +72,6 @@ const Header: React.FC = () => {
           </nav>
         </div>
 
-        {/* Logo */}
         <div className="flex justify-center items-center">
           <a href="/">
             <img

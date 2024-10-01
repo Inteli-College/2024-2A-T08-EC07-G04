@@ -3,9 +3,7 @@ import React from 'react';
 const LoginForm: React.FC = () => {
   return (
     <div className="bg-[#FAFAFA] py-12 px-24 rounded-3xl shadow-xl max-w-4xl w-full">
-      {/* Inner Container for Form */}
       <div className="max-w-sm mx-auto">
-        {/* Image */}
         <div className="flex justify-center mb-6">
           <img
             src="/logo.svg"
@@ -14,11 +12,9 @@ const LoginForm: React.FC = () => {
           />
         </div>
 
-        {/* Email Input */}
         <div className="mb-8">
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              {/* SVG as Image */}
               <img
                 src="/user.svg"
                 alt="Email Icon"
@@ -34,11 +30,9 @@ const LoginForm: React.FC = () => {
           </div>
         </div>
 
-        {/* Password Input */}
         <div className="mb-8">
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              {/* SVG as Image */}
               <img
                 src="/password.svg"
                 alt="Password Icon"
@@ -54,7 +48,6 @@ const LoginForm: React.FC = () => {
           </div>
         </div>
 
-        {/* Remember Me */}
         <div className="mb-8">
           <label className="inline-flex items-center">
             <input
@@ -65,7 +58,6 @@ const LoginForm: React.FC = () => {
           </label>
         </div>
 
-        {/* Login Button */}
         <div className="flex items-center justify-between">
           <button
             className="text-2xl appearance-none border-[2.5px] bg-[#000475] duration-700 hover:bg-slate-400 hover:text-[#000475] rounded-full text-white py-[11px] px-4 focus:outline-none focus:shadow-outline w-full"

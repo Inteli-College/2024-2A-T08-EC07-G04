@@ -24,8 +24,8 @@ class Model(Base):
     ID_modelo = Column(String, primary_key=True, index=True)
     model = Column(String)
     URL_modelo = Column(String)
-    # precision = Column(Float)
-    # features = Column(List(Integer))
+    precision = Column(Float)
+    # features = Column(ARRAY(Integer))
     
 
 class Values(Base):

@@ -7,6 +7,8 @@ import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Upload from './pages/Upload'
 import './index.css'
+import NoIssuesPage from './pages/NoIssuesPage.tsx';
+import IssuesPage from './pages/IssuesPage.tsx';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
@@ -16,6 +18,8 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/upload" element={<Upload />} />
+        <Route path="/no-issues" element={<NoIssuesPage />} />
+        <Route path="/issues" element={<IssuesPage />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

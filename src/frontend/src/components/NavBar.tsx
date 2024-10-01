@@ -29,7 +29,6 @@ const Header: React.FC = () => {
           </button>
         </div>
 
-        {/* Sidebar Menu */}
         <div
           className={`fixed inset-y-0 left-0 transform ${
             isMenuOpen ? 'translate-x-0' : '-translate-x-full'
@@ -64,11 +63,9 @@ const Header: React.FC = () => {
             >
               Upload
             </a>
-            {/* Adicione mais itens de menu aqui, se necessário */}
           </nav>
         </div>
 
-        {/* Logo */}
         <div className="flex justify-center items-center">
           <a href="/">
             <img
@@ -79,7 +76,6 @@ const Header: React.FC = () => {
           </a>
         </div>
 
-        {/* Login de Usuário */}
         <div className="relative">
           <a
             href="/login"
