@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import CarFailureChart from '../components/Graph';
 import AreaStatusChart from '../components/Graph2'; 
