@@ -38,7 +38,7 @@ def authenticate_pocketbase():
     
 pocketbase_token = authenticate_pocketbase()
 
-def upload_model_to_pocketbase(file_path: str, token: str) -> str:
+def upload_model_to_pocketbase(file_path: str, new_model_filename) -> str:
     try:
         POCKETBASE_URL = "http://pocketbase:8090"
         collection_name = 'fillmore'  # Nome da sua coleção
@@ -48,28 +48,24 @@ def upload_model_to_pocketbase(file_path: str, token: str) -> str:
 
         files = {file_field_name: open(file_path, 'rb')}
         headers = {
-            'Authorization': f'Admin {token}'
+            'Authorization': f'Bearer {pocketbase_token}'
         }
 
         response = requests.post(url, files=files, headers=headers)
-        response.raise_for_status()
 
-        # Extrair a URL do arquivo a partir da resposta
-        record = response.json()
-        file_id = record['id']
-        file_name = record[file_field_name]
+        response_data = response.json()
+        collectionId = response_data['collectionId']
+        id = response_data['id']
 
-        file_url = f"{POCKETBASE_URL}/api/files/{collection_name}/{file_id}/{file_name}"
-
-        print(f"Model uploaded to PocketBase successfully. URL: {file_url}")
-        return file_url  # Retorna apenas a URL como string
-    except requests.HTTPError as e:
-        print(f"Error uploading file: {e.response.status_code}")
-        print(f"Response content: {e.response.content}")
-        raise Exception("Failed to upload the model to PocketBase.")
+        if response.status_code == 200:
+            return f"{POCKETBASE_URL}/api/files/{collectionId}/{id}/{new_model_filename}"
+        else:
+            print(f"Error uploading file: {response.status_code}")
+            print(f"Response content: {response.content}")
+            return False
     except Exception as e:
         print(f"Exception during file upload: {e}")
-        raise Exception("Failed to upload the model to PocketBase.")
+        return False
 
 
 def call_ai(df: pd.DataFrame, model):
@@ -115,6 +111,7 @@ def load_model_from_url(url: str):
     print("Model loaded successfully")
     
     return model
+
 
 def get_model_url(ID_modelo: str, db: Session = Depends(get_db)) -> str:
     record = db.query(Model).filter(Model.ID_modelo == ID_modelo).first()

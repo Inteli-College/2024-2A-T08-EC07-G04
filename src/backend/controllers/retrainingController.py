@@ -5,6 +5,8 @@ import numpy as np
 import tensorflow as tf
 import os
 import logging
+import h5py
+import tempfile
 
 from models.database import get_db
 from models.predictionModel import Model
@@ -26,8 +28,7 @@ async def retrain_model(file: UploadFile, id_modelo: str, db: Session = Depends(
 
         token = authenticate_pocketbase()
 
-        # model_url = get_model_url(id_modelo, db)
-        model_url = "http://pocketbase:8090/api/files/4forqd5s2ez9ydw/wwpjocvw1obr90r/modelo_0cJQGhMAmk.h5"
+        model_url = get_model_url(id_modelo, db)
         model = load_model_from_url(model_url)
 
         model.compile(
@@ -89,15 +90,15 @@ async def retrain_model(file: UploadFile, id_modelo: str, db: Session = Depends(
         else:
             logger.error(f"O arquivo do modelo NÃO foi encontrado em: {model_save_path}")
 
-        # new_model_url = upload_model_to_pocketbase(model_save_path, token)
-
-        # if not new_model_url:
-        #     raise Exception("Failed to upload the model to PocketBase.")
+        new_model_url = upload_model_to_pocketbase(model_save_path, new_model_filename)
+        print(new_model_url)
+        if not new_model_url:
+            raise Exception("Failed to upload the model to PocketBase.")
 
         model_record = Model(
             ID_modelo=id_new_model,
             model="sequencial",
-            # URL_modelo=new_model_url
+            URL_modelo=new_model_url
         )
         db.add(model_record)
         db.commit()
@@ -107,7 +108,7 @@ async def retrain_model(file: UploadFile, id_modelo: str, db: Session = Depends(
 
         return {
             "detail": "Model retrained and updated successfully.",
-            # "model_url": new_model_url
+            "model_url": new_model_url
         }
     except HTTPException as e:
         raise e
