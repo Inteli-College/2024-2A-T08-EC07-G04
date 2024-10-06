@@ -1,17 +1,40 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, Legend, ResponsiveContainer,
+  ResponsiveContainer,
+  BarChart,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  Bar
 } from 'recharts';
 
-const data = [
-  { month: 'Jan', totalCars: 4000, faultyCars: 240 },
-  { month: 'Feb', totalCars: 3000, faultyCars: 139 },
-  { month: 'Mar', totalCars: 2000, faultyCars: 98 },
-  { month: 'Apr', totalCars: 2780, faultyCars: 390 },
-  { month: 'May', totalCars: 1890, faultyCars: 48 },
-];
+interface CarData {
+  month: string;
+  totalCars: number;
+  faultyCars: number;
+}
 
 const CarFailureChart: React.FC = () => {
+  const [data, setData] = useState<CarData[]>([]);
+
+  useEffect(() => {
+    axios.get('/api/dashboard/knr_5_months')
+      .then((response) => {
+        const formattedData = response.data.map((item: any) => ({
+          month: item.month,
+          totalCars: item.totalCars,
+          faultyCars: item.faultyCars,
+        }));
+        setData(formattedData);
+      })
+      .catch((error) => {
+        console.error('Erro ao buscar dados:', error);
+      });
+  }, []);
+
   return (
     <div className="bg-gradient-to-br from-white to-gray-100 p-6 rounded-xl shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
       <h2 className="text-2xl font-bold text-gray-700 mb-6 text-center">Falhas de Carros por Mês</h2>
@@ -22,20 +45,8 @@ const CarFailureChart: React.FC = () => {
           <YAxis tick={{ fill: '#555555' }} />
           <Tooltip contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #dddddd', borderRadius: '8px', padding: '10px' }} />
           <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: 10 }} />
-          <Bar
-            dataKey="totalCars"
-            fill="#2f94bf"
-            name="Total de Carros"
-            radius={[10, 10, 0, 0]}
-            animationDuration={1500}
-          />
-          <Bar
-            dataKey="faultyCars"
-            fill="#ff4d4d"
-            name="Carros com Falha"
-            radius={[10, 10, 0, 0]}
-            animationDuration={1500}
-          />
+          <Bar dataKey="totalCars" fill="#2f94bf" name="Total de Carros" radius={[10, 10, 0, 0]} animationDuration={1500} />
+          <Bar dataKey="faultyCars" fill="#ff4d4d" name="Carros com Falha" radius={[10, 10, 0, 0]} animationDuration={1500} />
         </BarChart>
       </ResponsiveContainer>
     </div>
