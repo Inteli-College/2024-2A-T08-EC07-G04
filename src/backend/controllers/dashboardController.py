@@ -1,11 +1,10 @@
 from datetime import datetime, timedelta
 import uuid
-from fastapi import HTTPException, Depends
+from fastapi import HTTPException, Depends, Query
 from sqlalchemy.orm import Session
 from models.predictionModel import Prediction
 from models.database import get_db
-from typing import List
-from typing import Dict
+from typing import List, Dict, Optional
 
 def normalize_to_current_month():
     today = datetime.utcnow()
@@ -130,33 +129,45 @@ def get_unique_knr_predictions_last_5_months(db: Session = Depends(get_db)) -> D
     return result  # Return the JSON-like structure
 
 
-def count_unique_knr_last_month(db: Session = Depends(get_db)) -> int:
-    start_date, end_date = normalize_to_current_month()
+def count_unique_knr(
+    db: Session = Depends(get_db),
+    start_date: Optional[datetime] = Query(None),
+    end_date: Optional[datetime] = Query(None)
+) -> int:
+    if not start_date or not end_date:
+        # If start_date or end_date is not provided, use the default current month range
+        start_date, end_date = normalize_to_current_month()
 
     # Query all records from the Prediction table
     records = db.query(Prediction).all()
 
-    # Count the number of distinct KNR within the last month based on the UUID timestamp
+    # Count the number of distinct KNR within the given date range based on the UUID timestamp
     unique_knr_set = set()
     for record in records:
         timestamp = get_timestamp_from_uuid(record.ID)
         if timestamp and start_date <= timestamp <= end_date:
             unique_knr_set.add(record.KNR)
 
-    return len(unique_knr_set)  # Return just the integer count
+    return len(unique_knr_set)
 
 
-def count_predictions_last_month(db: Session = Depends(get_db)) -> int:
-    start_date, end_date = normalize_to_current_month()
+def count_predictions(
+    db: Session = Depends(get_db),
+    start_date: Optional[datetime] = Query(None),
+    end_date: Optional[datetime] = Query(None)
+) -> int:
+    if not start_date or not end_date:
+        # If start_date or end_date is not provided, use the default current month range
+        start_date, end_date = normalize_to_current_month()
 
     # Query all records from the Prediction table
     records = db.query(Prediction).all()
 
-    # Count how many predictions have prediction_result = 1 within the last month based on UUID timestamp
+    # Count how many predictions have prediction_result = 1 within the given date range
     prediction_count = 0
     for record in records:
         timestamp = get_timestamp_from_uuid(record.ID)
         if timestamp and start_date <= timestamp <= end_date and record.Prediction_result == 1:
             prediction_count += 1
 
-    return prediction_count  # Return just the integer count
+    return prediction_count
