@@ -1,56 +1,75 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import {
-  ResponsiveContainer,
-  BarChart,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
-  Bar
-} from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-interface CarData {
-  month: string;
-  totalCars: number;
-  faultyCars: number;
+interface PredictionData {
+    carros: number;
+    falhas: number;
+    mes: string;
 }
 
-const CarFailureChart: React.FC = () => {
-  const [data, setData] = useState<CarData[]>([]);
+interface ApiResponse {
+    [key: string]: {
+        carros: number;
+        falhas: number;
+    };
+}
 
-  useEffect(() => {
-    axios.get('/api/dashboard/knr_5_months')
-      .then((response) => {
-        const formattedData = response.data.map((item: any) => ({
-          month: item.month,
-          totalCars: item.totalCars,
-          faultyCars: item.faultyCars,
-        }));
-        setData(formattedData);
-      })
-      .catch((error) => {
-        console.error('Erro ao buscar dados:', error);
-      });
-  }, []);
+const Graphs: React.FC = () => {
+    const [monthlyData, setMonthlyData] = useState<PredictionData[]>([]);
 
-  return (
-    <div className="bg-gradient-to-br from-white to-gray-100 p-6 rounded-xl shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
-      <h2 className="text-2xl font-bold text-gray-700 mb-6 text-center">Falhas de Carros por Mês</h2>
-      <ResponsiveContainer width="100%" height={400}>
-        <BarChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-          <XAxis dataKey="month" tick={{ fill: '#555555' }} />
-          <YAxis tick={{ fill: '#555555' }} />
-          <Tooltip contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #dddddd', borderRadius: '8px', padding: '10px' }} />
-          <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: 10 }} />
-          <Bar dataKey="totalCars" fill="#2f94bf" name="Total de Carros" radius={[10, 10, 0, 0]} animationDuration={1500} />
-          <Bar dataKey="faultyCars" fill="#ff4d4d" name="Carros com Falha" radius={[10, 10, 0, 0]} animationDuration={1500} />
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
-  );
+    useEffect(() => {
+        // Fetch data from backend for last 5 months
+        const fetchData = async () => {
+            try {
+                const response = await axios.get<ApiResponse>('http://localhost:8000/dashboard/knr_5_months');
+                const data = Object.entries(response.data).map(([key, value]) => ({
+                    mes: key,
+                    carros: value.carros,
+                    falhas: value.falhas,
+                }));
+                setMonthlyData(data);
+            } catch (error) {
+                console.error("Error fetching data: ", error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Gráfico de Carros */}
+            <div className="bg-white p-4 rounded-lg shadow-md">
+                <h2 className="text-xl font-bold mb-4">Carros Únicos nos Últimos 5 Meses</h2>
+                <ResponsiveContainer width="100%" height={300}>
+                    <LineChart data={monthlyData}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="mes" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Line type="monotone" dataKey="carros" stroke="#8884d8" activeDot={{ r: 8 }} />
+                    </LineChart>
+                </ResponsiveContainer>
+            </div>
+
+            {/* Gráfico de Falhas */}
+            <div className="bg-white p-4 rounded-lg shadow-md">
+                <h2 className="text-xl font-bold mb-4">Falhas Previstos nos Últimos 5 Meses</h2>
+                <ResponsiveContainer width="100%" height={300}>
+                    <LineChart data={monthlyData}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="mes" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Line type="monotone" dataKey="falhas" stroke="#82ca9d" activeDot={{ r: 8 }} />
+                    </LineChart>
+                </ResponsiveContainer>
+            </div>
+        </div>
+    );
 };
 
-export default CarFailureChart;
+export default Graphs;
