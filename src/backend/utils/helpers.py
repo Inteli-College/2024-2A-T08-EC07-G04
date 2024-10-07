@@ -42,7 +42,7 @@ def upload_model_to_pocketbase(file_path: str, new_model_filename) -> str:
     try:
         POCKETBASE_URL = "http://pocketbase:8090"
         collection_name = 'fillmore'  # Nome da sua coleção
-        file_field_name = 'model_file'  # Nome do campo de arquivo na coleção
+        file_field_name = 'models'  # Nome do campo de arquivo na coleção
 
         url = f"{POCKETBASE_URL}/api/collections/{collection_name}/records"
 
