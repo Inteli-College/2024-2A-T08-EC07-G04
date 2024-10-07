@@ -28,7 +28,8 @@ async def retrain_model(file: UploadFile, id_modelo: str, db: Session = Depends(
 
         token = authenticate_pocketbase()
 
-        model_url = get_model_url(id_modelo, db)
+        # model_url = get_model_url(id_modelo, db)
+        model_url = "http://pocketbase:8090/api/files/4forqd5s2ez9ydw/wwpjocvw1obr90r/modelo_0cJQGhMAmk.h5"
         model = load_model_from_url(model_url)
 
         model.compile(
