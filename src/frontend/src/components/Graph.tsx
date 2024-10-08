@@ -3,15 +3,12 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, Legend, ResponsiveContainer,
 } from 'recharts';
 
-const data = [
-  { month: 'Jan', totalCars: 4000, faultyCars: 240 },
-  { month: 'Feb', totalCars: 3000, faultyCars: 139 },
-  { month: 'Mar', totalCars: 2000, faultyCars: 98 },
-  { month: 'Apr', totalCars: 2780, faultyCars: 390 },
-  { month: 'May', totalCars: 1890, faultyCars: 48 },
-];
+// Define the props type
+interface CarFailureChartProps {
+  data: { month: string; totalCars: number; faultyCars: number }[];  // Adjust this type if needed
+}
 
-const CarFailureChart: React.FC = () => {
+const CarFailureChart: React.FC<CarFailureChartProps> = ({ data }) => {
   return (
     <div className="bg-gradient-to-br from-white to-gray-100 p-6 rounded-xl shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
       <h2 className="text-2xl font-bold text-gray-700 mb-6 text-center">Falhas de Carros por Mês</h2>

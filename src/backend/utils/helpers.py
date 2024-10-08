@@ -9,8 +9,10 @@ from models.predictionModel import Model
 from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException
 from models.database import get_db
+from tensorflow.keras.models import load_model
 import os
 import logging
+import traceback
 
 logger = logging.getLogger(__name__)
 
@@ -73,26 +75,47 @@ def upload_model_to_pocketbase(file_path: str, token: str) -> str:
 
 
 def call_ai(df: pd.DataFrame, model):
-    required_columns = ['unique_names', '1_status_10', '2_status_10', '718_status_10',
-                        '1_status_13', '2_status_13']
-    if not all(col in df.columns for col in required_columns):
-        raise ValueError(f"The input DataFrame does not have the required columns: {required_columns}")
-    
-    print("Data loaded successfully 2")
+    """
+    Prepares the input data and calls the AI model to make a prediction.
+    """
+    try:
+        expected_columns = ['unique_names', '1_status_10', '2_status_10', '718_status_10',
+                            '1_status_13', '2_status_13', '718_status_13',
+                            '_unit_count', '%_unit_count', 'Clicks_unit_count', 'Deg_unit_count',
+                            'Grad_unit_count', 'Nm_unit_count', 'Unnamed: 5_unit_count',
+                            'V_unit_count', 'kg_unit_count', 'min_unit_count', 'mm_unit_count',
+                            '_unit_mean', '%_unit_mean', 'Clicks_unit_mean', 'Deg_unit_mean',
+                            'Grad_unit_mean', 'Nm_unit_mean', 'Unnamed: 5_unit_mean',
+                            'V_unit_mean', 'kg_unit_mean', 'min_unit_mean', 'mm_unit_mean']  # Updated expected columns
 
-    input_data = df.values.astype(np.float32)
+        missing_columns = [col for col in expected_columns if col not in df.columns]
+        if missing_columns:
+            raise ValueError(f"The input DataFrame is missing required columns: {missing_columns}")
+        
+        print("Data loaded successfully.")
 
-    print("Calling AI model 2...")
+        # Ensure the data is in the correct order
+        input_data = df[expected_columns].astype(np.float32).values
 
-    input_data = np.reshape(input_data, (input_data.shape[0], input_data.shape[1]))
+        print("Calling AI model...")
 
-    print("nao deu erro")
+        # Adjust the input shape if necessary
+        # For example, if the model expects (1, num_features)
+        if len(input_data.shape) == 1:
+            input_data = np.expand_dims(input_data, axis=0)
 
-    predictions = model.predict(input_data)
+        predictions = model.predict(input_data)
 
-    print("Prediction result 2: ", float(predictions[0]))
-    
-    return float(predictions[0])
+        # Process the prediction output
+        # Assuming the model outputs a scalar value per input
+        prediction_result = float(predictions[0][0])  # Adjust indexing based on model output shape
+
+        print(f"Prediction result: {prediction_result}")
+
+        return prediction_result
+    except Exception as e:
+        print(f"Error during model prediction: {str(e)}")
+        raise
 
 def generate_uuidv7():
     # Get the current timestamp in milliseconds
@@ -110,20 +133,18 @@ def generate_uuidv7():
     return uuidv7
 
 
-def load_model_from_url(url: str):
-    unique_filename = f"temp_model_{generate_uuidv7()}.h5"
-    
-    response = requests.get(url)
-    with open(unique_filename, "wb") as f:
-        f.write(response.content)
-    
-    model = tf.keras.models.load_model(unique_filename)
-    
-    os.remove(unique_filename)
 
-    print("Model loaded successfully")
-    
-    return model
+
+def load_model_from_url(model_path):
+    try:
+        print(f"Loading model from: {model_path}")
+        model = load_model(model_path)
+        print("Model loaded successfully.")
+        return model
+    except Exception as e:
+        print(f"Error loading model: {str(e)}")
+        raise
+
 
 def get_model_url(ID_modelo: str, db: Session = Depends(get_db)) -> str:
     record = db.query(Model).filter(Model.ID_modelo == ID_modelo).first()

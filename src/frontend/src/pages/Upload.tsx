@@ -1,6 +1,7 @@
 import React from 'react';
 import NavBar from '../components/NavBar';
 import FileUpload from '../components/Upload';
+import PredictionComponent from '../components/PredictionComponent';
 
 const App: React.FC = () => {
   return (
@@ -9,6 +10,7 @@ const App: React.FC = () => {
       <main className="p-8 flex flex-col items-center justify-center text-white flex-grow">
       <div className="bg-white shadow-lg rounded-lg p-6 max-w-4xl w-full h-30">
             <FileUpload />
+            <PredictionComponent />
         </div>
       </main>
     </div>
