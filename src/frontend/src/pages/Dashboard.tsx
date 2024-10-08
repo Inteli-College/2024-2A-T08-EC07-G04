@@ -8,17 +8,32 @@ const Dashboard: React.FC = () => {
     // const [dayData, setDayData] = useState<number>(0);
     const [predictionsMonthData, setPredictionsMonthData] = useState<number>(0);
     const [knrMonthData, setKnrMonthData] = useState<number>(0);
+    const [accuracy, setAccuracy] = useState<number>(0);
+    const [falseNegative, setFalseNegative] = useState<number>(0);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
+                const [
+                    predictionsMonthResponse, 
+                    knrMonthResponse, 
+                    accuracyResponse, 
+                    falseNegativeResponse
+                ] = await Promise.all([
+                    axios.get('http://localhost:8001/dashboard/predictions_month'),
+                    axios.get('http://localhost:8001/dashboard/knr_month'),
+                    axios.get('http://localhost:8001/dashboard/accuracy'),
+                    axios.get('http://localhost:8001/dashboard/false_negatives')
+                ]);
                 // Fazer requisições para as rotas relevantes
-                const [/* weekResponse, dayResponse,*/ predictionsMonthResponse, knrMonthResponse] = await Promise.all([
+                /*const [/* weekResponse, dayResponse, predictionsMonthResponse, knrMonthResponse] = await Promise.all([
                     // axios.get('http://localhost:8001/dashboard/week'),
                     // axios.get('http://localhost:8001/dashboard/day'),
                     axios.get('http://localhost:8001/dashboard/predictions_month'),
                     axios.get('http://localhost:8001/dashboard/knr_month')
-                ]);
+                    axios.get('http://localhost:8001/dashboard/accuracy'),
+                    axios.get('http://localhost:8001/dashboard/false_negatives')
+                ]);*/
                 console.log("Xablau")
 
                 // Logs para depuração
@@ -26,6 +41,8 @@ const Dashboard: React.FC = () => {
                 // console.log('Day Response:', dayResponse.data);
                 console.log('Predictions Month Response:', predictionsMonthResponse.data);
                 console.log('KNR Month Response:', knrMonthResponse.data);
+                console.log('Accuracy Response:', accuracyResponse.data);
+                console.log('False Negatives Response:', falseNegativeResponse.data);
 
                 // Atualizar estados com base na estrutura da resposta
                 // setWeekData(typeof weekResponse.data === 'number' ? weekResponse.data : 0);
@@ -39,6 +56,16 @@ const Dashboard: React.FC = () => {
                     typeof knrMonthResponse.data === 'number' 
                         ? knrMonthResponse.data 
                         : knrMonthResponse.data.value
+                );
+                setAccuracy(
+                    typeof accuracyResponse.data.accuracy === 'number' 
+                        ? accuracyResponse.data.accuracy 
+                        : 0
+                );
+                setFalseNegative(
+                    typeof falseNegativeResponse.data.falseNegative === 'number' 
+                        ? falseNegativeResponse.data.falseNegative 
+                        : 0
                 );
             } catch (error) {
                 console.error("Error fetching dashboard data:", error);
@@ -70,6 +97,14 @@ const Dashboard: React.FC = () => {
                     <div className="bg-white shadow-md rounded-lg p-6">
                         <h2 className="text-xl font-semibold">KNRs do Mês</h2>
                         <p className="text-3xl">{knrMonthData}</p>
+                    </div>
+                    <div className="bg-white shadow-md rounded-lg p-6">
+                        <h2 className="text-xl font-semibold">Precisão do modelo</h2>
+                        <p className="text-3xl">{accuracy.toFixed(2)}</p>
+                    </div>
+                    <div className="bg-white shadow-md rounded-lg p-6">
+                        <h2 className="text-xl font-semibold">Falsos negativos</h2>
+                        <p className="text-3xl">{falseNegative}</p>
                     </div>
                 </div>
                 <Graphs />
