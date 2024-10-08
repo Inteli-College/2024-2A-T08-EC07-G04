@@ -19,10 +19,9 @@ const Graphs: React.FC = () => {
     const [monthlyData, setMonthlyData] = useState<PredictionData[]>([]);
 
     useEffect(() => {
-        // Fetch data from backend for last 5 months
         const fetchData = async () => {
             try {
-                const response = await axios.get<ApiResponse>('http://localhost:8000/dashboard/knr_5_months');
+                const response = await axios.get<ApiResponse>('http://localhost:8001/dashboard/knr_5_months');
                 const data = Object.entries(response.data).map(([key, value]) => ({
                     mes: key,
                     carros: value.carros,
@@ -39,7 +38,6 @@ const Graphs: React.FC = () => {
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Gráfico de Carros */}
             <div className="bg-white p-4 rounded-lg shadow-md">
                 <h2 className="text-xl font-bold mb-4">Carros Únicos nos Últimos 5 Meses</h2>
                 <ResponsiveContainer width="100%" height={300}>
@@ -54,7 +52,6 @@ const Graphs: React.FC = () => {
                 </ResponsiveContainer>
             </div>
 
-            {/* Gráfico de Falhas */}
             <div className="bg-white p-4 rounded-lg shadow-md">
                 <h2 className="text-xl font-bold mb-4">Falhas Previstos nos Últimos 5 Meses</h2>
                 <ResponsiveContainer width="100%" height={300}>

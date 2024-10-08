@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 
-const DateFilter: React.FC<{ onFilter: (startDate: string | null, endDate: string | null) => void }> = ({ onFilter }) => {
+interface DateFilterProps {
+  onFilter: (startDate: string | null, endDate: string | null) => void;
+}
+
+const DateFilter: React.FC<DateFilterProps> = ({ onFilter }) => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
@@ -8,7 +12,6 @@ const DateFilter: React.FC<{ onFilter: (startDate: string | null, endDate: strin
     if (startDate && endDate) {
       onFilter(startDate, endDate);
     } else {
-      // Pass null to indicate that the default (current month) should be used
       onFilter(null, null);
     }
   };
