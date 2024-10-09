@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
 
-const DateFilter: React.FC<{ onFilter: (startDate: string, endDate: string) => void }> = ({ onFilter }) => {
+interface DateFilterProps {
+  onFilter: (startDate: string | null, endDate: string | null) => void;
+}
+
+const DateFilter: React.FC<DateFilterProps> = ({ onFilter }) => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
   const handleFilter = () => {
     if (startDate && endDate) {
       onFilter(startDate, endDate);
+    } else {
+      onFilter(null, null);
     }
   };
 
