@@ -59,6 +59,24 @@ services:
     networks:
       - app-tier
 
+  healthcheck:
+    build: ./healthcheck  # Path to the Dockerfile for the FastAPI healthcheck
+    image: src/healthcheck
+    container_name: fillmore-healthcheck
+    ports:
+      - "9000:9000"
+    environment:
+      DATABASE_URL: "postgresql://postgres:KXQDTu5XrbsVDhe@postgres:5432/fillmore"
+    depends_on:
+      - backend
+      - postgres
+      - pocketbase
+      - frontend
+    networks:
+      - app-tier
+    restart: unless-stopped
+
+
 networks:
   app-tier:
     driver: bridge
