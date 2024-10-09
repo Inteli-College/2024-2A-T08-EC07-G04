@@ -5,22 +5,55 @@ const FileUpload: React.FC = () => {
   const [message, setMessage] = useState<string>("");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0];
-    if (selectedFile && (selectedFile.type === "application/vnd.ms-excel" || selectedFile.type === "text/csv")) {
-      setFile(selectedFile);
-      setMessage("");
-    } else {
-      setMessage("Por favor, selecione um arquivo CSV ou Excel válido.");
-      setFile(null);
+    if (e.target.files && e.target.files.length > 0) {
+      setFile(e.target.files[0]);
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (file) {
-      // Aqui você pode implementar a lógica para fazer upload do arquivo para o servidor.
-      console.log("Arquivo selecionado:", file.name);
-      setMessage(`Arquivo "${file.name}" foi enviado com sucesso!`);
+      const formData = new FormData();
+      formData.append("file", file);
+      // Removido o id_modelo
+      // formData.append("id_modelo", "1"); 
+
+      try {
+        const response = await fetch("http://localhost:8001/retrain", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Resposta do servidor:", data);
+          setMessage(`Arquivo "${file.name}" foi enviado com sucesso!`);
+        } else {
+          // Tentar obter a mensagem de erro
+          let errorMessage = '';
+          try {
+            const errorData = await response.json();
+            console.error("Erro ao enviar o arquivo:", errorData);
+            // Verificar se errorData.detail é uma string ou objeto
+            if (typeof errorData.detail === 'string') {
+              errorMessage = errorData.detail;
+            } else if (Array.isArray(errorData.detail)) {
+              // Caso o detalhe seja uma lista de erros
+              errorMessage = errorData.detail.join(', ');
+            } else {
+              errorMessage = JSON.stringify(errorData.detail);
+            }
+          } catch (parseError) {
+            // Caso a resposta não seja um JSON válido
+            errorMessage = await response.text();
+            console.error("Erro ao parsear a resposta de erro:", parseError);
+          }
+          setMessage(`Erro ao enviar o arquivo: ${errorMessage}`);
+        }
+      } catch (error) {
+        console.error("Erro na requisição:", error);
+        setMessage("Erro ao enviar o arquivo. Por favor, tente novamente.");
+      }
     } else {
       setMessage("Por favor, selecione um arquivo antes de enviar.");
     }

@@ -14,9 +14,8 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-POCKETBASE_URL = "http://pocketbase:8090"
-
 def authenticate_pocketbase():
+    POCKETBASE_URL = "http://pocketbase:8090"
     pass
     try:
         auth_data = {

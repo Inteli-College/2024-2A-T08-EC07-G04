@@ -5,31 +5,38 @@ import numpy as np
 import tensorflow as tf
 import os
 import logging
-import h5py
-import tempfile
 
 from models.database import get_db
 from models.predictionModel import Model
 from utils.helpers import (
     authenticate_pocketbase,
+    get_model_url,
     load_model_from_url,
     upload_model_to_pocketbase,
     generate_uuidv7,
-    get_model_url
 )
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)  
+logger.setLevel(logging.INFO)
 
-async def retrain_model(file: UploadFile, id_modelo: str, db: Session = Depends(get_db)):
+async def retrain_model(file: UploadFile, db: Session = Depends(get_db)):
     try:
         current_working_directory = os.getcwd()
         logger.info(f"Diretório de trabalho atual: {current_working_directory}")
 
-        token = authenticate_pocketbase()
+        latest_model = db.query(Model).order_by(Model.ID_modelo.desc()).first()
 
-        # model_url = get_model_url(id_modelo, db)
-        model_url = "http://pocketbase:8090/api/files/4forqd5s2ez9ydw/wwpjocvw1obr90r/modelo_0cJQGhMAmk.h5"
+        if not latest_model:
+            raise HTTPException(status_code=404, detail="Nenhum modelo encontrado no banco de dados.")
+        print(latest_model)
+
+        
+        # model_url = str(get_model_url(latest_model.ID_modelo, db))
+
+        model_url = "http://pocketbase:8090/api/files/4forqd5s2ez9ydw/kevct3veghwnm44/model_1926deec_a08_7_e610_70028dc7356a7d75344ae3_GWqWBffzmT.h5"
+
+        print(model_url)
+
         model = load_model_from_url(model_url)
 
         model.compile(
@@ -38,6 +45,7 @@ async def retrain_model(file: UploadFile, id_modelo: str, db: Session = Depends(
             metrics=['accuracy']
         )
 
+        # Ler o arquivo CSV enviado
         df = pd.read_csv(file.file)
 
         expected_columns = [
@@ -58,17 +66,11 @@ async def retrain_model(file: UploadFile, id_modelo: str, db: Session = Depends(
         feature_columns = expected_columns.copy()
         label_column = '718_status_13'
 
-        X = df[feature_columns]
-        y = df[label_column]
-
-        X = X.values.astype(np.float32)
-        y = y.values.astype(np.float32)
+        X = df[feature_columns].values.astype(np.float32)
+        y = df[label_column].values.astype(np.float32)
 
         num_samples = len(X)
-        if num_samples > 1:
-            validation_split = 0.1
-        else:
-            validation_split = 0.0
+        validation_split = 0.1 if num_samples > 1 else 0.0
 
         logger.info(f"Iniciando o treinamento do modelo com {num_samples} amostras.")
         model.fit(X, y, epochs=5, batch_size=1, validation_split=validation_split)
@@ -85,17 +87,26 @@ async def retrain_model(file: UploadFile, id_modelo: str, db: Session = Depends(
         model.save(model_save_path)
         logger.info("Modelo salvo com sucesso.")
 
-        # Verificar se o arquivo do modelo existe
         if os.path.exists(model_save_path):
             logger.info(f"O arquivo do modelo existe em: {model_save_path}")
         else:
             logger.error(f"O arquivo do modelo NÃO foi encontrado em: {model_save_path}")
+            raise HTTPException(
+                status_code=500,
+                detail="O arquivo do modelo não foi encontrado após salvar."
+            )
 
+        # Fazer o upload do novo modelo para o PocketBase
         new_model_url = upload_model_to_pocketbase(model_save_path, new_model_filename)
-        print(new_model_url)
-        if not new_model_url:
-            raise Exception("Failed to upload the model to PocketBase.")
+        logger.info(f"URL do novo modelo: {new_model_url}")
 
+        if not new_model_url:
+            raise HTTPException(
+                status_code=500,
+                detail="Falha ao fazer upload do modelo para o PocketBase."
+            )
+
+        # Atualizar o registro do modelo no banco de dados
         model_record = Model(
             ID_modelo=id_new_model,
             model="sequencial",
@@ -104,11 +115,8 @@ async def retrain_model(file: UploadFile, id_modelo: str, db: Session = Depends(
         db.add(model_record)
         db.commit()
 
-        # if os.path.exists(model_save_path):
-        #     os.remove(model_save_path)
-
         return {
-            "detail": "Model retrained and updated successfully.",
+            "detail": "Modelo retreinado e atualizado com sucesso.",
             "model_url": new_model_url
         }
     except HTTPException as e:
