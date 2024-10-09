@@ -61,7 +61,21 @@ const Header: React.FC = () => {
               className="block px-4 py-2 hover:bg-gray-200"
               onClick={() => setIsMenuOpen(false)}
             >
-              Upload
+              Retreinamento
+            </a>
+            <a
+              href="/predict"
+              className="block px-4 py-2 hover:bg-gray-200"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Predição
+            </a>
+            <a
+              href="/dashboard"
+              className="block px-4 py-2 hover:bg-gray-200"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Dashboard
             </a>
           </nav>
         </div>
