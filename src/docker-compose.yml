@@ -76,7 +76,6 @@ services:
       - app-tier
     restart: unless-stopped
 
-
 networks:
   app-tier:
     driver: bridge
