@@ -6,7 +6,7 @@ import numpy as np
 from sqlalchemy.orm import Session
 from models.predictionModel import Prediction, Features, Model, Values
 from models.database import get_db
-from utils.helpers import call_ai, generate_uuidv7, load_model_from_url, get_model_url, authenticate_pocketbase
+from utils.helpers import call_ai, generate_uuidv7, load_model_from_url, load_model_from_path, get_model_url, authenticate_pocketbase
 from typing import List
 import traceback
 
@@ -60,7 +60,7 @@ async def predict(knr: str, db: Session = Depends(get_db)):
         model_path = os.path.join("models", "model.h5")
         print("Model URL:", model_path)
 
-        model = load_model_from_url(model_path)
+        model = load_model_from_path(model_path)
         print("Model loaded successfully")
 
         # Load the CSV file from the data folder

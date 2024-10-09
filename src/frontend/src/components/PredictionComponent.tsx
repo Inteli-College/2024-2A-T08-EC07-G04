@@ -133,7 +133,7 @@ const PredictionCard: React.FC = () => {
                       key={knr}
                       className={({ active }) =>
                         `cursor-default select-none relative py-2 pl-10 pr-4 ${
-                          active ? 'text-white bg-blue-600' : 'text-gray-900'
+                          active ? 'text-white bg-[#000475]' : 'text-gray-900'
                         }`
                       }
                       value={knr}
@@ -168,7 +168,7 @@ const PredictionCard: React.FC = () => {
         <button
           onClick={handlePredict}
           disabled={loading || !selectedKnr}
-          className={`w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ${
+          className={`w-full bg-[#000475] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ${
             loading || !selectedKnr ? 'opacity-50 cursor-not-allowed' : ''
           }`}
         >
@@ -213,24 +213,24 @@ const PredictionCard: React.FC = () => {
                     as="h3"
                     className="text-lg font-medium leading-6 text-gray-900 mb-4"
                   >
-                    Prediction Result
+                    Probabilidade de Falha
                   </Dialog.Title>
                   <div className="mt-2">
                     {formattedPrediction !== null ? (
                       <p className="text-3xl font-bold text-center">
-                        {formattedPrediction}% likelihood
+                        {formattedPrediction}% 
                       </p>
                     ) : (
-                      <p className="text-gray-500">No prediction available.</p>
+                      <p className="text-gray-500">Predição não disponível.</p>
                     )}
                   </div>
                   <div className="mt-6">
                     <button
                       type="button"
-                      className="w-full inline-flex justify-center rounded-md border border-transparent bg-blue-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      className="w-full inline-flex justify-center rounded-md border border-transparent bg-[#000475] px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                       onClick={() => setIsModalOpen(false)}
                     >
-                      Close
+                      Fechar
                     </button>
                   </div>
                 </Dialog.Panel>

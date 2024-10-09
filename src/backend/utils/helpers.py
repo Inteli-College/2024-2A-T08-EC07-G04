@@ -156,6 +156,22 @@ def load_model_from_url(url: str):
     
     os.remove(unique_filename)
 
+def load_model_from_path(model_path: str):
+    """
+    Loads the model from a given file path.
+    """
+    try:
+        print(f"Loading model from: {model_path}")
+        if not os.path.exists(model_path):
+            print(f"Model file not found at path: {model_path}")
+            raise HTTPException(status_code=404, detail="Model file not found.")
+        model = load_model(model_path)
+        print("Model loaded successfully.")
+        return model
+    except Exception as e:
+        print(f"Error loading model: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error loading model: {str(e)}")
+
 
 
 def get_model_url(ID_modelo: str, db: Session = Depends(get_db)) -> str:
