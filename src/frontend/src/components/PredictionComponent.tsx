@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useMemo, Fragment } from 'react';
-import { Combobox, Transition } from '@headlessui/react';
-import { ChevronUpDownIcon, CheckIcon } from '@heroicons/react/20/solid';
+import { Combobox, Dialog, Transition } from '@headlessui/react';
+import { ChevronUpDownIcon, CheckIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import debounce from 'lodash.debounce';
 
 interface PredictionResponse {
-  prediction: any;
+  prediction: number;
 }
 
 const PredictionCard: React.FC = () => {
@@ -13,6 +13,7 @@ const PredictionCard: React.FC = () => {
   const [query, setQuery] = useState('');
   const [predictionResult, setPredictionResult] = useState<PredictionResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8001';
 
@@ -70,6 +71,7 @@ const PredictionCard: React.FC = () => {
       })
       .then((data) => {
         setPredictionResult(data);
+        setIsModalOpen(true); // Open the modal when prediction result is received
       })
       .catch((error) => {
         console.error('Error making prediction:', error);
@@ -79,6 +81,15 @@ const PredictionCard: React.FC = () => {
         setLoading(false);
       });
   };
+
+  // Format the prediction result as a percentage
+  const formattedPrediction = useMemo(() => {
+    if (predictionResult && typeof predictionResult.prediction === 'number') {
+      const percentage = predictionResult.prediction * 100;
+      return percentage.toFixed(2); // Format to two decimal places
+    }
+    return null;
+  }, [predictionResult]);
 
   return (
     <div className="max-w-md mx-auto mt-10">
@@ -163,14 +174,71 @@ const PredictionCard: React.FC = () => {
         >
           {loading ? 'Predicting...' : 'Predict'}
         </button>
-
-        {predictionResult && (
-          <div className="mt-6">
-            <h2 className="text-xl font-semibold">Prediction Result:</h2>
-            <p className="mt-2">{predictionResult.prediction}</p>
-          </div>
-        )}
       </div>
+
+      {/* Modal to display the prediction percentage */}
+      <Transition appear show={isModalOpen} as={Fragment}>
+        <Dialog as="div" className="relative z-50" onClose={() => setIsModalOpen(false)}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black bg-opacity-25" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <button
+                    className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
+                    onClick={() => setIsModalOpen(false)}
+                  >
+                    <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                  </button>
+                  <Dialog.Title
+                    as="h3"
+                    className="text-lg font-medium leading-6 text-gray-900 mb-4"
+                  >
+                    Prediction Result
+                  </Dialog.Title>
+                  <div className="mt-2">
+                    {formattedPrediction !== null ? (
+                      <p className="text-3xl font-bold text-center">
+                        {formattedPrediction}% likelihood
+                      </p>
+                    ) : (
+                      <p className="text-gray-500">No prediction available.</p>
+                    )}
+                  </div>
+                  <div className="mt-6">
+                    <button
+                      type="button"
+                      className="w-full inline-flex justify-center rounded-md border border-transparent bg-blue-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      onClick={() => setIsModalOpen(false)}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
     </div>
   );
 };

@@ -79,14 +79,16 @@ def call_ai(df: pd.DataFrame, model):
     Prepares the input data and calls the AI model to make a prediction.
     """
     try:
-        expected_columns = ['unique_names', '1_status_10', '2_status_10', '718_status_10',
-                            '1_status_13', '2_status_13', '718_status_13',
-                            '_unit_count', '%_unit_count', 'Clicks_unit_count', 'Deg_unit_count',
-                            'Grad_unit_count', 'Nm_unit_count', 'Unnamed: 5_unit_count',
-                            'V_unit_count', 'kg_unit_count', 'min_unit_count', 'mm_unit_count',
-                            '_unit_mean', '%_unit_mean', 'Clicks_unit_mean', 'Deg_unit_mean',
-                            'Grad_unit_mean', 'Nm_unit_mean', 'Unnamed: 5_unit_mean',
-                            'V_unit_mean', 'kg_unit_mean', 'min_unit_mean', 'mm_unit_mean']  # Updated expected columns
+        expected_columns = [
+            'unique_names', '1_status_10', '2_status_10', '718_status_10',
+            '1_status_13', '2_status_13', '718_status_13',
+            '_unit_count', '%_unit_count', 'Clicks_unit_count', 'Deg_unit_count',
+            'Grad_unit_count', 'Nm_unit_count', 'Unnamed: 5_unit_count',
+            'V_unit_count', 'kg_unit_count', 'min_unit_count', 'mm_unit_count',
+            '_unit_mean', '%_unit_mean', 'Clicks_unit_mean', 'Deg_unit_mean',
+            'Grad_unit_mean', 'Nm_unit_mean', 'Unnamed: 5_unit_mean',
+            'V_unit_mean', 'kg_unit_mean', 'min_unit_mean', 'mm_unit_mean'
+        ]  # Updated expected columns
 
         missing_columns = [col for col in expected_columns if col not in df.columns]
         if missing_columns:
@@ -94,15 +96,17 @@ def call_ai(df: pd.DataFrame, model):
         
         print("Data loaded successfully.")
 
-        # Ensure the data is in the correct order
+        # Ensure the data is in the correct order and data type
         input_data = df[expected_columns].astype(np.float32).values
 
         print("Calling AI model...")
 
-        # Adjust the input shape if necessary
-        # For example, if the model expects (1, num_features)
-        if len(input_data.shape) == 1:
-            input_data = np.expand_dims(input_data, axis=0)
+        # Adjust the input shape to match the model's expected input shape
+        # The model expects input shape of (batch_size, time_steps, features)
+        # In this case, time_steps = 1
+        input_data = np.expand_dims(input_data, axis=1)  # Adds a new dimension at axis=1
+
+        print(f"Adjusted input shape: {input_data.shape}")
 
         predictions = model.predict(input_data)
 
@@ -116,6 +120,7 @@ def call_ai(df: pd.DataFrame, model):
     except Exception as e:
         print(f"Error during model prediction: {str(e)}")
         raise
+
 
 def generate_uuidv7():
     # Get the current timestamp in milliseconds
