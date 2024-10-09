@@ -82,8 +82,5 @@ As responsabilidades estão divididas da seguinte forma:
 
 O Canvas de Planejamento de Testes para o Modelo Preditivo do Grupo Fillmore foi desenvolvido para garantir que o sistema seja testado de maneira organizada, cobrindo todas as principais funcionalidades e verificando a experiência do usuário final. O teste é fundamental para validar a usabilidade e a eficiência do modelo, garantindo que ele esteja pronto para ser implementado na linha de produção e ajude a prever falhas nos veículos com precisão e agilidade.
 
-## Resumo dos Testes do Grupo Fillmore
+Devido a questões de prazo de entrega do projeto, não foi possível realizar todos os testes de forma abrangente. Sendo assim, fica sugerido que a Volkswagen conduza testes adicionais para validar o sistema em ambiente real, garantindo que o modelo funcione conforme o esperado na linha de produção.
 
-Os testes realizados com três participantes — João Souza, Ana Lima, e Carlos Mendes — revelaram pontos importantes sobre a usabilidade do sistema preditivo. João teve uma experiência fluida, com apenas um pequeno atraso no envio de dados, destacando que os gráficos poderiam ser mais detalhados. Ana acessou e utilizou o sistema, mas sugeriu um layout mais amigável e melhores instruções para o envio de dados e interpretação dos gráficos. Carlos encontrou mais dificuldades, principalmente devido à lentidão no processamento e à complexidade dos gráficos, reforçando a necessidade de uma interface mais intuitiva e direta.
-
-Para visualizar os testes documentados, acesse esse [link](https://www.canva.com/design/DAGTAlCJhC4/Syj-7P5wis72N0HbdzstSw/edit?utm_content=DAGTAlCJhC4&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
