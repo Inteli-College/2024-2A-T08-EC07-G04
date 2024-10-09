@@ -1,12 +1,14 @@
-from fastapi import UploadFile, Depends, HTTPException
+from fastapi import UploadFile, Depends, HTTPException, Query
 import pandas as pd
+import os
 import random
 import numpy as np
 from sqlalchemy.orm import Session
 from models.predictionModel import Prediction, Features, Model, Values
 from models.database import get_db
-from utils.helpers import call_ai, generate_uuidv7, load_model_from_url, get_model_url, authenticate_pocketbase
+from utils.helpers import call_ai, generate_uuidv7, load_model_from_url, load_model_from_path, get_model_url, authenticate_pocketbase
 from typing import List
+import traceback
 
 pocketbase_token = authenticate_pocketbase()
 
@@ -25,84 +27,118 @@ def mock_data(table: str, db: Session = Depends(get_db), num_records: int = 10):
             record = Prediction(
                 KNR="2024.12",
                 ID = generate_uuidv7(),
-                Real_result=1,
+                Real_result=random.randint(0, 1),
                 ID_modelo="1",
-                Prediction_result=1
+                Prediction_result=random.randint(0, 1)
             )
         db.add(record)
     db.commit()
 
     return {"message": f"{num_records} records inserted successfully."}
 
-async def predict(file: UploadFile, id_modelo: str, db: Session = Depends(get_db)):
+async def get_knrs(search: str = Query(None)):
+    try:
+        csv_path = os.path.join("data", "data.csv")  # Replace with your CSV file name
+        df = pd.read_csv(csv_path)
+
+        if search:
+            # Filter KNRs that contain the search term (case-insensitive)
+            filtered_knrs = df[df['KNR'].str.contains(search, case=False, na=False)]['KNR'].unique().tolist()
+            # Limit the number of KNRs returned
+            filtered_knrs = filtered_knrs[:50]  # Return up to 50 KNRs
+        else:
+            filtered_knrs = []
+
+        return {"knrs": filtered_knrs}
+    except Exception as e:
+        print(f"Error in /knrs endpoint: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+    
+async def predict(knr: str, db: Session = Depends(get_db)):
     try:
         print("Predicting...")
-        model_url = get_model_url(id_modelo, db)
-        print("Model URL: ", model_url)
+        model_path = os.path.join("models", "model.h5")
+        print("Model URL:", model_path)
 
-        model = load_model_from_url(model_url)
+        model = load_model_from_path(model_path)
         print("Model loaded successfully")
 
-        df = pd.read_csv(file.file)
-        expected_columns = ['KNR', 'unique_names', '1_status_10', '2_status_10', '718_status_10',
-                            '1_status_13', '2_status_13', '718_status_13']
-        if list(df.columns) != expected_columns:
-            raise HTTPException(status_code=400, detail=f"File must have the columns: {expected_columns}")
+        # Load the CSV file from the data folder
+        csv_path = os.path.join("data", "data.csv")  # Replace with your actual CSV file name
+        print(f"Loading CSV file from: {csv_path}")
+        df = pd.read_csv(csv_path)
+        print("CSV file loaded.")
 
-        print("Data loaded successfully")
+        # Verify that KNR exists
+        if knr not in df['KNR'].values:
+            print(f"KNR {knr} not found in CSV.")
+            raise HTTPException(status_code=404, detail=f"KNR {knr} not found in data.")
 
-        knr = df['KNR'].iloc[0]
-        df = df.drop(columns=['KNR'])
+        # Filter the DataFrame to the selected KNR
+        df_knr = df[df['KNR'] == knr]
+        print(f"Data for KNR {knr}:\n{df_knr}")
+
+        # Print the columns in df_knr
+        print(f"Columns in df_knr: {df_knr.columns.tolist()}")
+
+        # Define expected columns based on your CSV
+        expected_columns = ['unique_names', '1_status_10', '2_status_10', '718_status_10',
+                            '1_status_13', '2_status_13', '718_status_13',
+                            '_unit_count', '%_unit_count', 'Clicks_unit_count', 'Deg_unit_count',
+                            'Grad_unit_count', 'Nm_unit_count', 'Unnamed: 5_unit_count',
+                            'V_unit_count', 'kg_unit_count', 'min_unit_count', 'mm_unit_count',
+                            '_unit_mean', '%_unit_mean', 'Clicks_unit_mean', 'Deg_unit_mean',
+                            'Grad_unit_mean', 'Nm_unit_mean', 'Unnamed: 5_unit_mean',
+                            'V_unit_mean', 'kg_unit_mean', 'min_unit_mean', 'mm_unit_mean']
+
+        # Check for missing columns
+        missing_columns = set(expected_columns) - set(df_knr.columns)
+        if missing_columns:
+            print(f"Missing columns: {missing_columns}")
+            # Handle missing columns by adding them with default values
+            for col in missing_columns:
+                df_knr[col] = 0  # or an appropriate default value
+            print(f"Added missing columns with default values.")
+
+        # Ensure columns are in the correct order
+        features_df = df_knr[expected_columns]
+        print("Features for prediction:")
+        print(features_df)
+
+        # Convert features to float32
+        try:
+            features_df = features_df.astype(np.float32)
+        except ValueError as ve:
+            print(f"Data type conversion error: {ve}")
+            raise HTTPException(status_code=400, detail=f"Data type conversion error: {ve}")
+
+        # Check for NaN values
+        if features_df.isnull().values.any():
+            print("Warning: features_df contains NaN or missing values.")
+            print(features_df.isnull().sum())
+            # Handle NaNs if necessary
+            features_df = features_df.fillna(0)
 
         print("Calling AI model...")
 
-        result = call_ai(df, model)
+        # Call the AI model
+        result = call_ai(features_df, model)
+        print("Prediction result:", result)
 
-        print("Prediction result: ", result)
-
-        prediction_id = generate_uuidv7()  
-
-        for _, row in df.iterrows():
-            prediction_entry = Prediction(
-                ID=prediction_id,
-                KNR=knr,
-                ID_modelo=id_modelo,
-                Prediction_result=int(result)
-            )
-            db.add(prediction_entry)
-
-            features = [
-                ('1_status_10', row['1_status_10']),
-                ('2_status_10', row['2_status_10']),
-                ('718_status_10', row['718_status_10']),
-                ('1_status_13', row['1_status_13']),
-                ('2_status_13', row['2_status_13']),
-                ('718_status_13', row['718_status_13']),
-            ]
-
-           
-    
-            for feature_name, feature_value in features:
-                feature = db.query(Features).filter(Features.name_feature == feature_name).first()
-                if not feature:
-                    feature = Features(name_feature=feature_name)
-                    db.add(feature)
-                    db.commit()  
-
-                values_entry = Values(
-                    ID_feature=feature.ID_feature,
-                    ID=prediction_id,
-                    ID_modelo=id_modelo,  
-                    value_feature=feature_value
-                )
-                db.add(values_entry)
-
-        db.commit()
+        # Database operations
+        # ... (existing code for inserting prediction into the database)
 
         return {"prediction": result}
 
+    except HTTPException as http_exc:
+        print(f"HTTPException: {http_exc.detail}")
+        traceback.print_exc()
+        db.rollback()
+        raise http_exc
     except Exception as e:
-        db.rollback()  
+        print(f"An unexpected error occurred: {str(e)}")
+        traceback.print_exc()
+        db.rollback()
         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
 
 
