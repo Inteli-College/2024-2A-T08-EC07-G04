@@ -104,21 +104,32 @@ docker compose up --build
 - Modelo Inicial
 - Apresentação dos Documentos de Análise de Negócios do Projeto
 - Requisitos de Viabilidade Técnica
+  
 ### Sprint 2
-
-TODO
+- Deploy do Modelo com uma API de Interface
+- API em FastAPI
+- Modelo implementado com RNN
+- Wireframe da Solução
 
 ### Sprint 3
-
-TODO
+- Dockerização da Aplicação
+- Inicio do Frontend
+- Remodelagem do banco de dados
+- Justificativa da não utilização de DataLake
+- Descrição das rotas do backend
 
 ### Sprint 4
-
-TODO
+- Projeto de Fluxo de Retreinamento do modelo
+- Construção do processo de ETL
+- Pipeline de Treinamento do Modelo
+- Visualização de Dados
+- Integração Backend e Frontend
 
 ### Sprint 5
-
-TODO
+- Finalização do Backend e Frontend
+- Migrar aplicação para a Cloud
+- Prova de conceito
+- Finalização da Documentação
 
 
 ## Licença
