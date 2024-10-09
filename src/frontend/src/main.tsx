@@ -9,6 +9,7 @@ import Upload from './pages/Upload'
 import './index.css'
 import NoIssuesPage from './pages/NoIssuesPage.tsx';
 import IssuesPage from './pages/IssuesPage.tsx';
+import Predict from './pages/Predict.tsx';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
@@ -20,6 +21,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
         <Route path="/upload" element={<Upload />} />
         <Route path="/no-issues" element={<NoIssuesPage />} />
         <Route path="/issues" element={<IssuesPage />} />
+        <Route path="/predict" element={<Predict />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
