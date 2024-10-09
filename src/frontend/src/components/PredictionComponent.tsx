@@ -15,7 +15,7 @@ const PredictionCard: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8001';
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://100.29.57.65:8001';
 
   // Debounced fetch function
   const fetchKnrs = useMemo(

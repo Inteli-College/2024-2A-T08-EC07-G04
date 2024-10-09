@@ -30,7 +30,7 @@ const Graphs: React.FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get<ApiResponse>('http://backend:8001/dashboard/knr_5_months');
+                const response = await axios.get<ApiResponse>('http://100.29.57.65:8001/dashboard/knr_5_months');
 
                 // Verifique o que está sendo retornado pela API
                 console.log("API Response:", response.data);

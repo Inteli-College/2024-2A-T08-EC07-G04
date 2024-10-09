@@ -18,10 +18,10 @@ const Dashboard: React.FC = () => {
                     accuracyResponse, 
                     falseNegativeResponse
                 ] = await Promise.all([
-                    axios.get('http://localhost:8001/dashboard/predictions_month'),
-                    axios.get('http://localhost:8001/dashboard/knr_month'),
-                    axios.get('http://localhost:8001/dashboard/accuracy'),
-                    axios.get('http://localhost:8001/dashboard/false_negatives')
+                    axios.get('http://100.29.57.65:8001/dashboard/predictions_month'),
+                    axios.get('http://100.29.57.65:8001/dashboard/knr_month'),
+                    axios.get('http://100.29.57.65:8001/dashboard/accuracy'),
+                    axios.get('http://100.29.57.65:8001/dashboard/false_negatives')
                 ]);
 
                 setPredictionsMonthData(

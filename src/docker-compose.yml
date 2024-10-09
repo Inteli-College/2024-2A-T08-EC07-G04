@@ -4,7 +4,7 @@ services:
     image: src/frontend
     restart: unless-stopped
     environment:
-      NEXT_PUBLIC_BACKEND_URL: "http://backend:8000"
+      NEXT_PUBLIC_BACKEND_URL: "http://backend:8001"
     ports:
       - "80:4173"
     depends_on:
