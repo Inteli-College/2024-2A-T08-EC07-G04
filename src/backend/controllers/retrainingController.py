@@ -29,7 +29,6 @@ async def retrain_model(file: UploadFile, db: Session = Depends(get_db)):
             raise HTTPException(status_code=404, detail="Nenhum modelo encontrado no banco de dados.")
         print(latest_model)
 
-        
         model_url = str(get_model_url(latest_model.ID_modelo, db))
         print(model_url)
 
