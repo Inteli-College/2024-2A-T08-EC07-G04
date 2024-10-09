@@ -89,11 +89,39 @@ docker compose up --build
 ```
 ## 📁 Estrutura de pastas
 ```plaintext
-
 └── 2024-2A-T08-EC07-G04
-    ├── .github/workflows
+    ├── .github
+    │   └── workflows
     ├── docs
+    │   ├── sprint1
+    │   ├── sprint2
+    │   ├── sprint3
+    │   ├── sprint4
+    │   ├── sprint5
+    │   └── intro.md
     ├── src
+    │   ├── backend
+    │   │   ├── alembic
+    │   │   ├── controllers
+    │   │   ├── model
+    │   │   ├── models
+    │   │   ├── pocketbase
+    │   │   ├── routes
+    │   │   ├── utils
+    │   │   ├── alembic.ini
+    │   │   ├── Dockerfile
+    │   │   └── main.py
+    │   ├── frontend
+    │   │   ├── node_modules
+    │   │   ├── public
+    │   │   └── src
+    │   ├── data
+    │   ├── notebook
+    │   ├── pocketbase_data
+    │   ├── postgres
+    │   ├── docker-compose.yml
+    │   ├── .gitignore
+    │   └── requirements.txt
     ├── .gitignore
     └── README.md
 ```
