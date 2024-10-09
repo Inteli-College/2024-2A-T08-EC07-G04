@@ -173,10 +173,22 @@ def count_predictions(
     return prediction_count
 
 def get_model_accuracy(db: Session = Depends(get_db)):
-    model = db.query().first()  # Assuming you're only interested in one model
-    if not model:
-        raise HTTPException(status_code=404, detail="Model not found")
-    return {"accuracy": model.precision}
+    total_predictions = db.query(Prediction).count()
+    if total_predictions == 0:
+        raise HTTPException(status_code=404, detail="No predictions found")
+    #Calculo de positivos verdaderos
+    true_positives = db.query(Prediction).filter(
+        Prediction.Prediction_result == 1, 
+        Prediction.Real_result == 1
+    ).count()
+    #Calculo de falsos negativos
+    true_negatives = db.query(Prediction).filter(
+        Prediction.Prediction_result == 0, 
+        Prediction.Real_result == 0
+    ).count()
+    #Calculo da acuracia
+    accuracy = (true_positives + true_negatives) / total_predictions
+    return {"accuracy": accuracy}
 
 def get_false_negatives(db: Session = Depends(get_db)):
     false_negatives_count = db.query(Prediction).filter(
