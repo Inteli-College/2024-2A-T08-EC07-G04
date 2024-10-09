@@ -9,7 +9,6 @@ import logging
 from models.database import get_db
 from models.predictionModel import Model
 from utils.helpers import (
-    authenticate_pocketbase,
     get_model_url,
     load_model_from_url,
     upload_model_to_pocketbase,
@@ -31,10 +30,7 @@ async def retrain_model(file: UploadFile, db: Session = Depends(get_db)):
         print(latest_model)
 
         
-        # model_url = str(get_model_url(latest_model.ID_modelo, db))
-
-        model_url = "http://pocketbase:8090/api/files/4forqd5s2ez9ydw/kevct3veghwnm44/model_1926deec_a08_7_e610_70028dc7356a7d75344ae3_GWqWBffzmT.h5"
-
+        model_url = str(get_model_url(latest_model.ID_modelo, db))
         print(model_url)
 
         model = load_model_from_url(model_url)
@@ -97,7 +93,7 @@ async def retrain_model(file: UploadFile, db: Session = Depends(get_db)):
             )
 
         # Fazer o upload do novo modelo para o PocketBase
-        new_model_url = upload_model_to_pocketbase(model_save_path, new_model_filename)
+        new_model_url = upload_model_to_pocketbase(model_save_path)
         logger.info(f"URL do novo modelo: {new_model_url}")
 
         if not new_model_url:

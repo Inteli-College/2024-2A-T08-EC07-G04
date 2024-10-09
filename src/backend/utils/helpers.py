@@ -37,7 +37,7 @@ def authenticate_pocketbase():
     
 pocketbase_token = authenticate_pocketbase()
 
-def upload_model_to_pocketbase(file_path: str, new_model_filename) -> str:
+def upload_model_to_pocketbase(file_path: str) -> str:
     try:
         POCKETBASE_URL = "http://pocketbase:8090"
         collection_name = 'fillmore'  # Nome da sua coleção
@@ -53,11 +53,15 @@ def upload_model_to_pocketbase(file_path: str, new_model_filename) -> str:
         response = requests.post(url, files=files, headers=headers)
 
         response_data = response.json()
+        print(response_data)
         collectionId = response_data['collectionId']
         id = response_data['id']
+        models_list = response_data['models']
+        # Como 'models' é uma lista, obtenha o primeiro nome de arquivo
+        file_name = models_list[0]
 
         if response.status_code == 200:
-            return f"{POCKETBASE_URL}/api/files/{collectionId}/{id}/{new_model_filename}"
+            return f"{POCKETBASE_URL}/api/files/{collectionId}/{id}/{file_name}"
         else:
             print(f"Error uploading file: {response.status_code}")
             print(f"Response content: {response.content}")
@@ -99,7 +103,14 @@ def generate_uuidv7():
 def load_model_from_url(url: str):
     unique_filename = f"temp_model_{generate_uuidv7()}.h5"
     
-    response = requests.get(url)
+    headers = {
+        'Authorization': f'Bearer {pocketbase_token}'
+    }
+    
+    response = requests.get(url, headers=headers)
+    if response.status_code != 200:
+        raise HTTPException(status_code=response.status_code, detail="Failed to download the model.")
+    
     with open(unique_filename, "wb") as f:
         f.write(response.content)
     
@@ -110,6 +121,7 @@ def load_model_from_url(url: str):
     print("Model loaded successfully")
     
     return model
+
 
 
 def get_model_url(ID_modelo: str, db: Session = Depends(get_db)) -> str:
