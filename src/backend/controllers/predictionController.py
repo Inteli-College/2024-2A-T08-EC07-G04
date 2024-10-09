@@ -21,7 +21,7 @@ def mock_data(table: str, db: Session = Depends(get_db), num_records: int = 10):
             record = Model(
                 ID_modelo=1,
                 model='sequencial_V1',
-                URL_modelo="http://pocketbase:8090/api/files/4forqd5s2ez9ydw/wwpjocvw1obr90r/modelo_0cJQGhMAmk.h5"
+                URL_modelo="http://pocketbase:8090/api/files/1alnoc2weednjiu/xgbwllkdtc3uych/model_LjqzVRNR2m.h5"
             )
         elif table == 'Prediction':
             record = Prediction(
