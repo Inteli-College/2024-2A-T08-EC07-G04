@@ -3,14 +3,12 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
 } from 'recharts';
 
-const data = [
-  { month: 'Jan', status_10: 20, status_13: 15, status_718: 30 },
-  { month: 'Feb', status_10: 30, status_13: 25, status_718: 35 },
-  { month: 'Mar', status_10: 50, status_13: 30, status_718: 40 },
-  { month: 'Apr', status_10: 60, status_13: 40, status_718: 50 },
-];
+// Define the props type
+interface AreaStatusChartProps {
+  data: { month: string; status_10: number; status_13: number; status_718: number }[]; // Adjust the types based on your actual data
+}
 
-const AreaStatusChart: React.FC = () => {
+const AreaStatusChart: React.FC<AreaStatusChartProps> = ({ data }) => {
   return (
     <div className="bg-gray-100 p-6 rounded-xl shadow-lg">
       <h2 className="text-2xl font-semibold text-gray-700 mb-4 text-center">
