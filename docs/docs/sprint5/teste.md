@@ -9,6 +9,7 @@ Esse teste busca garantir que o sistema desenvolvido seja intuitivo e eficiente 
 Segue uma Imagem do Canvas:
 
 ![Canvas de Planejamento de Testes](../../static/img/Canvas_Teste_Fillmore.png)
+
 [Canvas de Planejamento de Testes](https://www.canva.com/design/DAGS45mWxd8/puxsZgajr1m8l6xs-7VhcQ/edit?utm_content=DAGS45mWxd8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 ## Estrutura do Canvas de Teste
