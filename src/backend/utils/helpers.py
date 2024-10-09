@@ -16,9 +16,8 @@ import traceback
 
 logger = logging.getLogger(__name__)
 
-POCKETBASE_URL = "http://pocketbase:8090"
-
 def authenticate_pocketbase():
+    POCKETBASE_URL = "http://pocketbase:8090"
     pass
     try:
         auth_data = {
@@ -40,38 +39,38 @@ def authenticate_pocketbase():
     
 pocketbase_token = authenticate_pocketbase()
 
-def upload_model_to_pocketbase(file_path: str, token: str) -> str:
+def upload_model_to_pocketbase(file_path: str) -> str:
     try:
         POCKETBASE_URL = "http://pocketbase:8090"
         collection_name = 'fillmore'  # Nome da sua coleção
-        file_field_name = 'model_file'  # Nome do campo de arquivo na coleção
+        file_field_name = 'models'  # Nome do campo de arquivo na coleção
 
         url = f"{POCKETBASE_URL}/api/collections/{collection_name}/records"
 
         files = {file_field_name: open(file_path, 'rb')}
         headers = {
-            'Authorization': f'Admin {token}'
+            'Authorization': f'Bearer {pocketbase_token}'
         }
 
         response = requests.post(url, files=files, headers=headers)
-        response.raise_for_status()
 
-        # Extrair a URL do arquivo a partir da resposta
-        record = response.json()
-        file_id = record['id']
-        file_name = record[file_field_name]
+        response_data = response.json()
+        print(response_data)
+        collectionId = response_data['collectionId']
+        id = response_data['id']
+        models_list = response_data['models']
+        # Como 'models' é uma lista, obtenha o primeiro nome de arquivo
+        file_name = models_list[0]
 
-        file_url = f"{POCKETBASE_URL}/api/files/{collection_name}/{file_id}/{file_name}"
-
-        print(f"Model uploaded to PocketBase successfully. URL: {file_url}")
-        return file_url  # Retorna apenas a URL como string
-    except requests.HTTPError as e:
-        print(f"Error uploading file: {e.response.status_code}")
-        print(f"Response content: {e.response.content}")
-        raise Exception("Failed to upload the model to PocketBase.")
+        if response.status_code == 200:
+            return f"{POCKETBASE_URL}/api/files/{collectionId}/{id}/{file_name}"
+        else:
+            print(f"Error uploading file: {response.status_code}")
+            print(f"Response content: {response.content}")
+            return False
     except Exception as e:
         print(f"Exception during file upload: {e}")
-        raise Exception("Failed to upload the model to PocketBase.")
+        return False
 
 
 def call_ai(df: pd.DataFrame, model):
@@ -139,16 +138,24 @@ def generate_uuidv7():
 
 
 
+def load_model_from_url(url: str):
+    unique_filename = f"temp_model_{generate_uuidv7()}.h5"
+    
+    headers = {
+        'Authorization': f'Bearer {pocketbase_token}'
+    }
+    
+    response = requests.get(url, headers=headers)
+    if response.status_code != 200:
+        raise HTTPException(status_code=response.status_code, detail="Failed to download the model.")
+    
+    with open(unique_filename, "wb") as f:
+        f.write(response.content)
+    
+    model = tf.keras.models.load_model(unique_filename)
+    
+    os.remove(unique_filename)
 
-def load_model_from_url(model_path):
-    try:
-        print(f"Loading model from: {model_path}")
-        model = load_model(model_path)
-        print("Model loaded successfully.")
-        return model
-    except Exception as e:
-        print(f"Error loading model: {str(e)}")
-        raise
 
 
 def get_model_url(ID_modelo: str, db: Session = Depends(get_db)) -> str:

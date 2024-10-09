@@ -27,9 +27,9 @@ def mock_data(table: str, db: Session = Depends(get_db), num_records: int = 10):
             record = Prediction(
                 KNR="2024.12",
                 ID = generate_uuidv7(),
-                Real_result=1,
+                Real_result=random.randint(0, 1),
                 ID_modelo="1",
-                Prediction_result=1
+                Prediction_result=random.randint(0, 1)
             )
         db.add(record)
     db.commit()
