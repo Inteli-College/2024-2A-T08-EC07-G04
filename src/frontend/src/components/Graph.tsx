@@ -18,15 +18,37 @@ interface ApiResponse {
 const Graphs: React.FC = () => {
     const [monthlyData, setMonthlyData] = useState<PredictionData[]>([]);
 
+    // Função para converter números de meses em nomes
+    const getMonthName = (monthNumber: number) => {
+        const months = [
+            'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+            'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+        ];
+        return months[monthNumber - 1]; // Ajuste para índice zero
+    };
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await axios.get<ApiResponse>('http://localhost:8001/dashboard/knr_5_months');
-                const data = Object.entries(response.data).map(([key, value]) => ({
-                    mes: key,
-                    carros: value.carros,
-                    falhas: value.falhas,
-                }));
+
+                // Verifique o que está sendo retornado pela API
+                console.log("API Response:", response.data);
+
+                const data = Object.entries(response.data).map(([key, value]) => {
+                    // Extrai o número do mês da string "mesX"
+                    const monthNumber = parseInt(key.replace('mes', ''), 10);
+
+                    // Converte o número para o nome do mês
+                    const monthName = getMonthName(monthNumber);
+
+                    return {
+                        mes: monthName,
+                        carros: value.carros,
+                        falhas: value.falhas,
+                    };
+                });
+
                 setMonthlyData(data);
             } catch (error) {
                 console.error("Error fetching data: ", error);
