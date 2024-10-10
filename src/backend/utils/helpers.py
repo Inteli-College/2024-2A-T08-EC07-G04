@@ -40,8 +40,8 @@ pocketbase_token = authenticate_pocketbase()
 def upload_model_to_pocketbase(file_path: str) -> str:
     try:
         POCKETBASE_URL = "http://pocketbase:8090"
-        collection_name = 'fillmore'  # Nome da sua coleção
-        file_field_name = 'models'  # Nome do campo de arquivo na coleção
+        collection_name = 'fillmore'  # Name of your collection
+        file_field_name = 'field'  # Field name based on your image
 
         url = f"{POCKETBASE_URL}/api/collections/{collection_name}/records"
 
@@ -51,16 +51,16 @@ def upload_model_to_pocketbase(file_path: str) -> str:
         }
 
         response = requests.post(url, files=files, headers=headers)
-
         response_data = response.json()
-        print(response_data)
-        collectionId = response_data['collectionId']
-        id = response_data['id']
-        models_list = response_data['models']
-        # Como 'models' é uma lista, obtenha o primeiro nome de arquivo
-        file_name = models_list[0]
+
+        print(f"Response data: {response_data}")
 
         if response.status_code == 200:
+            collectionId = response_data['collectionId']
+            id = response_data['id']
+            models_list = response_data[file_field_name]  # Update to use correct field
+            file_name = models_list[0]  # Assuming it's a list of filenames
+
             return f"{POCKETBASE_URL}/api/files/{collectionId}/{id}/{file_name}"
         else:
             print(f"Error uploading file: {response.status_code}")
