@@ -62,6 +62,8 @@ async def retrain_model(file: UploadFile, db: Session = Depends(get_db)):
         label_column = '718_status_13'
 
         X = df[feature_columns].values.astype(np.float32)
+        X = np.expand_dims(X, axis=1)  # Add an additional axis to make it (batch_size, timesteps, features)
+
         y = df[label_column].values.astype(np.float32)
 
         num_samples = len(X)
