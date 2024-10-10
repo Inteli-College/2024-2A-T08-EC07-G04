@@ -10,6 +10,7 @@ from utils.helpers import call_ai, generate_uuidv7, load_model_from_url,load_mod
 from typing import List
 import traceback
 import httpx
+from io import StringIO
 
 pocketbase_token = authenticate_pocketbase()
 
@@ -48,7 +49,7 @@ async def get_knrs(search: str = Query(None)):
         if response.status_code == 200:
             # Convert the downloaded CSV content to a Pandas DataFrame
             csv_content = response.content.decode('utf-8')
-            df = pd.read_csv(pd.compat.StringIO(csv_content))
+            df = pd.read_csv(StringIO(csv_content))
 
             if search:
                 # Filter KNRs that contain the search term (case-insensitive)
