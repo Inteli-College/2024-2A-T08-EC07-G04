@@ -21,9 +21,9 @@ O projeto está completamente alocado em uma instância EC2 (Elastic Compute Clo
 
 A instância EC2 utilizada foi configurada para atender às necessidades do projeto, com os seguintes pontos importantes:
 
-- **Sistema Operacional**: A instância roda uma distribuição Linux (especificar se necessário).
+- **Sistema Operacional**: A instância roda uma distribuição Linux Ubuntu.
 - **Recursos de Computação**: A quantidade de CPU, memória e armazenamento foi provisionada com base nos requisitos atuais do projeto, garantindo espaço para crescimento futuro.
-- **Segurança**: A segurança foi configurada com grupos de segurança específicos, limitando o acesso por IP e portas específicas, garantindo que apenas conexões seguras sejam permitidas.
+- **Segurança**: Pelo momento, todos os acessos estão disponiveis, mas isso pode ser mudado para limitar a apenas IPs específicos.
 - **Chave SSH**: O acesso à instância é realizado por meio de uma chave SSH segura, permitindo que apenas usuários autorizados possam gerenciar a instância remotamente.
 
 ### Docker na Instância EC2
