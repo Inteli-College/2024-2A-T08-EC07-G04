@@ -9,6 +9,7 @@ from models.database import get_db
 from utils.helpers import call_ai, generate_uuidv7, load_model_from_url,load_model_from_path, get_model_url, authenticate_pocketbase
 from typing import List
 import traceback
+import httpx
 
 pocketbase_token = authenticate_pocketbase()
 
@@ -37,19 +38,30 @@ def mock_data(table: str, db: Session = Depends(get_db), num_records: int = 10):
     return {"message": f"{num_records} records inserted successfully."}
 
 async def get_knrs(search: str = Query(None)):
+    POCKETBASE_URL = "http://pocketbase:8090/api/files/8gcjxcrdl41d3ze/eyiqehnwwe7oy68/small_data_gGUzmjNESd.csv"
     try:
-        csv_path = os.path.join("data", "data.csv")  # Replace with your CSV file name
-        df = pd.read_csv(csv_path)
+        # Download the CSV file from the U  RL
+        async with httpx.AsyncClient() as client:
+            response = await client.get(POCKETBASE_URL)
 
-        if search:
-            # Filter KNRs that contain the search term (case-insensitive)
-            filtered_knrs = df[df['KNR'].str.contains(search, case=False, na=False)]['KNR'].unique().tolist()
-            # Limit the number of KNRs returned
-            filtered_knrs = filtered_knrs[:50]  # Return up to 50 KNRs
+        # Check if the download was successful
+        if response.status_code == 200:
+            # Convert the downloaded CSV content to a Pandas DataFrame
+            csv_content = response.content.decode('utf-8')
+            df = pd.read_csv(pd.compat.StringIO(csv_content))
+
+            if search:
+                # Filter KNRs that contain the search term (case-insensitive)
+                filtered_knrs = df[df['KNR'].str.contains(search, case=False, na=False)]['KNR'].unique().tolist()
+                # Limit the number of KNRs returned
+                filtered_knrs = filtered_knrs[:50]  # Return up to 50 KNRs
+            else:
+                filtered_knrs = []
+
+            return {"knrs": filtered_knrs}
         else:
-            filtered_knrs = []
+            raise HTTPException(status_code=response.status_code, detail="Failed to download CSV from Pocketbase")
 
-        return {"knrs": filtered_knrs}
     except Exception as e:
         print(f"Error in /knrs endpoint: {str(e)}")
         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
