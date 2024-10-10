@@ -19,7 +19,7 @@ const FileUpload: React.FC = () => {
       // formData.append("id_modelo", "1"); 
 
       try {
-        const response = await fetch("http://100.29.57.65:8001/retrain", {
+        const response = await fetch("http://localhost:8001/retrain", {
           method: "POST",
           body: formData,
         });
