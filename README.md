@@ -10,8 +10,6 @@
 
 [Demonstração da Solução Final](https://www.youtube.com/watch?v=rNgzF6gbDT4)
 
-Para acessar a documentação do projeto, basta clicar [aqui].
-
 ## Documentação
 
   A documentação pode ser encontrada no botao abaixo:
