@@ -8,7 +8,7 @@
 
 ## Vídeo de demonstração
 
-[![Demonstração da Solução Final]([https://youtube.com](https://youtu.be/rNgzF6gbDT4))
+[![Demonstração da Solução Final](https://youtu.be/rNgzF6gbDT4)
 
 Para acessar a documentação do projeto, basta clicar [aqui].
 
