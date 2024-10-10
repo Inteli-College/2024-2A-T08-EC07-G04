@@ -5,6 +5,7 @@ import pandas as pd
 import os
 import requests
 import tensorflow as tf
+from tensorflow.keras.models import load_model
 from models.predictionModel import Model
 from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException
