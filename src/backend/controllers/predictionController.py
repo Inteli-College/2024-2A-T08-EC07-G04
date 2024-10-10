@@ -68,19 +68,29 @@ async def get_knrs(search: str = Query(None)):
         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
     
 async def predict(knr: str, db: Session = Depends(get_db)):
+    POCKETBASE_CSV_URL = "http://pocketbase:8090/api/files/8gcjxcrdl41d3ze/eyiqehnwwe7oy68/small_data_gGUzmjNESd.csv"
     try:
         print("Predicting...")
+        
+        # Load the model from local path (this remains the same)
         model_path = os.path.join("models", "model.h5")
         print("Model URL:", model_path)
 
         model = load_model_from_path(model_path)
         print("Model loaded successfully")
 
-        # Load the CSV file from the data folder
-        csv_path = os.path.join("data", "data.csv")  # Replace with your actual CSV file name
-        print(f"Loading CSV file from: {csv_path}")
-        df = pd.read_csv(csv_path)
-        print("CSV file loaded.")
+        # Download the CSV file from Pocketbase URL
+        print(f"Downloading CSV file from: {POCKETBASE_CSV_URL}")
+        async with httpx.AsyncClient() as client:
+            response = await client.get(POCKETBASE_CSV_URL)
+
+        if response.status_code == 200:
+            # Convert the downloaded CSV content to a Pandas DataFrame
+            csv_content = response.content.decode('utf-8')
+            df = pd.read_csv(StringIO(csv_content))
+            print("CSV file loaded.")
+        else:
+            raise HTTPException(status_code=response.status_code, detail="Failed to download CSV from Pocketbase")
 
         # Verify that KNR exists
         if knr not in df['KNR'].values:
@@ -138,7 +148,7 @@ async def predict(knr: str, db: Session = Depends(get_db)):
         result = call_ai(features_df, model)
         print("Prediction result:", result)
 
-        # Database operations
+        # Database operations (if any)
         # ... (existing code for inserting prediction into the database)
 
         return {"prediction": result}
