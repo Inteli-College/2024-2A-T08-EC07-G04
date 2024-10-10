@@ -8,6 +8,8 @@
 
 ## Vídeo de demonstração
 
+![alt text](gif.gif)
+
 [Demonstração da Solução Final](https://www.youtube.com/watch?v=rNgzF6gbDT4)
 
 ## Documentação
