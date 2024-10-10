@@ -9,10 +9,8 @@ from models.predictionModel import Model
 from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException
 from models.database import get_db
-from tensorflow.keras.models import load_model
 import os
 import logging
-import traceback
 
 logger = logging.getLogger(__name__)
 
@@ -74,52 +72,26 @@ def upload_model_to_pocketbase(file_path: str) -> str:
 
 
 def call_ai(df: pd.DataFrame, model):
-    """
-    Prepares the input data and calls the AI model to make a prediction.
-    """
-    try:
-        expected_columns = [
-            'unique_names', '1_status_10', '2_status_10', '718_status_10',
-            '1_status_13', '2_status_13', '718_status_13',
-            '_unit_count', '%_unit_count', 'Clicks_unit_count', 'Deg_unit_count',
-            'Grad_unit_count', 'Nm_unit_count', 'Unnamed: 5_unit_count',
-            'V_unit_count', 'kg_unit_count', 'min_unit_count', 'mm_unit_count',
-            '_unit_mean', '%_unit_mean', 'Clicks_unit_mean', 'Deg_unit_mean',
-            'Grad_unit_mean', 'Nm_unit_mean', 'Unnamed: 5_unit_mean',
-            'V_unit_mean', 'kg_unit_mean', 'min_unit_mean', 'mm_unit_mean'
-        ]  # Updated expected columns
+    required_columns = ['unique_names', '1_status_10', '2_status_10', '718_status_10',
+                        '1_status_13', '2_status_13']
+    if not all(col in df.columns for col in required_columns):
+        raise ValueError(f"The input DataFrame does not have the required columns: {required_columns}")
+    
+    print("Data loaded successfully 2")
 
-        missing_columns = [col for col in expected_columns if col not in df.columns]
-        if missing_columns:
-            raise ValueError(f"The input DataFrame is missing required columns: {missing_columns}")
-        
-        print("Data loaded successfully.")
+    input_data = df.values.astype(np.float32)
 
-        # Ensure the data is in the correct order and data type
-        input_data = df[expected_columns].astype(np.float32).values
+    print("Calling AI model 2...")
 
-        print("Calling AI model...")
+    input_data = np.reshape(input_data, (input_data.shape[0], input_data.shape[1]))
 
-        # Adjust the input shape to match the model's expected input shape
-        # The model expects input shape of (batch_size, time_steps, features)
-        # In this case, time_steps = 1
-        input_data = np.expand_dims(input_data, axis=1)  # Adds a new dimension at axis=1
+    print("nao deu erro")
 
-        print(f"Adjusted input shape: {input_data.shape}")
+    predictions = model.predict(input_data)
 
-        predictions = model.predict(input_data)
-
-        # Process the prediction output
-        # Assuming the model outputs a scalar value per input
-        prediction_result = float(predictions[0][0])  # Adjust indexing based on model output shape
-
-        print(f"Prediction result: {prediction_result}")
-
-        return prediction_result
-    except Exception as e:
-        print(f"Error during model prediction: {str(e)}")
-        raise
-
+    print("Prediction result 2: ", float(predictions[0]))
+    
+    return float(predictions[0])
 
 def generate_uuidv7():
     # Get the current timestamp in milliseconds
@@ -135,7 +107,6 @@ def generate_uuidv7():
     uuidv7 = f'{time_hex[:8]}-{time_hex[8:12]}-7{random_hex[:3]}-{random_hex[3:7]}-{random_hex[7:]}'
     
     return uuidv7
-
 
 
 def load_model_from_url(url: str):
@@ -156,21 +127,9 @@ def load_model_from_url(url: str):
     
     os.remove(unique_filename)
 
-def load_model_from_path(model_path: str):
-    """
-    Loads the model from a given file path.
-    """
-    try:
-        print(f"Loading model from: {model_path}")
-        if not os.path.exists(model_path):
-            print(f"Model file not found at path: {model_path}")
-            raise HTTPException(status_code=404, detail="Model file not found.")
-        model = load_model(model_path)
-        print("Model loaded successfully.")
-        return model
-    except Exception as e:
-        print(f"Error loading model: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Error loading model: {str(e)}")
+    print("Model loaded successfully")
+    
+    return model
 
 
 
