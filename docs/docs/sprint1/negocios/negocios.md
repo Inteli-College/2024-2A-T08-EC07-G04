@@ -19,7 +19,7 @@ No contexto do projeto de manutenção preditiva para a Volkswagen do Brasil, o 
 
 **Imagem do Business Model Canvas:**
 
-![Business Model Canvas](../../static/img/Business_Model_Canvas.png)
+![Business Model Canvas](../../../static/img/Business_Model_Canvas.png)
 [Business Model Canvas](https://www.canva.com/design/DAGDPG8976Y/tf-Zg0P5Mq_P0Bwiepr2Mg/edit?utm_content=DAGDPG8976Y&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 **Explicação do Conteúdo:**
@@ -48,7 +48,7 @@ Para o projeto de manutenção preditiva da Volkswagen, a Matriz de Risco foi ut
 
 **Imagem da Matriz de Risco:**
 
-![Matriz de Risco](../../static/img/Matriz_de_Risco.png)
+![Matriz de Risco](../../../static/img/Matriz_de_Risco.png)
 [Matriz de Risco](https://www.canva.com/design/DAGNXaZ1txY/TNvaRr3aX0vE98Dg0E6aFQ/edit?utm_content=DAGNXaZ1txY&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 **Explicação do Conteúdo:**

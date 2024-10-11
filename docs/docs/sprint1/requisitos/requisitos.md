@@ -24,7 +24,7 @@ Em relação aos componentes do sistema podemos destacar os dados de entrada, mo
 
 Nesse sentido, haverá um fluxo entre os elementos de modo que os dados de entrada fornecidos pela empresa alimentarão o modelo preditivo, o qual estará integrado na plataforma web que exibirá os resultados em tempo real, um histórico de resultados e a possibilidade de inserção de novos dados para tornar o modelo cada vez melhor.
 
-![Diagrama](../../static/img/arquitetura.jpg)
+![Diagrama](../../../static/img/arquitetura.jpg)
 
 ## Requisitos Funcionais
 Os requisitos funcionais descrevem as funcionalidades essenciais que o sistema deve oferecer para atender às necessidades específicas do usuário e do negócio. Nesta seção, são detalhadas as capacidades que o sistema deve possuir, como a classificação preditiva de veículos, a interface de usuário, o treinamento contínuo do modelo, entre outras. Esses requisitos são fundamentais para garantir que o sistema desempenhe suas funções conforme esperado, proporcionando um ambiente eficiente e eficaz para a realização das inspeções de veículos.

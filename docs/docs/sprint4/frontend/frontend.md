@@ -1,4 +1,4 @@
-# Frontend
+# Como Executar
 
 O front-end é uma parte crucial de um sistema de análise de dados desenvolvido especialmente para a Volkswagen, com o objetivo de otimizar e acelerar o processo de análise de grandes volumes de informações referentes a falhas veiculares. Esse dashboard foi concebido para oferecer uma interface amigável, intuitiva e eficiente, que permita aos usuários compreender de maneira rápida e precisa a relação entre o número de veículos com falhas e aqueles sem falhas.
 

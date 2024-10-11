@@ -1,102 +1,51 @@
-# Documentação do que trabalhamos no modelo nessa sprint
+# Evolução do Modelo
 
-Nesta sprint, o foco principal foi melhorar o desempenho de um modelo de classificação binária utilizado para prever falhas. O modelo original apresentava uma boa acurácia, porém, percebemos que havia espaço para ajustes e melhorias. Durante o processo, aplicamos diversas técnicas para otimizar a capacidade do modelo de generalizar melhor para novos dados, além de buscar uma maneira mais robusta de avaliar seu desempenho em diferentes métricas.
+Durante essa Sprint, o principal foco foi em reduzir o overfitting do modelo. Para tal, foram empregadas 3 técnicas:
 
-## Situação Inicial
+## 1. Early Stopping
 
-O modelo original era uma rede neural simples, composta por duas camadas densas. A configuração inicial consistia em uma primeira camada com 16 neurônios, seguida por uma camada com 8 neurônios, ambas utilizando a função de ativação `ReLU`. A última camada utilizava a função de ativação `sigmoid`, para que o modelo pudesse realizar uma classificação binária (falha ou não falha):
+O **Early Stopping** é uma técnica que monitora a performance do modelo em um conjunto de validação e interrompe o treinamento quando o desempenho do modelo começa a deteriorar. Ou seja, o treinamento é finalizado assim que o erro no conjunto de validação começa a aumentar, indicando que o modelo está começando a overfittar os dados de treinamento. Essa abordagem evita que o modelo continue ajustando-se aos dados de treinamento além do necessário.
 
-```python
-model = Sequential([
-    Dense(16, activation='relu', input_shape=(X_train_scaled.shape[1],)),
-    Dense(8, activation='relu'),
-    Dense(1, activation='sigmoid')
-])
-```
+**Vantagens**:
+- Previne o treinamento excessivo.
+- Reduz o risco de memorizar dados de treinamento.
+- Melhora a capacidade de generalização.
 
-A acurácia inicial do modelo no conjunto de teste estava em torno de 94.32%. Embora o resultado fosse considerado bom, percebemos que poderíamos melhorar, especialmente em relação ao comportamento do modelo em classes desbalanceadas e no controle de overfitting.
+## 2. Redução de Complexidade
 
-## Técnicas Utilizadas para Melhorar o Modelo
+Modelos complexos, com muitos parâmetros e alta capacidade de aprendizado, são mais propensos a overfitting. Uma maneira eficaz de controlar isso é **reduzir a complexidade do modelo**, utilizando:
+- **Redução do número de camadas** (em redes neurais).
+- **Diminuir o número de neurônios** por camada.
+- **Remover features irrelevantes** ou correlacionadas (em modelos baseados em features).
+  
+Ao fazer isso, o modelo fica menos propenso a memorizar os dados de treinamento e foca nos padrões mais relevantes para a tarefa.
 
-Nesta sprint, várias abordagens foram implementadas para otimizar o desempenho do modelo. Começamos ajustando os hiperparâmetros por meio do uso de **Random Search**. Essa técnica nos permitiu testar diferentes combinações de parâmetros, como o número de épocas (epochs), o tamanho do batch e o otimizador utilizado. Aqui está o código usado para a pesquisa de hiperparâmetros:
+**Vantagens**:
+- Reduz o risco de overfitting ao evitar que o modelo fique grande demais.
+- Melhora a interpretabilidade do modelo.
 
-```python
-from sklearn.model_selection import RandomizedSearchCV
-from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
+## 3. Regularização
 
-# Função para construir o modelo
-def build_model(optimizer='adam'):
-    model = Sequential([
-        Dense(16, activation='relu', input_shape=(X_train_scaled.shape[1],)),
-        Dense(8, activation='relu'),
-        Dense(1, activation='sigmoid')
-    ])
-    model.compile(optimizer=optimizer, loss='binary_crossentropy', metrics=['accuracy'])
-    return model
+A **Regularização** é uma técnica que adiciona uma penalização ao erro do modelo durante o processo de treinamento, incentivando o modelo a encontrar soluções mais simples e generalizáveis. As duas formas principais de regularização que utilizei foram:
+- **L2 Regularization (Ridge)**: Adiciona uma penalidade baseada na soma dos quadrados dos pesos do modelo. Isso faz com que o modelo tenda a reduzir a magnitude dos pesos, resultando em um modelo mais simples e menos propenso a overfitting.
+- **L1 Regularization (Lasso)**: Adiciona uma penalidade baseada na soma dos valores absolutos dos pesos. Isso incentiva o modelo a definir alguns pesos como exatamente zero, o que efetivamente realiza seleção de características.
 
-# Usando RandomizedSearchCV
-param_grid = {'batch_size': [16, 32, 64], 'epochs': [100, 200, 300], 'optimizer': ['adam', 'rmsprop']}
-model = KerasClassifier(build_fn=build_model)
-random_search = RandomizedSearchCV(estimator=model, param_distributions=param_grid, n_iter=5, cv=3, verbose=1)
-random_search.fit(X_train_scaled, y_train_balanced)
-```
+**Vantagens**:
+- Mantém o modelo mais simples e robusto.
+- Previne que o modelo ajuste-se demais aos dados de treinamento.
+- Ajuda na seleção de features com L1 regularization.
 
-Os melhores hiperparâmetros encontrados foram 100 épocas, batch size de 64 e o otimizador RMSprop. Isso resultou em uma acurácia revisada de 93.76%, com uma redução no tempo de treinamento, tornando o processo mais eficiente.
+---
 
-Além dos ajustes nos hiperparâmetros, também introduzimos técnicas para evitar que o modelo se sobreajustasse aos dados de treinamento. Para isso, adicionamos camadas de **Dropout** e **Regularização L2**:
+Com essas técnicas combinadas, consegui melhorar a capacidade do modelo de generalizar para novos dados, reduzindo o overfitting e mantendo uma boa performance nos dados de validação.
 
-```python
-from tensorflow.keras.regularizers import l2
+## Antes das Mudanças
+![Antes das Mudanças](../../static/img/gbefore.png)
 
-model = Sequential([
-    Dense(32, activation='relu', input_shape=(X_train_scaled.shape[1],), kernel_regularizer=l2(0.001)),
-    Dropout(0.3),  # Dropout de 30% para reduzir overfitting
-    Dense(16, activation='relu', kernel_regularizer=l2(0.001)),
-    Dropout(0.3),  # Outro Dropout
-    Dense(1, activation='sigmoid')
-])
-```
+## Após as Mudanças
+![Após as Mudanças](../../static/img/gafter.png)
 
-O Dropout é uma técnica que desativa aleatoriamente neurônios durante o treinamento, evitando que o modelo dependa demais de combinações específicas de neurônios. Já a regularização L2 adiciona uma penalidade ao erro do modelo quando os pesos ficam muito grandes, ajudando a controlar o overfitting. Com essas adições, conseguimos criar um modelo mais robusto, que não apenas manteve uma acurácia alta (93.55%), mas também mostrou um comportamento mais estável entre os conjuntos de treinamento e validação, evidenciando uma generalização melhor para dados novos.
+## Métricas Finais
 
-Outra técnica importante que aplicamos foi o uso de SMOTE (Synthetic Minority Over-sampling Technique). O SMOTE é usado para balancear as classes no conjunto de treinamento, criando novas amostras sintéticas para a classe minoritária (neste caso, as falhas):
-
-```python
-from imblearn.over_sampling import SMOTE
-
-smote = SMOTE(random_state=42)
-X_train_balanced, y_train_balanced = smote.fit_resample(X_train, y_train)
-
-```
-
-Isso nos ajudou a melhorar a sensibilidade e o recall do modelo, garantindo que ele não ignorasse a classe de falhas, que era menos frequente nos dados.
-
-## Avaliação do Desempenho
-
-Após implementar essas melhorias, focamos em realizar uma análise mais aprofundada do desempenho do modelo. Adicionamos a **Curva ROC (Receiver Operating Characteristic)** à avaliação para medir a qualidade das previsões probabilísticas:
-
-```python
-from sklearn.metrics import roc_curve, auc
-
-# Previsões do modelo
-y_pred_proba = model.predict(X_test_scaled)
-
-# Calcular a curva ROC
-fpr, tpr, _ = roc_curve(y_test, y_pred_proba)
-roc_auc = auc(fpr, tpr)
-
-# Plot da curva ROC
-plt.figure()
-plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (area = %0.2f)' % roc_auc)
-plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
-plt.xlabel('False Positive Rate')
-plt.ylabel('True Positive Rate')
-plt.title('Receiver Operating Characteristic')
-plt.legend(loc="lower right")
-plt.show()
-```
-
-## Considerações Finais
-No geral, os ajustes realizados durante essa sprint no modelo trouxeram várias melhorias importantes. Mantivemos uma acurácia alta, mas, mais importante, criamos um modelo mais robusto e menos suscetível a overfitting. O uso de técnicas como Dropout e Regularização L2, além do balanceamento das classes com SMOTE, proporcionaram uma solução que se comporta de maneira mais estável em diferentes cenários.
-
-Apesar de termos avançado bastante, ainda há áreas que podem ser exploradas, especialmente no que diz respeito à Curva ROC, cuja AUC foi de 0.67. Isso sugere que podemos continuar refinando a seleção de features e ajustar o threshold de classificação para otimizar o desempenho.
+Acurácia: 94% e
+Recall: 97%
